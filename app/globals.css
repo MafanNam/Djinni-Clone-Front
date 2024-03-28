@@ -1,33 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
+@layer components {
+  .navbar-link {
+    @apply relative outline-0 hover:after:w-2/3 hover:after:h-[2px] hover:after:bg-blue-500 hover:after:absolute hover:after:top-[100%] hover:after:mt-1 hover:after:left-0 hover:after:left-[50%] hover:after:-translate-x-[50%];
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+  .navbar-link.active {
+    @apply after:w-2/3 after:h-[2px] after:bg-blue-500 after:absolute after:top-[100%] after:mt-1 after:left-0 after:left-[50%] after:-translate-x-[50%];
+  }
+
+  .modal-background {
+    @apply transition-opacity fixed top-0 right-0 bottom-0 left-0 flex items-center justify-center bg-[rgba(0,0,0,.7)] p-10 z-[9999];
+  }
+
+  .modal-box {
+    @apply transition-transform bg-white w-full rounded-md;
+  }
+
+  .modal-box-header {
+    @apply px-7 py-5 flex items-center justify-between border-b border-gray-300;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+* {
+  font-family: 'Poppins', sans-serif;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#fb-login > span {
+  width: 52px !important;
+  height: 52px !important;
+}
+
+#my-signin2 > div {
+  width: 100%;
+  border: 1px solid #eee;
+}
+
+.abcRioButtonBlue {
+  border-radius: 50% !important;
+  background: rgb(243 244 246) !important;
+  height: 52px !important;
+  width: auto !important;
+}
+
+.abcRioButtonIcon {
+  background: rgb(243 244 246) !important;
+}
+
+.abcRioButtonContents {
+  width: 0;
+  display: none;
+}
+
+.Toastify__toast-container {
+  z-index: 99999;
+}
+
+ul {
+  list-style: disc;
 }
