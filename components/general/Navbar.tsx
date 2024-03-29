@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import {useRouter, usePathname} from "next/navigation";
 import Logo from "@/public/images/ua.svg"
+import {AiOutlineClose} from "react-icons/ai";
+import {GiHamburgerMenu} from "react-icons/gi";
 
 
 export default function Navbar() {
@@ -21,25 +23,31 @@ export default function Navbar() {
   }
 
   return (
-    <div
-      className='flex items-center justify-between gap-10 lg:px-16 pl-4 pr-7 z-[999] py-3 bg-white sticky top-0 shadow-sm'>
+    <nav
+      className={`flex items-center justify-between gap-10 lg:px-16 pl-4 pr-7 z-[999] py-3 bg-white sticky top-0 shadow-sm bg-opacity-75 ${!openSidebar ? 'backdrop-blur-sm' : ''}`}>
       <div onClick={() => router.push('/')} className='flex items-center cursor-pointer'>
         <h1 className='text-xl'>Djinni Clone</h1>
         <Image src={Logo} width={25} height={25} alt='Djinni Clone'/>
       </div>
       <div onClick={() => setOpenSidebar(true)} className='lg:hidden block'>
-        {/*<GiHamburgerMenu className='text-xl cursor-pointer'/>*/}
+        <GiHamburgerMenu className='text-xl cursor-pointer'/>
       </div>
       <div ref={sidebarRef}
-           className={`lg:static fixed top-0 ${openSidebar ? 'right-0' : '-right-[3000px]'} transition-all bottom-0 lg:shadow-none shadow-xl lg:w-auto w-[200px] lg:p-0 p-7 lg:flex lg:flex-1`}>
-        {/*<AiOutlineClose onClick={() => setOpenSidebar(false)} className='float-right text-xl mb-5 lg:hidden cursor-pointer'/>*/}
+           className={`lg:static fixed top-0 ${openSidebar ? 'right-0' : '-right-[3000px] backdrop-filter-none'} transition-all bottom-0 lg:shadow-none shadow-xl lg:w-auto w-[200px] lg:p-0 p-7 lg:flex lg:flex-1 bg-opacity-75 backdrop-blur-3xl`}>
+        <AiOutlineClose onClick={() => setOpenSidebar(false)} className='float-right text-xl mb-5 lg:hidden cursor-pointer'/>
         <div className='clear-both'/>
         <div className='flex-1 lg:flex-row flex-col flex lg:items-center items-start text-sm lg:gap-7 gap-4'>
-          <Link href='/' className={`navbar-link ${pathname === '/' || pathname === '/index' ? 'active' : undefined}`}>
-            Home
+          {/*<Link href='/' className={`navbar-link ${pathname === '/' || pathname === '/index' ? 'active' : undefined}`}>*/}
+          {/*  Home*/}
+          {/*</Link>*/}
+          <Link href='/inbox' className={`navbar-link ${pathname === '/inbox' ? 'active' : undefined}`}>
+            Inbox
           </Link>
           <Link href='/jobs' className={`navbar-link ${pathname === '/jobs' ? 'active' : undefined}`}>
-            Find Jobs
+            Jobs
+          </Link>
+          <Link href='/salaries' className={`navbar-link ${pathname === '/salaries' ? 'active' : undefined}`}>
+            Salaries
           </Link>
           {
             ((auth.user?.role === 'organization') || (auth.user?.role === 'admin')) &&
@@ -104,6 +112,6 @@ export default function Navbar() {
           }
         </div>
       </div>
-    </div>
+    </nav>
   )
 }

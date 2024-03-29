@@ -16,9 +16,7 @@ export default function JobsLayout({
 }>) {
   return (
     <>
-      <Navbar/>
       <section>{children}</section>
-      <Footer/>
     </>
   );
 }
