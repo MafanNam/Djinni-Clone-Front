@@ -3,6 +3,7 @@ import {Key} from "react";
 import Link from "next/link";
 import {useCompanies, useCompany} from "@/services/queries";
 import Loader from "@/components/general/Loader"
+import Spinner from "@/components/general/Spinner";
 
 // @ts-ignore
 export default function CompanyContainer() {
@@ -12,6 +13,7 @@ export default function CompanyContainer() {
   return (
     <div className='py-20 md:px-16 px-8'>
       <h1 className='text-4xl md:text-3xl font-medium text-center mb-12'><span className='text-[#504ED7]'>Latest</span> Jobs</h1>
+      {isLoading && <Spinner/>}
       <div className='grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-10'>
         {
           data?.results.map((item: { id: Key | null | undefined; name: any; bio: any; country: any; num_employees: any; image: string; }) => (

@@ -1,26 +1,26 @@
 "use client";
 
 import {CSSProperties} from "react";
-import {RingLoader} from "react-spinners";
+import {MoonLoader} from "react-spinners";
 
 
 const override: CSSProperties = {
   display: "block",
   margin: "0 auto",
-  borderColor: "red",
+  borderColor: "gray",
 };
 
-export default function Spinner() {
+export default function Spinner({size = 100}) {
   return (
     <div>
-      <RingLoader
-        color='#800080'
+      <MoonLoader
+        color='#8298e3'
         loading={true}
         cssOverride={override}
-        size={150}
+        size={size}
         aria-label="Spinner Spinner"
         data-testid="loader"
       />
     </div>
-    )
+  )
 }
