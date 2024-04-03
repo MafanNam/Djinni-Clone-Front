@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import Logo from "@/public/images/djinni.co.png";
 
-
 export default function Footer() {
   return (
     <footer className='flex md:flex-row flex-col md:gap-3 gap-12 md:px-20 px-8 py-8 bg-[#282773] text-white bg-gradient-to-r from-blue-600 to-blue-800'>
@@ -30,5 +29,5 @@ export default function Footer() {
         <Link href='/' className='outline-0'>Djinni Clone Guide</Link>
       </div>
     </footer>
-  )
+  );
 }

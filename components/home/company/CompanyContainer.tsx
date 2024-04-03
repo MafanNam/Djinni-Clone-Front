@@ -1,36 +1,36 @@
 import CompanyCard from "@/components/home/company/CompanyCard";
-import {Key} from "react";
 import Link from "next/link";
-import {useCompanies, useCompany} from "@/services/queries";
-import Loader from "@/components/general/Loader"
 import Spinner from "@/components/general/Spinner";
+import {useRetrieveCompaniesQuery} from "@/lib/features/other/otherApiSlice";
 
-// @ts-ignore
+
 export default function CompanyContainer() {
-  const {data, isLoading} = useCompanies()
+  const {data, isLoading, isFetching} = useRetrieveCompaniesQuery()
 
 
   return (
     <div className='py-20 md:px-16 px-8'>
-      <h1 className='text-4xl md:text-3xl font-medium text-center mb-12'><span className='text-[#504ED7]'>Latest</span> Jobs</h1>
-      {isLoading && <Spinner/>}
+      <h1 className='text-4xl md:text-3xl font-medium text-center mb-12'><span
+        className='text-[#504ED7]'>Latest</span> Jobs</h1>
+      {(isLoading || isFetching) && <Spinner/>}
       <div className='grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-10'>
         {
-          data?.results.map((item: { id: Key | null | undefined; name: any; bio: any; country: any; num_employees: any; image: string; }) => (
+          data?.results.slice(0, 10).map((item) => (
             <CompanyCard
-              id={item.id as string}
               key={item.id}
+              id={item.id}
               name={item.name}
               bio={item.bio}
               country={item.country}
               num_employees={item.num_employees}
-              image={item.image as string}
+              image={item.image}
 
             />
           ))
         }
       </div>
-      <Link href='/jobs' className='bg-white m-auto block w-fit mt-20 px-10 py-2 border-2 rounded-full border-[#504ED7] text-[#504ED7]'>
+      <Link href='/jobs'
+            className='bg-white m-auto block w-fit mt-20 px-10 py-2 border-2 rounded-full border-[#504ED7] text-[#504ED7]'>
         Find More Jobs
       </Link>
     </div>
