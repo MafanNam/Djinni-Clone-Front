@@ -4,11 +4,11 @@ import Logo from "@/public/images/djinni.co.png";
 
 export default function Footer() {
   return (
-    <footer className='flex md:flex-row flex-col md:gap-3 gap-12 md:px-20 px-8 py-8 bg-[#282773] text-white bg-gradient-to-r from-blue-600 to-blue-800'>
+    <footer className='flex md:flex-row flex-col md:gap-3 gap-12 md:px-20 px-8 py-8 bg-blue-800 dark:bg-[#504ED7] dark:bg-opacity-10 text-white'>
       <div className='flex-1'>
         <div className='flex items-center mb-2'>
-          <Image src={Logo} width={60} height={60} alt='Djinni Clone' />
-          <h1>Djinni Clone</h1>
+          <Image src={Logo} width={50} height={50} alt='Djinni Clone' />
+          <h1 className='ml-2'>Djinni Clone</h1>
         </div>
         <p className='mb-3'>We transform the way candidates find jobs and companies hire talent.</p>
         <p>&copy; {new Date().getFullYear()} Djinni Clone, Inc.</p>

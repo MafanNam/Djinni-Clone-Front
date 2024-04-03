@@ -6,6 +6,7 @@ import {useRouter, usePathname} from "next/navigation";
 import Logo from "@/public/images/ua.svg"
 import {AiOutlineClose} from "react-icons/ai";
 import {GiHamburgerMenu} from "react-icons/gi";
+import {ModeToggle} from "@/components/general/ModeToggle";
 
 
 export default function Navbar() {
@@ -24,9 +25,9 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`flex items-center justify-between gap-10 lg:px-16 pl-4 pr-7 z-[999] py-3 bg-white sticky top-0 shadow-sm bg-opacity-75 ${!openSidebar ? 'backdrop-blur-sm' : ''}`}>
+      className={`flex items-center justify-between gap-10 lg:px-16 pl-4 pr-7 z-[999] py-3 bg-white dark:bg-gray-950 sticky top-0 shadow-sm bg-opacity-75 dark:bg-opacity-50 ${!openSidebar ? 'backdrop-blur-sm dark:backdrop-blur-sm' : ''}`}>
       <div onClick={() => router.push('/')} className='flex items-center cursor-pointer'>
-        <h1 className='text-xl'>Djinni Clone</h1>
+        <h1 className='text-xl mr-0.5'>Djinni Clone</h1>
         <Image src={Logo} width={25} height={25} alt='Djinni Clone'/>
       </div>
       <div onClick={() => setOpenSidebar(true)} className='lg:hidden block'>
@@ -34,7 +35,8 @@ export default function Navbar() {
       </div>
       <div ref={sidebarRef}
            className={`lg:static fixed top-0 ${openSidebar ? 'right-0' : '-right-[3000px] backdrop-filter-none'} transition-all bottom-0 lg:shadow-none shadow-xl lg:w-auto w-[200px] lg:p-0 p-7 lg:flex lg:flex-1 bg-opacity-75 backdrop-blur-3xl`}>
-        <AiOutlineClose onClick={() => setOpenSidebar(false)} className='float-right text-xl mb-5 lg:hidden cursor-pointer'/>
+        <AiOutlineClose onClick={() => setOpenSidebar(false)}
+                        className='float-right text-xl mb-5 lg:hidden cursor-pointer'/>
         <div className='clear-both'/>
         <div className='flex-1 lg:flex-row flex-col flex lg:items-center items-start text-sm lg:gap-7 gap-4'>
           {/*<Link href='/' className={`navbar-link ${pathname === '/' || pathname === '/index' ? 'active' : undefined}`}>*/}
@@ -51,7 +53,9 @@ export default function Navbar() {
           </Link>
           {
             ((auth.user?.role === 'organization') || (auth.user?.role === 'admin')) &&
-            <Link href='/find_candidate' className={`navbar-link ${pathname === '/find_candidate' ? 'active' : undefined}`}>Find Candidates</Link>
+            <Link href='/find_candidate'
+                  className={`navbar-link ${pathname === '/find_candidate' ? 'active' : undefined}`}>Find
+              Candidates</Link>
           }
         </div>
         <div className='text-sm flex lg:flex-row flex-col lg:items-center items-start lg:gap-8 gap-4 mt-10 lg:mt-0'>
@@ -60,10 +64,11 @@ export default function Navbar() {
               ? (
                 <>
                   <Link href='/login' className={`navbar-link ${pathname === '/login' ? 'active' : undefined}`}>
-                      Login
+                    Login
                   </Link>
-                  <Link href='/register' className={`px-6 py-2 border-2 rounded-full border-[#504ED7] ${pathname === '/register' || pathname === '/register/jobseeker' || pathname === '/register/organization' ? 'bg-[#504ED7] text-white' : 'text-[#504ED7]'}`}>
-                      Register Now
+                  <Link href='/register'
+                        className={`px-6 py-2 border-2 rounded-full border-[#504ED7] ${pathname === '/register' || pathname === '/register/jobseeker' || pathname === '/register/organization' ? 'bg-[#504ED7] text-white' : 'text-[#504ED7]'}`}>
+                    Register Now
                   </Link>
                 </>
               )
@@ -73,31 +78,36 @@ export default function Navbar() {
                     auth.user?.role === 'jobseeker'
                       ? (
                         <>
-                          <Link href='/edit_profile' className={`navbar-link ${pathname === '/edit_profile' ? 'active' : undefined}`}>
-                              Edit Profile
+                          <Link href='/edit_profile'
+                                className={`navbar-link ${pathname === '/edit_profile' ? 'active' : undefined}`}>
+                            Edit Profile
                           </Link>
-                          <Link href='/received_invitation' className={`navbar-link ${pathname === '/received_invitation' ? 'active' : undefined}`}>
-                              Invitation
+                          <Link href='/received_invitation'
+                                className={`navbar-link ${pathname === '/received_invitation' ? 'active' : undefined}`}>
+                            Invitation
                           </Link>
-                          <Link href='/job_applied' className={`navbar-link ${pathname === '/job_applied' ? 'active' : undefined}`}>
-                              Jobs Applied
+                          <Link href='/job_applied'
+                                className={`navbar-link ${pathname === '/job_applied' ? 'active' : undefined}`}>
+                            Jobs Applied
                           </Link>
                         </>
                       )
                       : auth.user?.role === 'organization'
                         ? (
                           <>
-                            <Link href='/organization/jobs' className={`navbar-link ${pathname === '/organization/jobs' ? 'active' : undefined}`}>
-                                Jobs Posted
+                            <Link href='/organization/jobs'
+                                  className={`navbar-link ${pathname === '/organization/jobs' ? 'active' : undefined}`}>
+                              Jobs Posted
                             </Link>
-                            <Link href='/sent_invitation' className={`navbar-link ${pathname === '/sent_invitation' ? 'active' : undefined}`}>
-                                Sent Invitation
+                            <Link href='/sent_invitation'
+                                  className={`navbar-link ${pathname === '/sent_invitation' ? 'active' : undefined}`}>
+                              Sent Invitation
                             </Link>
                           </>
                         )
                         : (
                           <Link href='/organization/approval' className='navbar-link'>
-                              Dashboard
+                            Dashboard
                           </Link>
                         )
                   }
@@ -110,6 +120,9 @@ export default function Navbar() {
                 </>
               )
           }
+        </div>
+        <div className='ml-2'>
+          <ModeToggle/>
         </div>
       </div>
     </nav>

@@ -8,7 +8,7 @@ export default function CategoryContainer() {
 
 
   return (
-    <div className='bg-gray-100 py-20 md:px-16 px-8'>
+    <div className='bg-gray-100 dark:bg-gray-900 dark:bg-opacity-50 py-20 md:px-16 px-8'>
       <h1 style={{lineHeight: '65px'}} className='md:text-4xl text-3xl font-medium text-center mb-10'>Platform <br
         className='hidden md:block'/> Many <span className='text-[#504ED7]'>Category</span></h1>
       {(isLoading || isFetching) && <Spinner/>}

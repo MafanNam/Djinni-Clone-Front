@@ -3,8 +3,16 @@ import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form";
 import {useLoginMutation} from "@/lib/features/auth/authApiSlice";
-import {toast} from "react-toastify";
 import {useRouter} from "next/navigation";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input"
+import {Label} from "@/components/ui/label"
+import React from "react";
+import Spinner from "@/components/general/Spinner";
+import {ImGoogle} from "react-icons/im";
+import {useAppDispatch} from "@/lib/hooks";
+import {setAuth} from "@/lib/features/auth/authSlice";
+import {toast} from "react-toastify";
 
 const loginFormSchema = z.object({
   email: z
@@ -22,15 +30,12 @@ const loginFormSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginFormSchema>
 
-
 export default function LoginForm() {
-
-  const router = useRouter();
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: {errors},
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     mode: "onChange",
@@ -38,53 +43,62 @@ export default function LoginForm() {
 
   const [login, {isLoading}] = useLoginMutation()
 
+  const router = useRouter()
+  const dispatch = useAppDispatch()
+
   function onSubmit(data: LoginFormValues) {
-    const { email, password } = data;
-    console.log(data);
+    const {email, password} = data
 
     login({email, password})
       .unwrap()
       .then(() => {
-        toast.success("Login successfully!");
-        router.push('/')
+        dispatch(setAuth())
+
+        toast.success("Login successfully")
+        router.push("/my/profile")
       })
-      .catch((err) => {
-        toast.error("Error occured");
+      .catch((err: Error) => {
+        toast.error("Failed to log in.")
       })
   }
 
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className='mb-7'>
-        <label htmlFor='email' className='text-sm'>Email</label>
-        <input className='w-full outline-0 border border-gray-300 px-2 py-3 text-sm rounded-md mt-3'
-               placeholder='me@example.com'
-               {...register('email')}
-        />
-        {errors.email && <span className='text-red-900'>{errors.email.message}</span>}
-      </div>
-      <div>
-        <label htmlFor='password' className='text-sm'>Password</label>
-        <div
-          className='flex items-center border border-gray-300 mt-3 rounded-md px-2 py-3 gap-2'>
-          <input type='password'
-                 className='w-full outline-0 text-sm'
-                 placeholder='password'
-                 {...register('password')}
-          />
-        </div>
-        {errors.password && <span className='text-red-900'>{errors.password.message}</span>}
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid gap-4">
+          <div className="grid gap-2 mb-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              placeholder="m@example.com"
+              {...register("email")}
+            />
+            {errors.email && <span className='text-red-900'>{errors.email.message}</span>}
+          </div>
+          <div className="grid gap-2 mb-2">
+            <div className="flex items-center">
+              <Label htmlFor="password">Password</Label>
+              <Link href="/password-reset" className="ml-auto inline-block text-sm underline">
+                Forgot your password?
+              </Link>
+            </div>
+            <Input type="password" {...register("password")} />
+            {errors.password && <span className='text-red-900'>{errors.password.message}</span>}
+          </div>
 
-        <Link href='/forgot_password' className='text-blue-500 text-xs mt-2 float-right outline-0'>
-          Forgot password?
+          <Button type="submit" className="w-full">
+            {isLoading ? <Spinner size={25}/> : 'Login'}
+          </Button>
+          <Button variant="outline" type='button' className="w-full bg-red-200 dark:bg-red-950">
+            <ImGoogle className='mr-3'/>Login with Google
+          </Button>
+        </div>
+      </form>
+      <div className="mt-4 text-center text-sm">
+        Don&apos;t have an account?{" "}
+        <Link href="/register" className="underline">
+          Sign up
         </Link>
-        <div className='clear-both'/>
       </div>
-      <button type='submit'
-              className={`bg-[#504ED7] hover:bg-[#2825C2] cursor-pointer'} outline-0 transition-[background] w-full text-white py-2 mt-6`}>
-        SIGN IN
-      </button>
-    </form>
+    </>
   )
 }

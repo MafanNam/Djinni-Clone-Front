@@ -13,7 +13,7 @@ export default function CompanyCard({id, name, image, bio, country, num_employee
   return (
     <div onClick={() => router.push(`/companies/${id}`)} className='hover:border-2 border hover:border-[#504ED7] border-gray-200 shadow-md p-5 hover:scale-105 rounded-md transition-[transform] cursor-pointer'>
       <div className='flex items-center gap-2'>
-        <div className='w-12 h-12 rounded-full border border-gray-300 shrink-0'>
+        <div className='w-12 h-12 rounded-full border border-gray-300 dark:border-[#504ED7] shrink-0'>
           <Image src={image} alt={name} width={100} height={100} className='w-full h-full rounded-full object-cover' />
         </div>
         <div>

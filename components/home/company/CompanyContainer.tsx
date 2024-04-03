@@ -2,6 +2,7 @@ import CompanyCard from "@/components/home/company/CompanyCard";
 import Link from "next/link";
 import Spinner from "@/components/general/Spinner";
 import {useRetrieveCompaniesQuery} from "@/lib/features/other/otherApiSlice";
+import {Button} from "@/components/ui/button";
 
 
 export default function CompanyContainer() {
@@ -30,7 +31,7 @@ export default function CompanyContainer() {
         }
       </div>
       <Link href='/jobs'
-            className='bg-white m-auto block w-fit mt-20 px-10 py-2 border-2 rounded-full border-[#504ED7] text-[#504ED7]'>
+            className='bg-white dark:bg-purple-800 dark:bg-opacity-20 m-auto block w-fit mt-20 px-10 py-2 border-2 rounded-full border-[#504ED7] text-[#504ED7]'>
         Find More Jobs
       </Link>
     </div>
