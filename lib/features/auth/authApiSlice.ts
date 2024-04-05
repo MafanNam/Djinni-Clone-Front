@@ -6,6 +6,7 @@ interface User {
   last_name: string;
   type_profile: string,
   email: string;
+  image: string;
   is_online: boolean;
 }
 
@@ -25,6 +26,7 @@ const authApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
     retrieveUser: builder.query<User, void>({
       query: () => '/auth/users/me/',
+      keepUnusedDataFor: 1,
       async onQueryStarted(arg, {dispatch, queryFulfilled}) {
         try {
           const {data} = await queryFulfilled
@@ -33,6 +35,7 @@ const authApiSlice = apiSlice.injectEndpoints({
           console.log(err)
         }
       },
+      providesTags: ['User']
     }),
     updateUser: builder.mutation<User, void>({
       query: (data) => ({
@@ -40,6 +43,15 @@ const authApiSlice = apiSlice.injectEndpoints({
         method: 'PUT',
         body: data,
       }),
+      invalidatesTags: ['User'],
+    }),
+    deleteUser: builder.mutation<User, void>({
+      query: (data) => ({
+        url: '/auth/users/me/',
+        method: 'DELETE',
+        body: data,
+      }),
+      invalidatesTags: ['User'],
     }),
     socialAuthenticate: builder.mutation<
       CreateUserResponse,
@@ -79,6 +91,7 @@ const authApiSlice = apiSlice.injectEndpoints({
         url: '/auth/logout/',
         method: 'POST',
       }),
+      invalidatesTags: ['User']
     }),
     activation: builder.mutation({
       query: ({uid, token}) => ({

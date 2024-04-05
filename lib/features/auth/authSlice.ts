@@ -9,16 +9,17 @@ interface AuthState {
     first_name: string,
     last_name: string,
     email: string,
+    image: string,
     type_profile: string,
-  };
+  } | null;
 }
 
 
 const initialState = {
   isAuthenticated: false,
-  isLoading: true,
+  isLoading: false,
   token: null,
-  user: {},
+  user: null,
 } as AuthState;
 
 export const authSlice = createSlice({
@@ -33,6 +34,10 @@ export const authSlice = createSlice({
     },
     logout: state => {
       state.isAuthenticated = false;
+      state.user = null;
+    },
+    setLoading: state => {
+      state.isLoading = true;
     },
     finishInitialLoad: state => {
       state.isLoading = false;

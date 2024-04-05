@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
+import {useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
+import Spinner from "@/components/general/Spinner";
 
 const profileFormSchema = z.object({
   username: z
@@ -73,6 +75,12 @@ export function ProfileForm() {
     name: "urls",
     control: form.control,
   })
+
+  const {data: user, isLoading, isFetching} = useRetrieveUserQuery()
+
+  if (isLoading || isFetching) {
+    return <Spinner size={200}/>
+  }
 
   function onSubmit(data: ProfileFormValues) {
     toast({

@@ -2,7 +2,7 @@ import Link from "next/link";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form";
-import {useLoginMutation} from "@/lib/features/auth/authApiSlice";
+import {useLoginMutation, useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
 import {useRouter} from "next/navigation";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input"
@@ -54,8 +54,9 @@ export default function LoginForm() {
       .then(() => {
         dispatch(setAuth())
 
+        router.refresh()
+        router.push('my/profile')
         toast.success("Login successfully")
-        router.push("/my/profile")
       })
       .catch((err: Error) => {
         toast.error("Failed to log in.")
