@@ -1,8 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form";
-import {useLoginMutation, useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
+import {useLoginMutation} from "@/lib/features/auth/authApiSlice";
 import {useRouter} from "next/navigation";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input"
@@ -11,7 +13,7 @@ import React from "react";
 import Spinner from "@/components/general/Spinner";
 import {ImGoogle} from "react-icons/im";
 import {useAppDispatch} from "@/lib/hooks";
-import {setCredentials} from "@/lib/features/auth/authSlice";
+import {setAuth} from "@/lib/features/auth/authSlice";
 import {toast} from "react-toastify";
 
 const loginFormSchema = z.object({
@@ -44,6 +46,7 @@ export default function LoginForm() {
   const [login, {isLoading}] = useLoginMutation()
 
   const router = useRouter()
+
   const dispatch = useAppDispatch()
 
   function onSubmit(data: LoginFormValues) {
@@ -51,8 +54,8 @@ export default function LoginForm() {
 
     login({email, password})
       .unwrap()
-      .then(({access}) => {
-        dispatch(setCredentials(access))
+      .then(() => {
+        dispatch(setAuth())
 
         router.refresh()
         router.push('my/profile')

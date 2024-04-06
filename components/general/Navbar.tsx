@@ -1,25 +1,18 @@
 "use client";
-import {useRef, useState} from "react";
+import {useState} from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {useRouter, usePathname} from "next/navigation";
+import {usePathname} from "next/navigation";
 import Logo from "@/public/images/ua.svg"
-import {AiOutlineClose} from "react-icons/ai";
-import {GiHamburgerMenu} from "react-icons/gi";
 import {ModeToggle} from "@/components/general/ModeToggle";
 
 import ProfileDropdownMenu from "@/components/ui/ProfileDropdownMenu";
 import {useAppSelector} from "@/lib/hooks";
-import {useDispatch} from "react-redux";
-import {useLogoutMutation, useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
-import {useRetrieveMeCandidateQuery} from "@/lib/features/accounts/accountsApiSlice";
-import Spinner from "@/components/general/Spinner";
-import {setCredentials} from "@/lib/features/auth/authSlice";
 
 
 export default function Navbar() {
   const [openSidebar, setOpenSidebar] = useState(false)
-  const {user, access} = useAppSelector(state => state.auth)
+  const {user, isAuthenticated} = useAppSelector(state => state.auth)
   // const {data: user, isLoading} = useRetrieveUserQuery()
   const pathname = usePathname()
 
@@ -40,7 +33,7 @@ export default function Navbar() {
           </div>
 
           {/*Dropdown menu*/}
-          {access
+          {isAuthenticated
             ? <ProfileDropdownMenu/>
             : (
               <div className='space-x-2'>

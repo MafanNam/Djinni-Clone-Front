@@ -19,14 +19,14 @@ import {useRouter} from "next/navigation";
 import {logout as setLogout} from "@/lib/features/auth/authSlice";
 import Spinner from "@/components/general/Spinner";
 import Link from "next/link";
-import {useAppSelector} from "@/lib/hooks";
 
 
 export default function ProfileDropdownMenu() {
   const [logout,] = useLogoutMutation()
   const dispatch = useDispatch();
   const router = useRouter();
-  const {data: user, isError} = useRetrieveUserQuery()
+  const {data: user} = useRetrieveUserQuery()
+
 
   if (!user) return <Spinner size={20}/>
   // if (isError) return <MessageCircleMore/>
