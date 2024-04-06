@@ -26,13 +26,11 @@ const authApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
     retrieveUser: builder.query<User, void>({
       query: () => '/auth/users/me/',
-      keepUnusedDataFor: 1,
       async onQueryStarted(arg, {dispatch, queryFulfilled}) {
         try {
           const {data} = await queryFulfilled
           dispatch(setUser(data))
         } catch (err) {
-          console.log(err)
         }
       },
       providesTags: ['User']
@@ -71,7 +69,14 @@ const authApiSlice = apiSlice.injectEndpoints({
         url: '/auth/jwt/create/',
         method: 'POST',
         body: {email, password},
-      })
+      }),
+      async onQueryStarted(_args, {dispatch, queryFulfilled}) {
+        try {
+          await queryFulfilled;
+          dispatch(setUser(null));
+        } catch (error) {
+        }
+      },
     }),
     register: builder.mutation({
       query: ({first_name, last_name, type_profile, email, password, re_password}) => ({

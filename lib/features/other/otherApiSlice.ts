@@ -1,4 +1,5 @@
 import {apiSlice} from "@/lib/services/apiSlice";
+import {apiPublicSlice} from "@/lib/services/apiPublicSlice";
 
 
 interface Category {
@@ -23,7 +24,7 @@ interface Companies {
 }
 
 
-const otherApiSlice = apiSlice.injectEndpoints({
+const otherApiSlice = apiPublicSlice.injectEndpoints({
   endpoints: builder => ({
     retrieveCategory: builder.query<Category, void>({
       query: () => '/categories/',

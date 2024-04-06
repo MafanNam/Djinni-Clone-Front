@@ -1,10 +1,9 @@
 "use client";
 import LoginForm from "@/components/forms/login-form";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import React from "react";
 
 
-export default function Login() {
+export default function LoginPage() {
   return (
     <div className="w-full h-screen flex items-center justify-center px-4 theme-zinc">
       <Card className="mx-auto max-w-sm">

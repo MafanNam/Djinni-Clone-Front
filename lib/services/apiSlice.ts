@@ -4,14 +4,24 @@ import type {
   FetchArgs,
   FetchBaseQueryError,
 } from '@reduxjs/toolkit/query'
-import {setAuth, logout} from '@/lib/features/auth/authSlice'
+import {logout, setCredentials} from '@/lib/features/auth/authSlice'
 import {Mutex} from 'async-mutex'
+import Cookies from "js-cookie";
 
 
 const mutex = new Mutex()
 const baseQuery = fetchBaseQuery({
   baseUrl: `${process.env.NEXT_PUBLIC_HOST}/api/v1`,
   credentials: 'include',
+  prepareHeaders: (headers, {getState}) => {
+    // @ts-ignore
+    const access = getState().auth.access;
+    console.log(access)
+
+    if(access) {
+      headers.set('Authorization', `Bearer ${access}`);
+    }
+  },
 })
 const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
@@ -36,7 +46,13 @@ const baseQueryWithReauth: BaseQueryFn<
           extraOptions,
         );
         if (refreshResult.data) {
-          api.dispatch(setAuth())
+          // @ts-ignore
+          api.dispatch(setCredentials(refreshResult.data.access))
+
+          // @ts-ignore
+          // Cookies.set('access', refreshResult.data.access,
+          //   {secure: true, sameSite: 'Lax', expires: (1 / 1440) * 2})
+          // api.dispatch(setAuth())
 
           result = await baseQuery(args, api, extraOptions)
         } else {

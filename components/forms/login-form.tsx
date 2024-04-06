@@ -11,7 +11,7 @@ import React from "react";
 import Spinner from "@/components/general/Spinner";
 import {ImGoogle} from "react-icons/im";
 import {useAppDispatch} from "@/lib/hooks";
-import {setAuth} from "@/lib/features/auth/authSlice";
+import {setCredentials} from "@/lib/features/auth/authSlice";
 import {toast} from "react-toastify";
 
 const loginFormSchema = z.object({
@@ -51,8 +51,8 @@ export default function LoginForm() {
 
     login({email, password})
       .unwrap()
-      .then(() => {
-        dispatch(setAuth())
+      .then(({access}) => {
+        dispatch(setCredentials(access))
 
         router.refresh()
         router.push('my/profile')

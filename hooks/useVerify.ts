@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from '@/lib/hooks';
-import { setAuth, finishInitialLoad } from '@/lib/features/auth/authSlice';
+import {setAuth, finishInitialLoad, setCredentials} from '@/lib/features/auth/authSlice';
 import { useVerifyMutation } from '@/lib/features/auth/authApiSlice';
 
 export default function useVerify() {
@@ -17,5 +17,5 @@ export default function useVerify() {
       .finally(() => {
         dispatch(finishInitialLoad());
       });
-  }, []);
+  }, [dispatch, verify]);
 }

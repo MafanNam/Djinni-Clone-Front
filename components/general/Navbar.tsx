@@ -14,11 +14,12 @@ import {useDispatch} from "react-redux";
 import {useLogoutMutation, useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
 import {useRetrieveMeCandidateQuery} from "@/lib/features/accounts/accountsApiSlice";
 import Spinner from "@/components/general/Spinner";
+import {setCredentials} from "@/lib/features/auth/authSlice";
 
 
 export default function Navbar() {
   const [openSidebar, setOpenSidebar] = useState(false)
-  const {isAuthenticated, user} = useAppSelector(state => state.auth)
+  const {user, access} = useAppSelector(state => state.auth)
   // const {data: user, isLoading} = useRetrieveUserQuery()
   const pathname = usePathname()
 
@@ -39,7 +40,7 @@ export default function Navbar() {
           </div>
 
           {/*Dropdown menu*/}
-          {isAuthenticated
+          {access
             ? <ProfileDropdownMenu/>
             : (
               <div className='space-x-2'>

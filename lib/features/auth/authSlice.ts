@@ -1,9 +1,10 @@
 import {createSlice} from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
 
 interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
-  token: string | null;
+  access: string | null;
   user: {
     id: number,
     first_name: string,
@@ -18,7 +19,7 @@ interface AuthState {
 const initialState = {
   isAuthenticated: false,
   isLoading: false,
-  token: null,
+  access: null,
   user: null,
 } as AuthState;
 
@@ -29,15 +30,17 @@ export const authSlice = createSlice({
     setAuth: state => {
       state.isAuthenticated = true;
     },
+    setCredentials: (state, action) => {
+      const access = Cookies.get('access') || null
+      state.access = access;
+    },
     setUser: (state, action) => {
       state.user = action.payload
     },
     logout: state => {
       state.isAuthenticated = false;
       state.user = null;
-    },
-    setLoading: state => {
-      state.isLoading = true;
+      state.access = null;
     },
     finishInitialLoad: state => {
       state.isLoading = false;
@@ -45,5 +48,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const {setAuth, setUser, logout, finishInitialLoad} = authSlice.actions;
+export const {setCredentials, setUser, logout, finishInitialLoad} = authSlice.actions;
 export default authSlice.reducer;
