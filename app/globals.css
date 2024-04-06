@@ -1,74 +1,76 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .navbar-link {
-    @apply relative outline-0 hover:after:w-2/3 hover:after:h-[2px] hover:after:bg-blue-500 hover:after:absolute hover:after:top-[100%] hover:after:mt-1 hover:after:left-0 hover:after:left-[50%] hover:after:-translate-x-[50%];
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+
+    --radius: 0.5rem;
   }
 
-  .navbar-link.active {
-    @apply after:w-2/3 after:h-[2px] after:bg-blue-500 after:absolute after:top-[100%] after:mt-1 after:left-0 after:left-[50%] after:-translate-x-[50%];
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
   }
+}
 
-  .modal-background {
-    @apply transition-opacity fixed top-0 right-0 bottom-0 left-0 flex items-center justify-center bg-[rgba(0,0,0,.7)] p-10 z-[9999];
+@layer base {
+  * {
+    @apply border-border;
   }
-
-  .modal-box {
-    @apply transition-transform bg-white w-full rounded-md;
+  body {
+    @apply bg-background text-foreground;
   }
-
-  .modal-box-header {
-    @apply px-7 py-5 flex items-center justify-between border-b border-gray-300;
-  }
-}
-
-* {
-  font-family: 'Poppins', sans-serif;
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-#fb-login > span {
-  width: 52px !important;
-  height: 52px !important;
-}
-
-#my-signin2 > div {
-  width: 100%;
-  border: 1px solid #eee;
-}
-
-.abcRioButtonBlue {
-  border-radius: 50% !important;
-  background: rgb(243 244 246) !important;
-  height: 52px !important;
-  width: auto !important;
-}
-
-.abcRioButtonIcon {
-  background: rgb(243 244 246) !important;
-}
-
-.abcRioButtonContents {
-  width: 0;
-  display: none;
-}
-
-.Toastify__toast-container {
-  z-index: 99999;
-}
-
-ul {
-  list-style: disc;
 }
