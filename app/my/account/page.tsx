@@ -1,7 +1,16 @@
-import { Separator } from "@/components/ui/separator"
-import { ProfileForm } from "@/components/forms/profile-form"
+"use client";
+import {Separator} from "@/components/ui/separator"
+import {AccountForm} from "@/components/forms/account-form";
+import {useRetrieveMeCandidateQuery} from "@/lib/features/accounts/accountsApiSlice";
+import Spinner from "@/components/general/Spinner";
 
 export default function Page() {
+  const {data: candidate, isLoading, isFetching} = useRetrieveMeCandidateQuery()
+
+  if (isLoading || isFetching) {
+    return <Spinner size={150}/>
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -11,8 +20,8 @@ export default function Page() {
           Only those to whom you open contacts will see your personal data.
         </p>
       </div>
-      <Separator />
-      <ProfileForm />
+      <Separator/>
+      <AccountForm candidate={candidate}/>
     </div>
   )
 }

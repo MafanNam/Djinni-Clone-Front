@@ -5,6 +5,7 @@ import {SidebarNav} from "@/components/forms/components/sidebar-nav"
 import ProtectRouter from "@/components/utils/ProtectRouter";
 import {useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
 import Spinner from "@/components/general/Spinner";
+import FullScreenSpinner from "@/components/general/FullScreenSpinner";
 
 
 interface SettingsLayoutProps {
@@ -12,10 +13,9 @@ interface SettingsLayoutProps {
 }
 
 export default function SettingsLayout({children}: SettingsLayoutProps) {
-  const {data: user, isLoading, isFetching, isError} = useRetrieveUserQuery();
+  const {data: user, isLoading, isFetching} = useRetrieveUserQuery();
 
-  if (isLoading || isFetching) return <Spinner size={100}/>;
-  if (isError) return <h1>Error...</h1>;
+  if (isLoading || isFetching) return <FullScreenSpinner/>;
 
   let sidebarNavItems: { href: string; title: string; }[] = [];
   if (user?.type_profile === "Candidate") {

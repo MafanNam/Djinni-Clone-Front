@@ -1,8 +1,8 @@
+"use client";
 import CompanyCard from "@/components/home/company/CompanyCard";
 import Link from "next/link";
 import Spinner from "@/components/general/Spinner";
 import {useRetrieveCompaniesQuery} from "@/lib/features/other/otherApiSlice";
-import {Button} from "@/components/ui/button";
 
 
 export default function CompanyContainer() {

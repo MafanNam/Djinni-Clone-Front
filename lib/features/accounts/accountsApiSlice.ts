@@ -2,7 +2,7 @@ import {apiSlice} from "@/lib/services/apiSlice";
 import {BaseApi} from "@/utils/Interface";
 
 
-interface Candidate extends BaseApi {
+export interface Candidate extends BaseApi {
   results: {
     first_name: string;
     last_name: string;
@@ -22,7 +22,7 @@ interface Candidate extends BaseApi {
 }
 
 
-interface Recruiter extends BaseApi {
+export interface Recruiter extends BaseApi {
   results: {
     first_name: string;
     last_name: string;
@@ -60,16 +60,11 @@ const accountsApiSlice = apiSlice.injectEndpoints({
       query: () => '/accounts/candidates/me/',
       keepUnusedDataFor: 5,
     }),
-    updateMeCandidate: builder.query<Candidate, void>({
-      query: () => ({
+    updateMeCandidate: builder.mutation<Candidate, void>({
+      query: (data) => ({
         url: '/accounts/candidates/me/',
         method: "PATCH",
-      }),
-    }),
-    deleteMeCandidate: builder.query<Candidate, void>({
-      query: () => ({
-        url: '/accounts/candidates/me/',
-        method: "DELETE",
+        body: data,
       }),
     }),
     listRecruiters: builder.query<Recruiters, void>({
@@ -82,16 +77,11 @@ const accountsApiSlice = apiSlice.injectEndpoints({
       query: () => '/accounts/recruiters/me/',
       keepUnusedDataFor: 5,
     }),
-    updateMeRecruiter: builder.query<Recruiter, void>({
-      query: () => ({
+    updateMeRecruiter: builder.mutation<Recruiter, void>({
+      query: (data) => ({
         url: '/accounts/recruiters/me/',
         method: "PATCH",
-      }),
-    }),
-    deleteMeRecruiter: builder.query<Recruiter, void>({
-      query: () => ({
-        url: '/accounts/recruiters/me/',
-        method: "DELETE",
+        body: data,
       }),
     }),
   })
@@ -102,12 +92,10 @@ export const {
   useListCandidatesQuery,
   useRetrieveCandidateQuery,
   useRetrieveMeCandidateQuery,
-  useUpdateMeCandidateQuery,
-  useDeleteMeCandidateQuery,
+  useUpdateMeCandidateMutation,
 
   useListRecruitersQuery,
   useRetrieveRecruiterQuery,
   useRetrieveMeRecruiterQuery,
-  useUpdateMeRecruiterQuery,
-  useDeleteMeRecruiterQuery,
+  useUpdateMeRecruiterMutation,
 } = accountsApiSlice;

@@ -1,3 +1,4 @@
+"use client";
 import CategoryCard from "@/components/home/category/CategoryCard";
 import Spinner from "@/components/general/Spinner";
 import {useRetrieveCategoryQuery} from "@/lib/features/other/otherApiSlice";
@@ -14,7 +15,7 @@ export default function CategoryContainer() {
       {(isLoading || isFetching) && <Spinner/>}
       <div className='grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-10'>
         {
-          data?.results.slice(0, 12).map((item) => (
+          data?.results.slice(0, 8).map((item) => (
             <CategoryCard
               key={item.id}
               name={item.name}

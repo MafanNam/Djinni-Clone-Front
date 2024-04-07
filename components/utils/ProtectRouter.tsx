@@ -3,6 +3,7 @@
 import {redirect} from "next/navigation";
 import {useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
 import FullScreenSpinner from "@/components/general/FullScreenSpinner";
+import {useEffect} from "react";
 
 interface Props {
   allowedRoles: string[];
@@ -13,17 +14,20 @@ interface Props {
 export default function ProtectRouter({children, allowedRoles}: Props) {
   const {data: user, isLoading, isFetching, isError} = useRetrieveUserQuery();
 
-  if (isLoading || isFetching) {
-    return <FullScreenSpinner/>;
-  }
+  // @ts-ignore
+  useEffect(() => {
+    if (isLoading || isFetching) {
+      return <FullScreenSpinner/>
+    }
 
-  if (isError) {
-    redirect('/login')
-  }
+    if (isError) {
+      redirect('/login')
+    }
 
-  if (allowedRoles.includes(user?.type_profile as string)) {
-    return <>{children}</>
-  } else {
-    redirect('/');
-  }
+    if (!allowedRoles.includes(user?.type_profile as string)) {
+      redirect('/');
+    }
+  }, []);
+
+  return <>{children}</>
 };

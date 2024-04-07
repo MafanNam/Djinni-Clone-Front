@@ -1,7 +1,7 @@
 import type {Metadata} from "next";
 
 export const metadata: Metadata = {
-  title: 'Job Seek | Sign Up'
+  title: 'Djinni | Profile'
 }
 
 export default function ProfileLayout({
