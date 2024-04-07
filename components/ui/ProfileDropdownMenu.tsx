@@ -11,7 +11,7 @@ import {
   ArrowRightLeft,
   LogOut, MessageCircleMore,
   BriefcaseBusiness,
-  User, Ban, Mail, ReceiptText
+  User, Ban, Mail, ReceiptText, Building2, Handshake, Settings, AreaChart
 } from "lucide-react";
 import {useLogoutMutation, useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
 import {useDispatch} from "react-redux";
@@ -25,11 +25,11 @@ export default function ProfileDropdownMenu() {
   const [logout,] = useLogoutMutation()
   const dispatch = useDispatch();
   const router = useRouter();
-  const {data: user} = useRetrieveUserQuery()
+  const {data: user, isLoading, isFetching, isError} = useRetrieveUserQuery()
 
 
-  if (!user) return <Spinner size={20}/>
-  // if (isError) return <MessageCircleMore/>
+  if (isLoading || isFetching || !user) return <Spinner size={20}/>
+  if (isError) return <h1>Error...</h1>
 
   const handleLogout = () => {
     logout(undefined)
@@ -45,6 +45,67 @@ export default function ProfileDropdownMenu() {
       })
   }
 
+  let MenuItems;
+  if (user.type_profile === 'Candidate') {
+    MenuItems = (
+      <>
+        <DropdownMenuItem onClick={() => router.push('/my/profile')}>
+          <User className="mr-2 h-4 w-4"/>
+          <span>Profile</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/my/account')}>
+          <ReceiptText className="mr-2 h-4 w-4"/>
+          <span>Contacts and CV</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/my/subscriptions')}>
+          <Mail className="mr-2 h-4 w-4"/>
+          <span>Subscriptions</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/my/stoplist')}>
+          <Ban className="mr-2 h-4 w-4"/>
+          <span>Stop list</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/my/hires')}>
+          <BriefcaseBusiness className="mr-2 h-4 w-4"/>
+          <span>Hires</span>
+        </DropdownMenuItem>
+      </>
+    );
+  } else if (user.type_profile === 'Recruiter') {
+    MenuItems = (
+      <>
+        <DropdownMenuItem onClick={() => router.push('/my/profile')}>
+          <User className="mr-2 h-4 w-4"/>
+          <span>Profile</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/my/contacts')}>
+          <ReceiptText className="mr-2 h-4 w-4"/>
+          <span>Contacts</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/my/about-us')}>
+          <Building2 className="mr-2 h-4 w-4"/>
+          <span>About us</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/my/team')}>
+          <Handshake className="mr-2 h-4 w-4"/>
+          <span>Team</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/my/subscriptions')}>
+          <Mail className="mr-2 h-4 w-4"/>
+          <span>Subscriptions</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/my/settings')}>
+          <Settings className="mr-2 h-4 w-4"/>
+          <span>Settings</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/my/analytics')}>
+          <AreaChart className="mr-2 h-4 w-4"/>
+          <span>Analytics</span>
+        </DropdownMenuItem>
+      </>
+    )
+  }
+
 
   return (
     <DropdownMenu>
@@ -57,26 +118,7 @@ export default function ProfileDropdownMenu() {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator/>
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => router.push('/my/profile')}>
-            <User className="mr-2 h-4 w-4"/>
-            <span>Profile</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push('/my/account')}>
-            <ReceiptText className="mr-2 h-4 w-4"/>
-            <span>Contacts and CV</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push('/my/subscriptions')}>
-            <Mail className="mr-2 h-4 w-4"/>
-            <span>Subscriptions</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push('/my/stoplist')}>
-            <Ban className="mr-2 h-4 w-4"/>
-            <span>Stop list</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push('/my/hires')}>
-            <BriefcaseBusiness className="mr-2 h-4 w-4"/>
-            <span>Hires</span>
-          </DropdownMenuItem>
+          {MenuItems}
         </DropdownMenuGroup>
         <DropdownMenuSeparator/>
         <DropdownMenuGroup>

@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator"
-import { ProfileForm } from "@/components/forms/profile-form"
+import WorkInProgress from "@/components/ui/work-in-progress";
 
 export default function Page() {
   return (
@@ -12,7 +12,7 @@ export default function Page() {
         </p>
       </div>
       <Separator />
-      <ProfileForm />
+      <WorkInProgress />
     </div>
   )
 }

@@ -1,43 +1,82 @@
-import {Metadata} from "next"
+"use client";
 
 import {Separator} from "@/components/ui/separator"
 import {SidebarNav} from "@/components/forms/components/sidebar-nav"
 import ProtectRouter from "@/components/utils/ProtectRouter";
+import {useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
+import Spinner from "@/components/general/Spinner";
 
-export const metadata: Metadata = {
-  title: "My account",
-}
-
-const sidebarNavItems = [
-  {
-    title: "Profile",
-    href: "/my/profile",
-  },
-  {
-    title: "Contacts and CV",
-    href: "/my/account",
-  },
-  {
-    title: "Subscriptions",
-    href: "/my/subscriptions",
-  },
-  {
-    title: "Stop list",
-    href: "/my/stoplist",
-  },
-  {
-    title: "Hires",
-    href: "/my/hires",
-  },
-]
 
 interface SettingsLayoutProps {
   children: React.ReactNode
 }
 
 export default function SettingsLayout({children}: SettingsLayoutProps) {
+  const {data: user, isLoading, isFetching, isError} = useRetrieveUserQuery();
+
+  if (isLoading || isFetching) return <Spinner size={100}/>;
+  if (isError) return <h1>Error...</h1>;
+
+  let sidebarNavItems: { href: string; title: string; }[] = [];
+  if (user?.type_profile === "Candidate") {
+    sidebarNavItems = [
+      {
+        title: "Profile",
+        href: "/my/profile",
+      },
+      {
+        title: "Contacts and CV",
+        href: "/my/account",
+      },
+      {
+        title: "Subscriptions",
+        href: "/my/subscriptions",
+      },
+      {
+        title: "Stop list",
+        href: "/my/stoplist",
+      },
+      {
+        title: "Hires",
+        href: "/my/hires",
+      },
+    ]
+  } else if (user?.type_profile === "Recruiter") {
+    sidebarNavItems = [
+      {
+        title: "Profile",
+        href: "/my/profile",
+      },
+      {
+        title: "Contacts",
+        href: "/my/contacts",
+      },
+      {
+        title: "About us",
+        href: "/my/about-us",
+      },
+      {
+        title: 'Team',
+        href: '/my/team'
+      },
+      {
+        title: "Subscriptions",
+        href: "/my/subscriptions",
+      },
+      {
+        title: "Settings",
+        href: "/my/settings",
+      },
+      {
+        title: "Analytics",
+        href: "/my/analytics",
+      },
+    ]
+  }
+
+
   return (
-    <ProtectRouter>
+    <ProtectRouter allowedRoles={['Candidate', 'Recruiter']}>
       <div className=" space-y-6 p-10 pb-16 md:block">
         <div className="space-y-0.5">
           <h2 className="text-2xl font-bold tracking-tight">My account</h2>

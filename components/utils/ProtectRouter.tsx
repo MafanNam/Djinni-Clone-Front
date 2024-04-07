@@ -1,34 +1,27 @@
 "use client";
 
 import {redirect} from "next/navigation";
-import Spinner from "@/components/general/Spinner";
-import {useAppSelector} from "@/lib/hooks";
+import {useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
+import FullScreenSpinner from "@/components/general/FullScreenSpinner";
 
 interface Props {
-  // allowedRoles: string[];
+  allowedRoles: string[];
   children: React.ReactNode;
 }
 
 
-export default function ProtectRouter({children}: Props) {
-  const allowedRoles = ['Candidate']
+export default function ProtectRouter({children, allowedRoles}: Props) {
+  const {data: user, isLoading, isFetching, isError} = useRetrieveUserQuery();
 
-  // const {isLoading, isFetching} = useRetrieveUserQuery();
-
-
-  const {user, isAuthenticated, isLoading} = useAppSelector(state => state.auth);
-
-  console.log({isLoading});
-
-  if (isLoading) {
-    return <Spinner size={300}/>;
+  if (isLoading || isFetching) {
+    return <FullScreenSpinner/>;
   }
 
-  if (!isAuthenticated) {
+  if (isError) {
     redirect('/login')
   }
 
-  if (user && allowedRoles.includes(user?.type_profile as string)) {
+  if (allowedRoles.includes(user?.type_profile as string)) {
     return <>{children}</>
   } else {
     redirect('/');
