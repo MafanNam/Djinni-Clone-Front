@@ -1,4 +1,5 @@
 import {apiPublicSlice} from "@/lib/services/apiPublicSlice";
+import {Tag} from "@/components/ui/tag-input";
 
 
 interface Category {
@@ -22,20 +23,28 @@ interface Companies {
   }]
 }
 
+export interface Skills {
+  results: Tag[];
+}
+
 
 const otherApiSlice = apiPublicSlice.injectEndpoints({
   endpoints: builder => ({
-    retrieveCategory: builder.query<Category, void>({
+    listCategory: builder.query<Category, void>({
       query: () => '/categories/',
     }),
-    retrieveCompanies: builder.query<Companies, void>({
+    listCompanies: builder.query<Companies, void>({
       query: () => '/companies/',
+    }),
+    listSkills: builder.query<Skills, void>({
+      query: () => '/skills/',
     }),
   })
 })
 
 
 export const {
-  useRetrieveCategoryQuery,
-  useRetrieveCompaniesQuery,
+  useListCategoryQuery,
+  useListCompaniesQuery,
+  useListSkillsQuery,
 } = otherApiSlice

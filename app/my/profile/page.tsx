@@ -1,7 +1,12 @@
-import { Separator } from "@/components/ui/separator"
-import { ProfileForm } from "@/components/forms/profile-form"
+"use client";
+import {Separator} from "@/components/ui/separator"
+import {ProfileForm} from "@/components/forms/profile-form"
+import {useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
+import Spinner from "@/components/general/Spinner";
 
 export default function Page() {
+  const {data: user, isLoading, isFetching} = useRetrieveUserQuery()
+
   return (
     <div className="space-y-6">
       <div>
@@ -11,7 +16,9 @@ export default function Page() {
         </p>
       </div>
       <Separator/>
-      <ProfileForm/>
+      {isLoading || isFetching ? <Spinner size={200}/> :
+        <ProfileForm user={user}/>
+      }
     </div>
   )
 }

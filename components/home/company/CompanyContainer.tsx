@@ -2,11 +2,11 @@
 import CompanyCard from "@/components/home/company/CompanyCard";
 import Link from "next/link";
 import Spinner from "@/components/general/Spinner";
-import {useRetrieveCompaniesQuery} from "@/lib/features/other/otherApiSlice";
+import {useListCompaniesQuery} from "@/lib/features/other/otherApiSlice";
 
 
 export default function CompanyContainer() {
-  const {data, isLoading, isFetching} = useRetrieveCompaniesQuery()
+  const {data, isLoading, isFetching} = useListCompaniesQuery()
 
 
   return (

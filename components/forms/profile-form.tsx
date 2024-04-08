@@ -16,7 +16,7 @@ import {
 import {Input} from "@/components/ui/input"
 import {
   useDeleteUserMutation,
-  useLogoutMutation,
+  useLogoutMutation, User,
   useRetrieveUserQuery,
   useUpdateUserMutation
 } from "@/lib/features/auth/authApiSlice";
@@ -28,6 +28,7 @@ import {Separator} from "@/components/ui/separator";
 import {FormEvent, useState} from "react";
 import {useAppDispatch} from "@/lib/hooks";
 import {logout as setLogout} from "@/lib/features/auth/authSlice";
+import Loader from "@/components/general/Loader";
 
 const profileFormSchema = z.object({
   first_name: z
@@ -53,16 +54,15 @@ const profileFormSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
-export function ProfileForm() {
-  const {data: user, isLoading, isFetching} = useRetrieveUserQuery()
+interface UserFormProps {
+  user?: User;
+}
+
+export function ProfileForm({user}: UserFormProps) {
   const [updateUser, {isLoading: isLoadingUpdate}] = useUpdateUserMutation();
   const [deleteUser, {isLoading: isLoadingDelete}] = useDeleteUserMutation();
   const [logout,] = useLogoutMutation();
   const [password, setPassword] = useState('')
-
-  if (isLoading || isFetching) {
-    return <Spinner size={200}/>
-  }
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -153,9 +153,9 @@ export function ProfileForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" disabled={isLoadingUpdate}>
+          <Button type="submit" className='w-full' disabled={isLoadingUpdate}>
             {isLoadingUpdate
-              ? <Spinner size={20}/>
+              ? <Loader/>
               : 'Update profile'
             }
           </Button>
@@ -164,14 +164,24 @@ export function ProfileForm() {
 
       <Separator/>
 
+      <div>
+        <h3 className="text-lg font-medium">Delete profile</h3>
+        <p className="text-sm text-muted-foreground">
+          Enter your current password to delete your profile.
+        </p>
+        <p className="text-sm text-muted-foreground text-red-500">
+          WARNING: after deletion, all data will be invalidated. It is impossible to restore.
+        </p>
+      </div>
+
       <form onSubmit={handleDelete}>
         <Label>Password</Label>
         <Input className='mt-2' value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Password'/>
 
-        <Button type="submit" variant="destructive" className='mt-8'
+        <Button type="submit" variant="destructive" className='mt-8 w-full'
                 disabled={isLoadingDelete}>
           {isLoadingDelete
-            ? <Spinner size={20}/>
+            ? <Loader/>
             : 'Delete profile'
           }
         </Button>

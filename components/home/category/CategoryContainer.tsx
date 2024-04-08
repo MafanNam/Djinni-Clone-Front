@@ -1,11 +1,11 @@
 "use client";
 import CategoryCard from "@/components/home/category/CategoryCard";
 import Spinner from "@/components/general/Spinner";
-import {useRetrieveCategoryQuery} from "@/lib/features/other/otherApiSlice";
+import {useListCategoryQuery} from "@/lib/features/other/otherApiSlice";
 
 
 export default function CategoryContainer() {
-  const {data, isLoading, isFetching} = useRetrieveCategoryQuery();
+  const {data, isLoading, isFetching} = useListCategoryQuery();
 
 
   return (

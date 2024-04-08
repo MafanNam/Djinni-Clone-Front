@@ -1,7 +1,7 @@
 import {apiSlice} from "@/lib/services/apiSlice";
 import {setUser} from "@/lib/features/auth/authSlice";
 
-interface User {
+export interface User {
   first_name: string;
   last_name: string;
   type_profile: string,
