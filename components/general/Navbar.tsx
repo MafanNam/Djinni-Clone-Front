@@ -8,12 +8,12 @@ import {ModeToggle} from "@/components/general/ModeToggle";
 
 import ProfileDropdownMenu from "@/components/ui/ProfileDropdownMenu";
 import {useAppSelector} from "@/lib/hooks";
+import {Skeleton} from "@/components/ui/skeleton";
 
 
 export default function Navbar() {
   const [openSidebar, setOpenSidebar] = useState(false)
-  const {user, isAuthenticated} = useAppSelector(state => state.auth)
-  // const {data: user, isLoading} = useRetrieveUserQuery()
+  const {user, isAuthenticated, isLoading} = useAppSelector(state => state.auth)
   const pathname = usePathname()
 
   // if (isLoading) return <Spinner size={50}/>
@@ -33,20 +33,21 @@ export default function Navbar() {
           </div>
 
           {/*Dropdown menu*/}
-          {isAuthenticated
-            ? <ProfileDropdownMenu/>
-            : (
-              <div className='space-x-2'>
-                <Link href='/login'
-                      className={`navbar-link ${pathname === '/login' ? 'text-blue-700 dark:text-blue-500' : undefined}`}>
-                  Login
-                </Link>
-                <Link href='/register'
-                      className={`px-6 py-2 border-2 rounded-full border-[#504ED7] ${pathname === '/register' ? 'bg-[#504ED7] text-white' : 'text-[#504ED7]'}`}>
-                  Register Now
-                </Link>
-              </div>
-            )
+          {isLoading ? <Skeleton className="h-10 w-10 rounded-full"/> :
+            isAuthenticated
+              ? <ProfileDropdownMenu/>
+              : (
+                <div className='space-x-2'>
+                  <Link href='/login'
+                        className={`navbar-link ${pathname === '/login' ? 'text-blue-700 dark:text-blue-500' : undefined}`}>
+                    Login
+                  </Link>
+                  <Link href='/register'
+                        className={`px-6 py-2 border-2 rounded-full border-[#504ED7] ${pathname === '/register' ? 'bg-[#504ED7] text-white' : 'text-[#504ED7]'}`}>
+                    Register Now
+                  </Link>
+                </div>
+              )
           }
 
           <button type="button"

@@ -54,7 +54,7 @@ export default function ImageForm({candidate}: { candidate?: Candidate | undefin
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} encType='multipart/form-data' className="space-y-8">
-        <Avatar className="w-28 h-28 static">
+        <Avatar className="w-36 h-36 static ml-10">
           <AvatarImage src={tempImage}/>
           <AvatarFallback>Djinni</AvatarFallback>
         </Avatar>
@@ -64,13 +64,14 @@ export default function ImageForm({candidate}: { candidate?: Candidate | undefin
           name="image"
           render={({field}) => (
             <FormItem>
-              <FormLabel>Image</FormLabel>
+              {/*<FormLabel>Image</FormLabel>*/}
               <FormControl>
                 <Input
                   {...field}
                   type='file'
                   accept='image/*'
                   value={field.value?.image}
+                  className='w-56'
                   onChange={(e) => {
                     const {files, displayUrl} = getImageData(e)
                     // @ts-ignore
@@ -84,7 +85,7 @@ export default function ImageForm({candidate}: { candidate?: Candidate | undefin
             </FormItem>
           )}
         />
-        <Button type="submit" className='w-full' disabled={isLoading}>
+        <Button type="submit" className='w-56' disabled={isLoading}>
           {isLoading
             ? <Loader/>
             : 'Update candidate image'

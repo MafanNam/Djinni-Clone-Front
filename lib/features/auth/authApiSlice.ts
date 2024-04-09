@@ -8,6 +8,7 @@ export interface User {
   email: string;
   image: string;
   is_online: boolean;
+  is_spam_email: boolean;
 }
 
 interface SocialAuthArgs {

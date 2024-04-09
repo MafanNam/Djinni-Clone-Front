@@ -14,6 +14,8 @@ export default function Page() {
     return <Spinner size={150}/>
   }
 
+  window.scrollTo(0, 0);
+
   return (
     <div className="space-y-6">
       <div>
@@ -24,7 +26,10 @@ export default function Page() {
         </p>
       </div>
       <Separator/>
-      <ImageForm candidate={candidate}/>
+      <div className='flex items-center justify-center'>
+        <ImageForm candidate={candidate}/>
+      </div>
+      <Separator/>
       <ProfileForm candidate={candidate} skills={skills} category={category}/>
     </div>
   )

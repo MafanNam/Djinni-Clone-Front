@@ -118,6 +118,19 @@ const accountsApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['Recruiter'],
     }),
 
+    postIsSpamEmailEveryWeek: builder.mutation({
+      query: () => ({
+        url: 'auth/users/me/spam-email-every-week/',
+        method: 'POST',
+      })
+    }),
+    deleteIsSpamEmailEveryWeek: builder.mutation({
+      query: () => ({
+        url: 'auth/users/me/spam-email-every-week/',
+        method: 'DELETE',
+      })
+    }),
+
 
   })
 })
@@ -136,4 +149,7 @@ export const {
   useRetrieveRecruiterQuery,
   useRetrieveMeRecruiterQuery,
   useUpdateMeRecruiterMutation,
+
+  usePostIsSpamEmailEveryWeekMutation,
+  useDeleteIsSpamEmailEveryWeekMutation,
 } = accountsApiSlice;

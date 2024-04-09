@@ -19,6 +19,7 @@ import {useRouter} from "next/navigation";
 import {logout as setLogout} from "@/lib/features/auth/authSlice";
 import Spinner from "@/components/general/Spinner";
 import Link from "next/link";
+import {Skeleton} from "@/components/ui/skeleton";
 
 
 export default function ProfileDropdownMenu() {
@@ -28,7 +29,7 @@ export default function ProfileDropdownMenu() {
   const {data: user, isLoading, isFetching, isError} = useRetrieveUserQuery()
 
 
-  if (isLoading || isFetching || !user) return <Spinner size={20}/>
+  if (isLoading || isFetching || !user) return <Skeleton className="h-12 w-12 rounded-full" />
   if (isError) return <h1>Error...</h1>
 
   const handleLogout = () => {
