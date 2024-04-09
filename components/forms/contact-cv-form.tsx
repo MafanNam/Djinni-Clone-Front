@@ -87,9 +87,9 @@ export function ContactCvForm({contactCv}: ContactFormProps) {
     formData.append('linkedin_url', String(data.linkedin_url))
     formData.append('git_hub_url', String(data.git_hub_url))
     formData.append('portfolio_url', String(data.portfolio_url))
-    console.log(formData.get('telegram_url'))
-    if (data?.cv_file) {
-      formData.append('cv_file', data.cv_file[0], data.cv_file[0].name)
+    console.log(typeof data?.cv_file)
+    if (typeof data?.cv_file === "object") {
+      formData.append('cv_file', data.cv_file, data.cv_file.name)
     }
 
 
@@ -172,7 +172,7 @@ export function ContactCvForm({contactCv}: ContactFormProps) {
             <FormItem>
               <FormLabel>Telegram</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder='url' {...field} />
               </FormControl>
               <FormMessage/>
             </FormItem>
@@ -185,7 +185,7 @@ export function ContactCvForm({contactCv}: ContactFormProps) {
             <FormItem>
               <FormLabel>Linkedin</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder='url' {...field} />
               </FormControl>
               {field.value &&
                 <FormDescription>
@@ -206,7 +206,7 @@ export function ContactCvForm({contactCv}: ContactFormProps) {
             <FormItem>
               <FormLabel>GitHub</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder='url' {...field} />
               </FormControl>
               <FormMessage/>
             </FormItem>
@@ -219,21 +219,24 @@ export function ContactCvForm({contactCv}: ContactFormProps) {
             <FormItem>
               <FormLabel>Portfolio</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder='url' {...field} />
               </FormControl>
               <FormMessage/>
             </FormItem>
           )}
         />
 
+        <Separator/>
+        <br/>
+
         {contactCv?.cv_file ?
           <Link href={contactCv.cv_file} rel="noopener noreferrer" target="_blank">
-            <Alert>
+            <Alert className='bg-blue-800 bg-opacity-50'>
               <File className="h-6 w-6"/>
               <AlertTitle>
                 {contactCv.cv_file.substring(contactCv.cv_file.lastIndexOf('/') + 1)}
               </AlertTitle>
-              <AlertDescription>Last modify: {dayjs(contactCv.updated_at).format('D MMMM YYYY')}</AlertDescription>
+              <AlertDescription>Last modify: {dayjs(contactCv.updated_at).format('D MMMM YYYY HH:MM')}</AlertDescription>
             </Alert>
           </Link>
           : <Alert>
@@ -256,7 +259,7 @@ export function ContactCvForm({contactCv}: ContactFormProps) {
                   accept='.pdf'
                   value={field.value?.cv_file}
                   onChange={(e) => {
-                    field.onChange(e.target.files)
+                    field.onChange(e.target.files?.[0])
                   }}
                 />
               </FormControl>
