@@ -2,7 +2,7 @@ import {apiPublicSlice} from "@/lib/services/apiPublicSlice";
 import {Tag} from "@/components/ui/tag-input";
 
 
-interface Category {
+export interface Category {
   results: [{
     id: number;
     name: string;
@@ -10,7 +10,7 @@ interface Category {
 }
 
 
-interface Companies {
+export interface Companies {
   results: [{
     id: number;
     name: string;

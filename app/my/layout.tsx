@@ -26,7 +26,7 @@ export default function SettingsLayout({children}: SettingsLayoutProps) {
       },
       {
         title: "Contacts and CV",
-        href: "/my/account",
+        href: "/my/contacts-cv",
       },
       {
         title: "Subscriptions",
@@ -40,13 +40,13 @@ export default function SettingsLayout({children}: SettingsLayoutProps) {
         title: "Hires",
         href: "/my/hires",
       },
+      {
+        title: "Account",
+        href: "/my/account",
+      },
     ]
   } else if (user?.type_profile === "Recruiter") {
     sidebarNavItems = [
-      {
-        title: "Profile",
-        href: "/my/profile",
-      },
       {
         title: "Contacts",
         href: "/my/contacts",
@@ -70,6 +70,10 @@ export default function SettingsLayout({children}: SettingsLayoutProps) {
       {
         title: "Analytics",
         href: "/my/analytics",
+      },
+      {
+        title: "Account",
+        href: "/my/account",
       },
     ]
   }

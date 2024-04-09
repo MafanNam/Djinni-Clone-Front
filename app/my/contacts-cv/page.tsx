@@ -1,4 +1,4 @@
-import { Separator } from "@/components/ui/separator"
+import {Separator} from "@/components/ui/separator"
 import WorkInProgress from "@/components/ui/work-in-progress";
 
 export default function Page() {
@@ -11,8 +11,8 @@ export default function Page() {
           Only those to whom you open contacts will see your personal data.
         </p>
       </div>
-      <Separator />
-      <WorkInProgress />
+      <Separator/>
+      <WorkInProgress/>
     </div>
   )
 }

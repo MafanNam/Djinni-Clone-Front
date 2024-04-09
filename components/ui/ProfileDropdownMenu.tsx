@@ -11,7 +11,7 @@ import {
   ArrowRightLeft,
   LogOut, MessageCircleMore,
   BriefcaseBusiness,
-  User, Ban, Mail, ReceiptText, Building2, Handshake, Settings, AreaChart
+  User, Ban, Mail, ReceiptText, Building2, Handshake, Settings, AreaChart, CircleUserRound
 } from "lucide-react";
 import {useLogoutMutation, useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
 import {useDispatch} from "react-redux";
@@ -50,10 +50,10 @@ export default function ProfileDropdownMenu() {
     MenuItems = (
       <>
         <DropdownMenuItem onClick={() => router.push('/my/profile')}>
-          <User className="mr-2 h-4 w-4"/>
+          <CircleUserRound className="mr-2 h-4 w-4"/>
           <span>Profile</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push('/my/account')}>
+        <DropdownMenuItem onClick={() => router.push('/my/contacts-cv')}>
           <ReceiptText className="mr-2 h-4 w-4"/>
           <span>Contacts and CV</span>
         </DropdownMenuItem>
@@ -69,15 +69,15 @@ export default function ProfileDropdownMenu() {
           <BriefcaseBusiness className="mr-2 h-4 w-4"/>
           <span>Hires</span>
         </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/my/account')}>
+          <User className="mr-2 h-4 w-4"/>
+          <span>Account</span>
+        </DropdownMenuItem>
       </>
     );
   } else if (user.type_profile === 'Recruiter') {
     MenuItems = (
       <>
-        <DropdownMenuItem onClick={() => router.push('/my/profile')}>
-          <User className="mr-2 h-4 w-4"/>
-          <span>Profile</span>
-        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => router.push('/my/contacts')}>
           <ReceiptText className="mr-2 h-4 w-4"/>
           <span>Contacts</span>
@@ -101,6 +101,10 @@ export default function ProfileDropdownMenu() {
         <DropdownMenuItem onClick={() => router.push('/my/analytics')}>
           <AreaChart className="mr-2 h-4 w-4"/>
           <span>Analytics</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/my/account')}>
+          <User className="mr-2 h-4 w-4"/>
+          <span>Account</span>
         </DropdownMenuItem>
       </>
     )

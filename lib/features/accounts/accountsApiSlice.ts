@@ -60,12 +60,16 @@ const accountsApiSlice = apiSlice.injectEndpoints({
     updateMeCandidate: builder.mutation<Candidate, void>({
       query: (data) => ({
         url: '/accounts/candidates/me/',
-        method: "PATCH",
+        method: "PUT",
         body: data,
-        // headers: {
-        //   'Accept': 'application/json',
-        //   'Content-Type': 'multipart/form-data; boundary=--63c5979328c44e2c869349443a94200e',
-        // }
+      }),
+      invalidatesTags: ['Candidate'],
+    }),
+    updateMeCandidateImage: builder.mutation<Candidate, void>({
+      query: (data) => ({
+        url: '/accounts/candidates/me/image/',
+        method: "PUT",
+        body: data,
       }),
       invalidatesTags: ['Candidate'],
     }),
@@ -97,6 +101,7 @@ export const {
   useRetrieveCandidateQuery,
   useRetrieveMeCandidateQuery,
   useUpdateMeCandidateMutation,
+  useUpdateMeCandidateImageMutation,
 
   useListRecruitersQuery,
   useRetrieveRecruiterQuery,

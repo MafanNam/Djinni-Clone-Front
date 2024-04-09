@@ -2,10 +2,10 @@ import type {Metadata} from "next";
 import ProtectRouter from "@/components/utils/ProtectRouter";
 
 export const metadata: Metadata = {
-  title: 'Djinni | Profile'
+  title: 'Djinni | Contacts CV',
 }
 
-export default function ProfileLayout({
+export default function ContactsCvLayout({
                                          children,
                                        }: Readonly<{
   children: React.ReactNode;
