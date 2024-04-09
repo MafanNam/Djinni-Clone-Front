@@ -1,7 +1,16 @@
+"use client";
 import {Separator} from "@/components/ui/separator"
-import WorkInProgress from "@/components/ui/work-in-progress";
+import {ContactCvForm} from "@/components/forms/contact-cv-form";
+import {useRetrieveMeCandidateContactCvQuery} from "@/lib/features/accounts/accountsApiSlice";
+import Spinner from "@/components/general/Spinner";
 
 export default function Page() {
+  const {data: contactCv, isLoading, isFetching} = useRetrieveMeCandidateContactCvQuery();
+
+  if (isLoading || isFetching) {
+    return <Spinner size={150} />
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -12,7 +21,7 @@ export default function Page() {
         </p>
       </div>
       <Separator/>
-      <WorkInProgress/>
+      <ContactCvForm contactCv={contactCv}/>
     </div>
   )
 }

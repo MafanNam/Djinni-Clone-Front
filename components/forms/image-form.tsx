@@ -69,6 +69,7 @@ export default function ImageForm({candidate}: { candidate?: Candidate | undefin
                 <Input
                   {...field}
                   type='file'
+                  accept='image/*'
                   value={field.value?.image}
                   onChange={(e) => {
                     const {files, displayUrl} = getImageData(e)

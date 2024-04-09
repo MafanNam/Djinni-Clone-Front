@@ -81,10 +81,10 @@ export function AccountForm({user}: UserFormProps) {
     updateUser({first_name, last_name})
       .unwrap()
       .then(() => {
-        toast.success('Updated Profile')
+        toast.success('Updated Account')
       })
       .catch(() => {
-        toast.error('Failed to update Profile')
+        toast.error('Failed to update Account')
       });
   }
 

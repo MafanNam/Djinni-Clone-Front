@@ -15,8 +15,20 @@ export interface Candidate extends BaseApi {
   city: string;
   eng_level: string;
   employ_options: [];
-  image: string;
+  image: any;
   find_job: string;
+}
+
+export interface ContactCv extends BaseApi {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  telegram_url: string;
+  linkedin_url: string;
+  git_hub_url: string;
+  portfolio_url: string;
+  cv_file: any;
 }
 
 
@@ -28,10 +40,10 @@ export interface Recruiter extends BaseApi {
   company: {
     id: number;
     name: string;
-    image: string;
+    image: any;
     country: string;
   };
-  image: string;
+  image: any;
   trust_hr: boolean;
 }
 
@@ -73,6 +85,19 @@ const accountsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Candidate'],
     }),
+    retrieveMeCandidateContactCv: builder.query<ContactCv, void>({
+      query: () => '/accounts/candidates/me/cv/',
+      keepUnusedDataFor: 5,
+      providesTags: ['Candidate'],
+    }),
+    updateMeCandidateContactCv: builder.mutation<ContactCv, void>({
+      query: (data) => ({
+        url: '/accounts/candidates/me/cv/',
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ['Candidate'],
+    }),
     listRecruiters: builder.query<Recruiters, void>({
       query: () => '/accounts/recruiters/',
     }),
@@ -92,6 +117,8 @@ const accountsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Recruiter'],
     }),
+
+
   })
 })
 
@@ -102,6 +129,8 @@ export const {
   useRetrieveMeCandidateQuery,
   useUpdateMeCandidateMutation,
   useUpdateMeCandidateImageMutation,
+  useRetrieveMeCandidateContactCvQuery,
+  useUpdateMeCandidateContactCvMutation,
 
   useListRecruitersQuery,
   useRetrieveRecruiterQuery,

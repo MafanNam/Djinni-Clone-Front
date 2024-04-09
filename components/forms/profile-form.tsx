@@ -32,7 +32,7 @@ import {Textarea} from "@/components/ui/textarea";
 import {cn} from "@/lib/utils";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "@/components/ui/command";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {Check, DollarSign} from "lucide-react";
+import {Check} from "lucide-react";
 import {countries, employOptions} from "@/utils/constForm";
 import {Checkbox} from "@/components/ui/checkbox";
 import {useState} from "react";
@@ -110,10 +110,10 @@ export function ProfileForm({candidate, skills, category}: ProfileFormProps) {
     updateCandidate(data)
       .unwrap()
       .then(() => {
-        toast.success('Updated contact')
+        toast.success('Updated Profile')
       })
       .catch(() => {
-        toast.error('Failed to update contact')
+        toast.error('Failed to update Profile')
       });
   }
 
