@@ -1,7 +1,14 @@
-import { Separator } from "@/components/ui/separator"
-import WorkInProgress from "@/components/ui/work-in-progress";
+"use client";
+import {Separator} from "@/components/ui/separator"
+import {ContactForm} from "@/components/forms/contact-form";
+import {useRetrieveMeRecruiterQuery} from "@/lib/features/accounts/accountsApiSlice";
+import Spinner from "@/components/general/Spinner";
+import {useListCompaniesQuery} from "@/lib/features/other/otherApiSlice";
 
 export default function Page() {
+  const {data: recruiter, isLoading, isFetching} = useRetrieveMeRecruiterQuery();
+  const {data: companies, isLoading: isLoadingCompanies, isFetching: isFetchingCompanies} = useListCompaniesQuery();
+
   return (
     <div className="space-y-6">
       <div>
@@ -11,8 +18,10 @@ export default function Page() {
           Only those to whom you open contacts will see your personal data.
         </p>
       </div>
-      <Separator />
-      <WorkInProgress />
+      <Separator/>
+      {(isLoading || isFetching || isLoadingCompanies || isFetchingCompanies) ? <Spinner size={200}/> :
+        <ContactForm recruiter={recruiter} companies={companies}/>
+      }
     </div>
   )
 }

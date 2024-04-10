@@ -15,7 +15,6 @@ export default function Jobs() {
   ])
 
 
-
   const handleFilter = (e?: FormSubmit) => {
     e?.preventDefault()
   }
@@ -24,13 +23,19 @@ export default function Jobs() {
   return (
     <>
       <div className='md:py-10 py-7 md:px-16 px-5'>
-        <div className='w-full m-auto bg-white shadow-xl border border-gray-200 md:rounded-full rounded-md md:h-16 h-auto md:py-0 py-6 px-4'>
+        <div
+          className='w-full m-auto bg-white dark:bg-gray-900 shadow-xl border border-gray-200 dark:border-gray-600 md:rounded-full rounded-md md:h-16 h-auto md:py-0 py-6 px-4'>
           <form onSubmit={handleFilter} className='flex md:flex-row flex-col justify-between items-center h-full gap-3'>
-            <div className='flex w-full items-center gap-3 md:mb-0 mb-5 md:border-none border-b border-gray-200 md:pb-0 pb-3 flex-1'>
-              <AiOutlineSearch className='text-xl text-gray-500' />
-              <input type='text' value={search} onChange={e => setSearch(e.target.value)} placeholder='Job title or keyword' className='outline-0 h-full px-2 w-full text-sm' />
+            <div
+              className='flex w-full items-center gap-3 md:mb-0 mb-5 md:border-none border-b border-gray-200 md:pb-0 pb-3 flex-1'>
+              <AiOutlineSearch className='text-xl text-gray-500 dark:text-purple-500'/>
+              <input type='text' value={search} onChange={e => setSearch(e.target.value)}
+                     placeholder='Job title or keyword'
+                     className='outline-0 dark:bg-gray-900 h-full px-2 w-full text-sm'/>
             </div>
-            <button className='bg-[#504ED7] hover:bg-[#2825C2] transition-[background] text-white text-sm px-6 py-2 rounded-full outline-0'>Search</button>
+            <button
+              className='bg-[#504ED7] hover:bg-[#2825C2] transition-[background] text-white text-sm px-6 py-2 rounded-full outline-0'>Search
+            </button>
           </form>
         </div>
       </div>
@@ -43,7 +48,7 @@ export default function Jobs() {
       {/*  setMinSalary={setMinSalary}*/}
       {/*  handleFilter={handleFilter}*/}
       {/*/>*/}
-      <div className='bg-gray-100 pt-10 pb-7 md:px-16 px-5'>
+      <div className='bg-gray-100 dark:bg-gray-950 pt-10 pb-7 md:px-16 px-5'>
         {
           jobs.length === 0
             ? (
@@ -53,7 +58,7 @@ export default function Jobs() {
               <div className='grid gap-8 xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1'>
                 {
                   jobs.map(item => (
-                    <JobCard key={item.id} item={item} />
+                    <JobCard key={item.id} item={item}/>
                   ))
                 }
               </div>

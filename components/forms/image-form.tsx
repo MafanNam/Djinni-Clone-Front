@@ -4,14 +4,13 @@ import {
 } from "@/lib/features/accounts/accountsApiSlice";
 import {useState} from "react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import getImageData from "@/utils/getImage";
 import {Button} from "@/components/ui/button";
 import Loader from "@/components/general/Loader";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {Label} from "@/components/ui/label";
 import {z} from "zod";
 import {toast} from "react-toastify";
 
@@ -64,7 +63,6 @@ export default function ImageForm({candidate}: { candidate?: Candidate | undefin
           name="image"
           render={({field}) => (
             <FormItem>
-              {/*<FormLabel>Image</FormLabel>*/}
               <FormControl>
                 <Input
                   {...field}

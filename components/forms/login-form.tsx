@@ -51,7 +51,7 @@ export default function LoginForm() {
   const {isAuthenticated} = useAppSelector(state => state.auth);
 
   useEffect(() => {
-    if (isAuthenticated) redirect("/my/profile");
+    if (isAuthenticated) redirect("/my/account");
   }, [isAuthenticated]);
 
 
@@ -63,7 +63,6 @@ export default function LoginForm() {
       .then(() => {
         dispatch(setAuth())
 
-        router.refresh()
         router.push('my/profile')
         toast.success("Login successfully")
       })

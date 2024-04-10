@@ -1,5 +1,6 @@
 import {apiSlice} from "@/lib/services/apiSlice";
 import {BaseApi} from "@/utils/Interface";
+import {Companies, Company} from "@/lib/features/other/otherApiSlice";
 
 
 export interface Candidate extends BaseApi {
@@ -132,6 +133,39 @@ const accountsApiSlice = apiSlice.injectEndpoints({
     }),
 
 
+    listMyCompanies: builder.query<Companies, void>({
+      query: () => `/companies/`,
+      providesTags: ['Company', 'Recruiter']
+    }),
+    retrieveMyCompany: builder.query<Company, void>({
+      query: (id) => `/companies/${id}/`,
+      providesTags: ['Company', 'Recruiter']
+    }),
+    updateMyCompany: builder.mutation<Company, Partial<Company>>({
+      query: ({id, ...data}) => ({
+        url: `/companies/${id}/`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ['Company', 'Companies'],
+    }),
+
+    postMyCompany: builder.mutation({
+      query: () => ({
+        url: '/companies/',
+        method: 'POST',
+      }),
+      invalidatesTags: ['Companies']
+    }),
+    deleteMyCompany: builder.mutation({
+      query: (id) => ({
+        url: `/companies/${id}/`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Recruiter', 'Companies']
+    }),
+
+
   })
 })
 
@@ -149,6 +183,12 @@ export const {
   useRetrieveRecruiterQuery,
   useRetrieveMeRecruiterQuery,
   useUpdateMeRecruiterMutation,
+
+  useListMyCompaniesQuery,
+  useRetrieveMyCompanyQuery,
+  usePostMyCompanyMutation,
+  useUpdateMyCompanyMutation,
+  useDeleteMyCompanyMutation,
 
   usePostIsSpamEmailEveryWeekMutation,
   useDeleteIsSpamEmailEveryWeekMutation,

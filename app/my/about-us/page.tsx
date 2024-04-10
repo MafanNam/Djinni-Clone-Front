@@ -1,7 +1,13 @@
-import { Separator } from "@/components/ui/separator"
-import WorkInProgress from "@/components/ui/work-in-progress";
+"use client";
+
+import {Separator} from "@/components/ui/separator"
+import {useListMyCompaniesQuery, useRetrieveMyCompanyQuery} from "@/lib/features/accounts/accountsApiSlice";
+import Spinner from "@/components/general/Spinner";
 
 export default function Page() {
+  const {data: companies, isLoading, isFetching} = useListMyCompaniesQuery();
+  const {data: company, isLoading: isLoadingCompany, isFetching: isFetchingCompany} = useRetrieveMyCompanyQuery();
+
   return (
     <div className="space-y-6">
       <div>
@@ -11,8 +17,10 @@ export default function Page() {
           Only those to whom you open contacts will see your personal data.
         </p>
       </div>
-      <Separator />
-      <WorkInProgress />
+      <Separator/>
+      {(isLoading || isFetching || isLoadingCompany || isFetchingCompany) ? <Spinner size={250}/> :
+        (companies?.results?.length || 0) > 0 ? <></> : <></>
+      }
     </div>
   )
 }

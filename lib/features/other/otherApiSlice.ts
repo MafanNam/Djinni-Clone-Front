@@ -9,6 +9,16 @@ export interface Category {
   }]
 }
 
+export interface Company {
+  id: number;
+  name: string;
+  image: any;
+  bio: string;
+  company_url: string;
+  dou_url: string;
+  country: string;
+  num_employees: number;
+}
 
 export interface Companies {
   results: [{

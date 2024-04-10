@@ -63,10 +63,10 @@ const profileFormSchema = z.object({
     .string({required_error: "Category is required"}),
   skills: z.any(),
   work_exp: z.coerce.number()
-    .gte(0, 'Must be 0 and above')
+    .gte(0, 'Must be 0 or above')
     .lte(10, 'Must be less or equal then 10 '),
   work_exp_bio: z.string(),
-  salary_expectation: z.coerce.number().gte(0, 'Must be 0 and above'),
+  salary_expectation: z.coerce.number().gte(1, 'Must be 1 or above'),
   country: z.string({
     required_error: "Please select a country.",
   }),

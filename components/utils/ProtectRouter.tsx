@@ -14,20 +14,31 @@ interface Props {
 export default function ProtectRouter({children, allowedRoles}: Props) {
   const {data: user, isLoading, isFetching, isError} = useRetrieveUserQuery();
 
+
+  // async function check() {
+  //   if (isError) {
+  //     redirect('/login');
+  //   }
+  //
+  //   if (!allowedRoles.includes(user?.type_profile as string)) {
+  //     redirect('/');
+  //   }
+  // }
+
   // @ts-ignore
   useEffect(() => {
     if (isLoading || isFetching) {
-      return <FullScreenSpinner/>
+      return () => <FullScreenSpinner/>
     }
 
     if (isError) {
-      redirect('/login')
+      redirect('/login');
     }
 
     if (!allowedRoles.includes(user?.type_profile as string)) {
       redirect('/');
     }
-  }, []);
+  }, [isError, isLoading, isFetching]);
 
   return <>{children}</>
 };
