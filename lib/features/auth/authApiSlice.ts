@@ -1,13 +1,14 @@
 import {apiSlice} from "@/lib/services/apiSlice";
-import {setUser} from "@/lib/features/auth/authSlice";
+import {finishInitialLoadUser, setUser} from "@/lib/features/auth/authSlice";
 
-interface User {
+export interface User {
   first_name: string;
   last_name: string;
   type_profile: string,
   email: string;
   image: string;
   is_online: boolean;
+  is_spam_email: boolean;
 }
 
 interface SocialAuthArgs {
@@ -26,11 +27,14 @@ const authApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
     retrieveUser: builder.query<User, void>({
       query: () => '/auth/users/me/',
+      keepUnusedDataFor: 5,
       async onQueryStarted(arg, {dispatch, queryFulfilled}) {
         try {
           const {data} = await queryFulfilled
           dispatch(setUser(data))
         } catch (err) {
+        } finally {
+          dispatch(finishInitialLoadUser())
         }
       },
       providesTags: ['User']
@@ -75,6 +79,7 @@ const authApiSlice = apiSlice.injectEndpoints({
           await queryFulfilled;
           dispatch(setUser(null));
         } catch (error) {
+          console.log(error);
         }
       },
     }),
@@ -125,6 +130,7 @@ const authApiSlice = apiSlice.injectEndpoints({
 export const {
   useRetrieveUserQuery,
   useUpdateUserMutation,
+  useDeleteUserMutation,
   useSocialAuthenticateMutation,
   useLoginMutation,
   useRegisterMutation,

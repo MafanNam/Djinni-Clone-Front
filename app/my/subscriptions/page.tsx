@@ -1,7 +1,12 @@
-import { Separator } from "@/components/ui/separator"
-import {NotificationsForm} from "@/app/my/subscriptions/notifications-form";
+"use client";
+import {Separator} from "@/components/ui/separator"
+import {NotificationsForm} from "@/components/forms/notifications-form";
+import {useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
+import Spinner from "@/components/general/Spinner";
 
-export default function SettingsNotificationsPage() {
+export default function Page() {
+  const {data: user, isLoading, isFetching} = useRetrieveUserQuery()
+
   return (
     <div className="space-y-6">
       <div>
@@ -10,8 +15,10 @@ export default function SettingsNotificationsPage() {
           Configure how you receive notifications.
         </p>
       </div>
-      <Separator />
-      <NotificationsForm />
+      <Separator/>
+      {isLoading || isFetching ? <Spinner size={200}/>
+        : <NotificationsForm user={user}/>
+      }
     </div>
   )
 }

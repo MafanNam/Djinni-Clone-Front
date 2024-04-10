@@ -10,14 +10,12 @@ import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
-// import {continueWithGoogle} from "@/utils";
 import {ImGoogle} from "react-icons/im";
-import Spinner from "@/components/general/Spinner";
-import {setAuth} from "@/lib/features/auth/authSlice";
 import {toast} from "react-toastify";
 import {useRegisterMutation} from "@/lib/features/auth/authApiSlice";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
+import Loader from "@/components/general/Loader";
 
 
 const registerFormSchema = z.object({
@@ -75,8 +73,6 @@ export default function RegisterForm() {
   const router = useRouter()
 
   function onSubmit(data: RegisterFormValue) {
-    const {first_name, last_name, email, password, re_password} = data
-    console.log(data, typeProfile)
     registerUser({...data, typeProfile})
       .unwrap()
       .then(() => {
@@ -84,7 +80,7 @@ export default function RegisterForm() {
         toast.info("Please check email to verify account.")
         router.push("/login")
       })
-      .catch((err: Error) => {
+      .catch(() => {
         toast.error("Uh oh! Something went wrong.")
       })
   }
@@ -108,7 +104,8 @@ export default function RegisterForm() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="type_profile">Select Type Profile:</Label>
-            <RadioGroup defaultValue="candidate" name='type_profile' onValueChange={(value: string) => setTypeProfile(value)}>
+            <RadioGroup defaultValue="candidate" name='type_profile'
+                        onValueChange={(value: string) => setTypeProfile(value)}>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="candidate" id="r1"/>
                 <Label htmlFor="r1">Candidate</Label>
@@ -140,7 +137,7 @@ export default function RegisterForm() {
             {errors.re_password && <span className='text-red-900'>{errors.re_password.message}</span>}
           </div>
           <Button type="submit" className="w-full">
-            {isLoading ? <Spinner size={25}/> : 'Create an account'}
+            {isLoading ? <Loader/> : 'Create an account'}
           </Button>
           <Button variant="outline" type='button' className="w-full bg-red-200 dark:bg-red-950">
             <ImGoogle className='mr-3'/>Login with Google

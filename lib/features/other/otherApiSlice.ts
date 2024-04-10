@@ -1,42 +1,57 @@
-import {apiSlice} from "@/lib/services/apiSlice";
 import {apiPublicSlice} from "@/lib/services/apiPublicSlice";
+import {Tag} from "@/components/ui/tag-input";
+import {BaseApi} from "@/utils/Interface";
 
 
-interface Category {
+export interface Category {
   results: [{
     id: number;
     name: string;
   }]
 }
 
+export interface Company extends BaseApi {
+  name: string;
+  image: any;
+  bio: string;
+  company_url: string;
+  dou_url: string;
+  country: string;
+  num_employees: number;
+}
 
-interface Companies {
-  results: [{
-    id: number;
-    name: string;
-    image: string;
-    bio: string;
-    company_url: string;
-    dou_url: string;
-    country: string;
-    num_employees: number;
-  }]
+export interface Companies extends BaseApi {
+  name: string;
+  image: string;
+  bio: string;
+  company_url: string;
+  dou_url: string;
+  country: string;
+  num_employees: number;
+}
+
+export interface Skills {
+  results: Tag[];
 }
 
 
 const otherApiSlice = apiPublicSlice.injectEndpoints({
   endpoints: builder => ({
-    retrieveCategory: builder.query<Category, void>({
+    listCategory: builder.query<Category, void>({
       query: () => '/categories/',
     }),
-    retrieveCompanies: builder.query<Companies, void>({
+    listCompanies: builder.query<Companies, void>({
       query: () => '/companies/',
+    }),
+    listSkills: builder.query<Skills, void>({
+      query: () => '/skills/',
     }),
   })
 })
 
 
 export const {
-  useRetrieveCategoryQuery,
-  useRetrieveCompaniesQuery,
+  useListCategoryQuery,
+  useListCompaniesQuery,
+  useListSkillsQuery,
 } = otherApiSlice

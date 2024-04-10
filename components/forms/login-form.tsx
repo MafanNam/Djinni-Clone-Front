@@ -1,18 +1,20 @@
+"use client";
+
 import Link from "next/link";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form";
-import {useLoginMutation, useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
-import {useRouter} from "next/navigation";
+import {useLoginMutation} from "@/lib/features/auth/authApiSlice";
+import {redirect, useRouter} from "next/navigation";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
-import React from "react";
-import Spinner from "@/components/general/Spinner";
+import React, {useEffect} from "react";
 import {ImGoogle} from "react-icons/im";
-import {useAppDispatch} from "@/lib/hooks";
-import {setCredentials} from "@/lib/features/auth/authSlice";
+import {useAppDispatch, useAppSelector} from "@/lib/hooks";
+import {setAuth} from "@/lib/features/auth/authSlice";
 import {toast} from "react-toastify";
+import Loader from "@/components/general/Loader";
 
 const loginFormSchema = z.object({
   email: z
@@ -44,21 +46,27 @@ export default function LoginForm() {
   const [login, {isLoading}] = useLoginMutation()
 
   const router = useRouter()
+
   const dispatch = useAppDispatch()
+  const {isAuthenticated} = useAppSelector(state => state.auth);
+
+  useEffect(() => {
+    if (isAuthenticated) redirect("/my/account");
+  }, [isAuthenticated]);
+
 
   function onSubmit(data: LoginFormValues) {
     const {email, password} = data
 
     login({email, password})
       .unwrap()
-      .then(({access}) => {
-        dispatch(setCredentials(access))
+      .then(() => {
+        dispatch(setAuth())
 
-        router.refresh()
         router.push('my/profile')
         toast.success("Login successfully")
       })
-      .catch((err: Error) => {
+      .catch(() => {
         toast.error("Failed to log in.")
       })
   }
@@ -87,7 +95,7 @@ export default function LoginForm() {
           </div>
 
           <Button type="submit" className="w-full">
-            {isLoading ? <Spinner size={25}/> : 'Login'}
+            {isLoading ? <Loader/> : 'Login'}
           </Button>
           <Button variant="outline" type='button' className="w-full bg-red-200 dark:bg-red-950">
             <ImGoogle className='mr-3'/>Login with Google

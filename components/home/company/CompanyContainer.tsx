@@ -1,22 +1,30 @@
+"use client";
 import CompanyCard from "@/components/home/company/CompanyCard";
 import Link from "next/link";
 import Spinner from "@/components/general/Spinner";
-import {useRetrieveCompaniesQuery} from "@/lib/features/other/otherApiSlice";
-import {Button} from "@/components/ui/button";
+import {useListCompaniesQuery} from "@/lib/features/other/otherApiSlice";
+import {Skeleton} from "@/components/ui/skeleton";
 
 
 export default function CompanyContainer() {
-  const {data, isLoading, isFetching} = useRetrieveCompaniesQuery()
+  const {data, isLoading, isFetching} = useListCompaniesQuery()
 
 
   return (
     <div className='py-20 md:px-16 px-8'>
       <h1 className='text-4xl md:text-3xl font-medium text-center mb-12'><span
         className='text-[#504ED7]'>Latest</span> Jobs</h1>
-      {(isLoading || isFetching) && <Spinner/>}
-      <div className='grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-10'>
+      <div
+        className='grid xl:items-center xl:justify-center xl:flex lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-10'>
+        {(isLoading || isFetching) && (
+          <>
+            <Skeleton className="h-[215px] w-[330px] rounded-l"/>
+            <Skeleton className="h-[215px] w-[330px] rounded-l"/>
+            <Skeleton className="h-[215px] w-[330px] rounded-l"/>
+          </>
+        )}
         {
-          data?.results.slice(0, 10).map((item) => (
+          data?.results.slice(0, 3).map((item) => (
             <CompanyCard
               key={item.id}
               id={item.id}

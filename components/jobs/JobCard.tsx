@@ -1,6 +1,5 @@
 // @ts-ignore
 export default function JobCard({item}) {
-  const job = item
   return (
     <>
       <div>
