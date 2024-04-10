@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form"
 import {Input} from "@/components/ui/input"
 import {
+  usePostMyCompanyMutation,
   useUpdateMyCompanyMutation,
 } from "@/lib/features/accounts/accountsApiSlice";
 import Loader from "@/components/general/Loader";
@@ -30,52 +31,33 @@ import getImageData from "@/utils/getImage";
 import {useState} from "react";
 import {Separator} from "@/components/ui/separator";
 import {Company} from "@/lib/features/other/otherApiSlice";
+import {companyFormSchema, CompanyFormValues} from "@/components/forms/company-form";
 import {Textarea} from "@/components/ui/textarea";
 
-export const companyFormSchema = z.object({
-  name: z
-    .string()
-    .min(2, {
-      message: "Company name must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "Company name must not be longer than 30 characters.",
-    }),
-  image: z.any(),
-  bio: z.string(),
-  company_url: z.string().url().optional().or(z.literal('')),
-  dou_url: z.string().url().optional().or(z.literal('')),
-  country: z.string({
-    required_error: "Please select a country.",
-  }),
-  num_employees: z.coerce.number().gte(1, 'Must be 1 or above'),
-})
 
-export type CompanyFormValues = z.infer<typeof companyFormSchema>
-
-
-interface CompanyFormProps {
-  company?: Company | undefined
-}
-
-export function CompanyForm({company}: CompanyFormProps) {
-  const [updateCompany, {isLoading: isLoadingUpdate}] = useUpdateMyCompanyMutation();
-  const [tempImage, setTempImage] = useState(company?.image);
+export function CompanyCreateForm() {
+  const [createCompany, {isLoading: isLoadingCreate}] = usePostMyCompanyMutation();
+  const [tempImage, setTempImage] = useState();
 
   const form = useForm<CompanyFormValues>({
     resolver: zodResolver(companyFormSchema),
-    defaultValues: company,
+    defaultValues: {
+      name: '',
+      image: '',
+      bio: '',
+      company_url: '',
+      dou_url: '',
+      country: '',
+      num_employees: 1,
+    },
     mode: "onChange",
   })
-
-  console.log(company)
 
 
   function onSubmit(data: CompanyFormValues) {
     console.log('Data: ', data)
 
     const formData = new FormData();
-    formData.append('id', String(company?.id))
     formData.append('name', data.name)
     formData.append('bio', data.bio)
     formData.append('company_url', String(data.company_url))
@@ -87,13 +69,13 @@ export function CompanyForm({company}: CompanyFormProps) {
     }
 
     // @ts-ignore
-    updateCompany(formData)
+    createCompany(formData)
       .unwrap()
       .then(() => {
-        toast.success('Updated Company')
+        toast.success('Created Company')
       })
       .catch(() => {
-        toast.error('Failed to update Company')
+        toast.error('Failed to created Company')
       });
   }
 
@@ -143,7 +125,7 @@ export function CompanyForm({company}: CompanyFormProps) {
             <FormItem>
               <FormLabel>Company name</FormLabel>
               <FormControl>
-                <Input placeholder="C." {...field}/>
+                <Input placeholder="c." {...field}/>
               </FormControl>
               <FormMessage/>
             </FormItem>
@@ -262,10 +244,10 @@ export function CompanyForm({company}: CompanyFormProps) {
           )}
         />
 
-        <Button type="submit" className='w-full' disabled={isLoadingUpdate}>
-          {isLoadingUpdate
+        <Button type="submit" className='w-full' disabled={isLoadingCreate}>
+          {isLoadingCreate
             ? <Loader/>
-            : 'Update Company'
+            : 'Create Company'
           }
         </Button>
       </form>

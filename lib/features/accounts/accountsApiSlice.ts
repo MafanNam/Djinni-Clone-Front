@@ -134,32 +134,33 @@ const accountsApiSlice = apiSlice.injectEndpoints({
 
 
     listMyCompanies: builder.query<Companies, void>({
-      query: () => `/companies/`,
+      query: () => `/companies/my/`,
       providesTags: ['Company', 'Recruiter']
     }),
-    retrieveMyCompany: builder.query<Company, void>({
-      query: (id) => `/companies/${id}/`,
+    postMyCompany: builder.mutation({
+      query: (data) => ({
+        url: '/companies/my/',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Companies']
+    }),
+    retrieveMyCompany: builder.query<Company, number>({
+      query: (id) => `/companies/my/${id}/`,
       providesTags: ['Company', 'Recruiter']
     }),
     updateMyCompany: builder.mutation<Company, Partial<Company>>({
-      query: ({id, ...data}) => ({
-        url: `/companies/${id}/`,
+      query: (data) => ({
+        // @ts-ignore
+        url: `/companies/my/${data.get('id')}/`,
         method: "PUT",
         body: data,
       }),
       invalidatesTags: ['Company', 'Companies'],
     }),
-
-    postMyCompany: builder.mutation({
-      query: () => ({
-        url: '/companies/',
-        method: 'POST',
-      }),
-      invalidatesTags: ['Companies']
-    }),
     deleteMyCompany: builder.mutation({
       query: (id) => ({
-        url: `/companies/${id}/`,
+        url: `/companies/my/${id}/`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Recruiter', 'Companies']

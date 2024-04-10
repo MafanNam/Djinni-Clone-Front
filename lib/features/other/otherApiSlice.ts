@@ -1,5 +1,6 @@
 import {apiPublicSlice} from "@/lib/services/apiPublicSlice";
 import {Tag} from "@/components/ui/tag-input";
+import {BaseApi} from "@/utils/Interface";
 
 
 export interface Category {
@@ -9,8 +10,7 @@ export interface Category {
   }]
 }
 
-export interface Company {
-  id: number;
+export interface Company extends BaseApi {
   name: string;
   image: any;
   bio: string;
@@ -20,17 +20,14 @@ export interface Company {
   num_employees: number;
 }
 
-export interface Companies {
-  results: [{
-    id: number;
-    name: string;
-    image: string;
-    bio: string;
-    company_url: string;
-    dou_url: string;
-    country: string;
-    num_employees: number;
-  }]
+export interface Companies extends BaseApi {
+  name: string;
+  image: string;
+  bio: string;
+  company_url: string;
+  dou_url: string;
+  country: string;
+  num_employees: number;
 }
 
 export interface Skills {

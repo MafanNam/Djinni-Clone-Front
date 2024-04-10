@@ -2,7 +2,7 @@ import type {Metadata} from "next";
 import ProtectRouter from "@/components/utils/ProtectRouter";
 
 export const metadata: Metadata = {
-  title: 'Djinni | About Us'
+  title: 'Djinni | company edit'
 }
 
 export default function AboutUsLayout({

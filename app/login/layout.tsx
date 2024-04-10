@@ -1,15 +1,12 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
+import type {Metadata} from "next";
 
 export const metadata: Metadata = {
-  title: 'Job Seek | Sign In'
+  title: 'Djinni | Sign In'
 }
 
 export default function LoginLayout({
-  children,
-}: Readonly<{
+                                      children,
+                                    }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (

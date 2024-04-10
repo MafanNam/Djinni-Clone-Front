@@ -1,5 +1,5 @@
 import {apiSlice} from "@/lib/services/apiSlice";
-import {setUser} from "@/lib/features/auth/authSlice";
+import {finishInitialLoadUser, setUser} from "@/lib/features/auth/authSlice";
 
 export interface User {
   first_name: string;
@@ -33,6 +33,8 @@ const authApiSlice = apiSlice.injectEndpoints({
           const {data} = await queryFulfilled
           dispatch(setUser(data))
         } catch (err) {
+        } finally {
+          dispatch(finishInitialLoadUser())
         }
       },
       providesTags: ['User']

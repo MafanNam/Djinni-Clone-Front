@@ -1,9 +1,8 @@
 "use client";
 
 import {redirect} from "next/navigation";
-import {useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
 import FullScreenSpinner from "@/components/general/FullScreenSpinner";
-import {useEffect} from "react";
+import {useAppSelector} from "@/lib/hooks";
 
 interface Props {
   allowedRoles: string[];
@@ -12,33 +11,20 @@ interface Props {
 
 
 export default function ProtectRouter({children, allowedRoles}: Props) {
-  const {data: user, isLoading, isFetching, isError} = useRetrieveUserQuery();
 
+  const {user, isLoadingUser} = useAppSelector(state => state.auth);
 
-  // async function check() {
-  //   if (isError) {
-  //     redirect('/login');
-  //   }
-  //
-  //   if (!allowedRoles.includes(user?.type_profile as string)) {
-  //     redirect('/');
-  //   }
-  // }
+  if (isLoadingUser) {
+    return <FullScreenSpinner/>
+  }
 
-  // @ts-ignore
-  useEffect(() => {
-    if (isLoading || isFetching) {
-      return () => <FullScreenSpinner/>
-    }
+  if (!user) {
+    return redirect('/login');
+  }
 
-    if (isError) {
-      redirect('/login');
-    }
-
-    if (!allowedRoles.includes(user?.type_profile as string)) {
-      redirect('/');
-    }
-  }, [isError, isLoading, isFetching]);
+  if (!allowedRoles.includes(user?.type_profile as string)) {
+    return redirect('/');
+  }
 
   return <>{children}</>
 };
