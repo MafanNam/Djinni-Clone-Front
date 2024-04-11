@@ -32,6 +32,62 @@ export interface ContactCv extends BaseApi {
   cv_file: any;
 }
 
+export interface VacancyCreate {
+  title: string;
+  slug: string;
+  description: string;
+  requirements: string;
+  other: string;
+  eng_level: string;
+  salary: number;
+  category: string;
+  skills: [];
+  work_exp: number;
+  employ_options: [];
+  country: string;
+  is_only_ukraine: boolean;
+  is_test_task: boolean;
+}
+
+export interface Vacancy extends BaseApi {
+  recruiter: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    position: string;
+    category: string;
+    company: string;
+    image: any;
+    trust_hr: boolean;
+  }
+  company: {
+    id: number;
+    name: string;
+    image: any;
+    country: string;
+  }
+  title: string;
+  slug: string;
+  description: string;
+  requirements: string;
+  other: string;
+  eng_level: string;
+  salary: number;
+  category: string;
+  skills: [];
+  work_exp: number;
+  employ_options: [];
+  country: string;
+  is_only_ukraine: boolean;
+  is_test_task: boolean;
+  views: number;
+  feedback: number;
+}
+
+export interface Vacancies extends BaseApi {
+  results: Vacancy[];
+}
+
 
 export interface Recruiter extends BaseApi {
   first_name: string;
@@ -49,11 +105,11 @@ export interface Recruiter extends BaseApi {
 }
 
 interface Candidates {
-  result: [Candidate]
+  result: Candidate[]
 }
 
 interface Recruiters {
-  result: [Recruiter]
+  result: Recruiter[]
 }
 
 
@@ -133,7 +189,7 @@ const accountsApiSlice = apiSlice.injectEndpoints({
     }),
 
 
-    listMyCompanies: builder.query<Companies, void>({
+    listMyCompanies: builder.query<Company[], void>({
       query: () => `/companies/my/`,
       providesTags: ['Company', 'Recruiter']
     }),
@@ -167,6 +223,40 @@ const accountsApiSlice = apiSlice.injectEndpoints({
     }),
 
 
+    listMyVacancies: builder.query<Vacancies, void>({
+      query: () => `/vacancies/my/`,
+      providesTags: ['Vacancy', 'Recruiter']
+    }),
+    postMyVacancy: builder.mutation<VacancyCreate, void>({
+      query: (data) => ({
+        url: '/vacancies/my/',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Vacancies']
+    }),
+    retrieveMyVacancy: builder.query<Vacancy, string>({
+      query: (slug) => `/vacancies/my/${slug}/`,
+      providesTags: ['Vacancy', 'Recruiter']
+    }),
+    updateMyVacancy: builder.mutation<VacancyCreate, Partial<VacancyCreate>>({
+      query: ({slug, ...data}) => ({
+        // @ts-ignore
+        url: `/vacancies/my/${slug}/`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ['Vacancy', 'Vacancies'],
+    }),
+    deleteMyVacancy: builder.mutation({
+      query: (slug) => ({
+        url: `/vacancies/my/${slug}/`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Recruiter', 'Vacancies']
+    }),
+
+
   })
 })
 
@@ -190,6 +280,12 @@ export const {
   usePostMyCompanyMutation,
   useUpdateMyCompanyMutation,
   useDeleteMyCompanyMutation,
+
+  useListMyVacanciesQuery,
+  useRetrieveMyVacancyQuery,
+  usePostMyVacancyMutation,
+  useUpdateMyVacancyMutation,
+  useDeleteMyVacancyMutation,
 
   usePostIsSpamEmailEveryWeekMutation,
   useDeleteIsSpamEmailEveryWeekMutation,

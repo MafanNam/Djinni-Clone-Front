@@ -1,8 +1,5 @@
 "use client";
 import {Separator} from "@/components/ui/separator"
-import {CompanyForm} from "@/components/forms/company-form";
-import {useRetrieveMyCompanyQuery} from "@/lib/features/accounts/accountsApiSlice";
-import Spinner from "@/components/general/Spinner";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,13 +8,13 @@ import {
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
 import {useRouter} from "next/navigation";
+import {CompanyCreateForm} from "@/components/forms/company-create-form";
 
-export default function Page({params}: { params: { id: number } }) {
-  const {data: company, isLoading, isFetching} = useRetrieveMyCompanyQuery(params.id)
+export default function Page() {
   const router = useRouter();
 
   return (
-    <div className='flex-1'>
+    <>
       <Breadcrumb className=''>
         <BreadcrumbList className='text-xl'>
           <BreadcrumbItem>
@@ -27,16 +24,14 @@ export default function Page({params}: { params: { id: number } }) {
           </BreadcrumbItem>
           <BreadcrumbSeparator/>
           <BreadcrumbItem>
-            <BreadcrumbPage>Edit Company</BreadcrumbPage>
+            <BreadcrumbPage>Create Company</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
       <div className="space-y-6">
         <Separator className="mt-5 mb-3"/>
-        {(isLoading || isFetching) ? <Spinner size={150}/> :
-          <CompanyForm company={company}/>
-        }
+        <CompanyCreateForm/>
       </div>
-    </div>
+    </>
   )
 }

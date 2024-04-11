@@ -1,5 +1,5 @@
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {ListFilter, MoreHorizontal, PlusCircle, Search, Users} from "lucide-react";
+import {Eye, ListFilter, MessageCircle, MoreHorizontal, PlusCircle, Search, Users} from "lucide-react";
 import {Input} from "@/components/ui/input";
 import {
   DropdownMenu, DropdownMenuCheckboxItem,
@@ -11,37 +11,38 @@ import {
 import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import Image from "next/image";
 import {Badge} from "@/components/ui/badge";
-import {Companies} from "@/lib/features/other/otherApiSlice";
-import dayjs from "dayjs";
 import {useRouter} from "next/navigation";
-import {useDeleteMyCompanyMutation} from "@/lib/features/accounts/accountsApiSlice";
+import {
+  useDeleteMyVacancyMutation,
+  Vacancies
+} from "@/lib/features/accounts/accountsApiSlice";
 import {toast} from "react-toastify";
+import {Checkbox} from "@/components/ui/checkbox";
 
 
 interface Prop {
-  companies?: Companies[] | undefined;
+  vacancies?: Vacancies | undefined;
   loader: any;
 }
 
-export default function MyCompaniesTable({companies, loader}: Prop) {
-  const [companyDelete, {isLoading}] = useDeleteMyCompanyMutation();
+export default function MyVacanciesTable({vacancies, loader}: Prop) {
+  const [vacancyDelete, {isLoading}] = useDeleteMyVacancyMutation();
   const router = useRouter();
 
-  console.log(companies)
+  console.log(vacancies)
 
   if (isLoading) return loader;
 
-  function handleDelete(id: number) {
-    alert('Are you sure you want to delete this company?');
+  function handleDelete(slug: string) {
+    alert('Are you sure you want to delete this vacancy?');
 
-    companyDelete(id)
+    vacancyDelete(slug)
       .unwrap()
       .then(() => {
-        toast.success('Deleted Company')
+        toast.success('Deleted Vacancy')
       })
-      .catch(() => toast.error('Failed to delete Company'))
+      .catch(() => toast.error('Failed to delete Vacancy'))
   }
 
   return (
@@ -84,7 +85,7 @@ export default function MyCompaniesTable({companies, loader}: Prop) {
           <Button size="sm" className="h-8 gap-1" onClick={() => router.push('/my/about-us/create')}>
             <PlusCircle className="h-3.5 w-3.5"/>
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Add Company
+                    Add Vacancy
                   </span>
           </Button>
         </div>
@@ -92,63 +93,92 @@ export default function MyCompaniesTable({companies, loader}: Prop) {
       <TabsContent value="all">
         <Card x-chunk="dashboard-06-chunk-0">
           <CardHeader>
-            <CardTitle>Companies</CardTitle>
+            <CardTitle>Vacancies</CardTitle>
             <CardDescription>
-              Manage your Companies and view their details.
+              Manage your Vacancies and view their details.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="hidden w-[100px] sm:table-cell">
-                    <span className="sr-only">Image</span>
-                  </TableHead>
-                  <TableHead>Name</TableHead>
+                  <TableHead>Title</TableHead>
                   <TableHead>Country</TableHead>
                   <TableHead className="hidden md:table-cell">
-                    Num Employees
+                    Work exp
                   </TableHead>
                   <TableHead className="hidden md:table-cell">
-                    Created at
+                    Salary
                   </TableHead>
+                  <TableHead>Company</TableHead>
+                  <TableHead className="hidden lg:table-cell">
+                    Is only Ukraine
+                  </TableHead>
+                  <TableHead className="hidden lg:table-cell">
+                    Is test task
+                  </TableHead>
+                  <TableHead>Views</TableHead>
+                  <TableHead>Feedback</TableHead>
+
                   <TableHead>
                     <span className="sr-only">Actions</span>
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {companies?.map((company) => (
-                  <TableRow key={company.id}>
-                    <TableCell className="hidden sm:table-cell">
-                      <Image
-                        alt={company.name}
-                        className="aspect-square rounded-md object-cover"
-                        height="64"
-                        src={company.image}
-                        width="64"
-                      />
-                    </TableCell>
+                {vacancies?.results?.map((vacancy) => (
+                  <TableRow key={vacancy.id}>
                     <TableCell className="font-medium">
-                      {company.name}
+                      {vacancy.title.slice(0, 30) + '...'}
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline"
-                             className={`${company.country === 'Ukraine' ? 'text-white bg-gradient-to-b from-blue-500 to-yellow-500' : ''}`}>{company.country}</Badge>
+                             className={`${vacancy.country === 'Ukraine' ? 'text-white bg-gradient-to-b from-blue-500 to-yellow-500' : ''}`}>{vacancy.country}</Badge>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      {company.num_employees
+                      {vacancy.work_exp
                         ? (
                           <div className='flex'>
                             <Users className='h-4'/>
-                            {company.num_employees}
+                            {vacancy.work_exp}
                           </div>
                         )
-                        : 'No employees'
+                        : 'No work experience'
                       }
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      {dayjs(company.created_at).format('YYYY-MM-DD HH:mm')}
+                      $ {vacancy.salary}
+                    </TableCell>
+                    <TableCell>
+                      {vacancy.company.name}
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell">
+                      <Checkbox defaultChecked={vacancy.is_only_ukraine} disabled/>
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell">
+                      <Checkbox defaultChecked={vacancy.is_test_task} disabled/>
+                    </TableCell>
+                    <TableCell>
+                      {vacancy.feedback
+                        ? (
+                          <div className='flex'>
+                            <Eye className='h-4 mr-1'/>
+                            {vacancy.feedback}
+                          </div>
+                        )
+                        : 'No feedback'
+                      }
+                    </TableCell>
+                    <TableCell>
+                      {vacancy.views
+                        ? (
+                          <div className='flex'>
+                            <MessageCircle className='h-4 mr-1'/>
+                            {vacancy.views}
+                          </div>
+                        )
+                        : 'No views'
+                      }
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
@@ -165,8 +195,8 @@ export default function MyCompaniesTable({companies, loader}: Prop) {
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuItem
-                            onClick={() => router.push(`/my/about-us/${company.id}/edit`)}>Edit</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleDelete(company.id)}>Delete</DropdownMenuItem>
+                            onClick={() => router.push(`/my/vacancies/${vacancy.slug}/edit`)}>Edit</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleDelete(vacancy.slug)}>Delete</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -177,7 +207,8 @@ export default function MyCompaniesTable({companies, loader}: Prop) {
           </CardContent>
           <CardFooter>
             <div className="text-xs text-muted-foreground">
-              Only available create <strong>10</strong> companies
+              Showing <strong>1-10</strong> of <strong>{'<NONE>'}</strong>{" "}
+              Vacancies
             </div>
           </CardFooter>
         </Card>

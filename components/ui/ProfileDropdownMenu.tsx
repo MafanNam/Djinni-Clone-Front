@@ -87,9 +87,9 @@ export default function ProfileDropdownMenu() {
           <Building2 className="mr-2 h-4 w-4"/>
           <span>About us</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push('/my/team')}>
+        <DropdownMenuItem onClick={() => router.push('/my/vacancies')}>
           <Handshake className="mr-2 h-4 w-4"/>
-          <span>Team</span>
+          <span>Vacancies</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => router.push('/my/subscriptions')}>
           <Mail className="mr-2 h-4 w-4"/>

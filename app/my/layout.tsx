@@ -4,8 +4,6 @@ import {Separator} from "@/components/ui/separator"
 import {SidebarNav} from "@/components/forms/components/sidebar-nav"
 import ProtectRouter from "@/components/utils/ProtectRouter";
 import {useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
-import Spinner from "@/components/general/Spinner";
-import FullScreenSpinner from "@/components/general/FullScreenSpinner";
 import {Skeleton} from "@/components/ui/skeleton";
 
 
@@ -55,8 +53,8 @@ export default function SettingsLayout({children}: SettingsLayoutProps) {
         href: "/my/about-us",
       },
       {
-        title: 'Team',
-        href: '/my/team'
+        title: 'Vacancies',
+        href: '/my/vacancies'
       },
       {
         title: "Subscriptions",
@@ -103,12 +101,13 @@ export default function SettingsLayout({children}: SettingsLayoutProps) {
         </div>
         <Separator className="my-6"/>
         <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-          <aside className="-mx-4 lg:w-1/5">
+          <aside className="-mx-4 lg:w-1/6">
             {loader ||
               <SidebarNav items={sidebarNavItems}/>
             }
           </aside>
-          <div className="flex-1 lg:max-w-2xl">{children}</div>
+          <div className="flex-1 lg:max-w-5xl">{children}</div>
+          {/*<>{children}</>*/}
         </div>
       </div>
     </ProtectRouter>

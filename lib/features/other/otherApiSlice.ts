@@ -21,13 +21,7 @@ export interface Company extends BaseApi {
 }
 
 export interface Companies extends BaseApi {
-  name: string;
-  image: string;
-  bio: string;
-  company_url: string;
-  dou_url: string;
-  country: string;
-  num_employees: number;
+  results: Company[];
 }
 
 export interface Skills {
