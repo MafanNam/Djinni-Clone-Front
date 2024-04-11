@@ -11,7 +11,7 @@ import {
   ArrowRightLeft,
   LogOut, MessageCircleMore,
   BriefcaseBusiness,
-  User, Ban, Mail, ReceiptText, Building2, Handshake, Settings, AreaChart, CircleUserRound
+  User, Ban, Mail, ReceiptText, Building2, Settings, AreaChart, CircleUserRound, Layers
 } from "lucide-react";
 import {useLogoutMutation, useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
 import {useDispatch} from "react-redux";
@@ -88,7 +88,7 @@ export default function ProfileDropdownMenu() {
           <span>About us</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => router.push('/my/vacancies')}>
-          <Handshake className="mr-2 h-4 w-4"/>
+          <Layers className="mr-2 h-4 w-4"/>
           <span>Vacancies</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => router.push('/my/subscriptions')}>

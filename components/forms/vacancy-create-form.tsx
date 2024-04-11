@@ -2,7 +2,6 @@
 
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
-import {z} from "zod"
 import {CaretSortIcon} from "@radix-ui/react-icons"
 
 import {Button} from "@/components/ui/button"
@@ -16,7 +15,7 @@ import {
 } from "@/components/ui/form"
 import {Input} from "@/components/ui/input"
 import {
-  useUpdateMyVacancyMutation, Vacancy,
+  usePostMyVacancyMutation
 } from "@/lib/features/accounts/accountsApiSlice";
 import Loader from "@/components/general/Loader";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
@@ -33,80 +32,54 @@ import {Category, Company, Skills} from "@/lib/features/other/otherApiSlice";
 import {Slider} from "@/components/ui/slider";
 import {Avatar, AvatarImage} from "@/components/ui/avatar";
 import {toast} from "react-toastify";
-
-export const vacancyFormSchema = z.object({
-  title: z
-    .string()
-    .min(2, {
-      message: "First name must be at least 2 characters.",
-    })
-    .max(100, {
-      message: "First name must not be longer than 100 characters.",
-    }),
-  description: z.string(),
-  requirements: z.string(),
-  other: z.string(),
-  eng_level: z
-    .enum(['none', 'beginner', 'intermediate', 'upper_intermediate', 'advanced']),
-  salary: z.coerce.number().gte(1, 'Must be 1 or above'),
-  category: z
-    .string({required_error: "Category is required"}),
-  skills: z.any(),
-  work_exp: z.coerce.number()
-    .gte(0, 'Must be 0 or above')
-    .lte(10, 'Must be less or equal then 10 '),
-  employ_options: z
-    .array(z.string()).refine((value) => value.some((item) => item)),
-  country: z.string({
-    required_error: "Please select a country.",
-  }),
-  company: z.any({
-    required_error: "Please select a company.",
-  }),
-  is_only_ukraine: z.boolean(),
-  is_test_task: z.boolean(),
-})
-
-export type VacancyFormValues = z.infer<typeof vacancyFormSchema>
+import {vacancyFormSchema, VacancyFormValues} from "@/components/forms/vacancy-form";
 
 
 interface VacancyFormProps {
-  vacancy?: Vacancy | undefined
   skills?: Skills | undefined
   category?: Category | undefined
   myCompanies?: Company[] | undefined
 }
 
-export function VacancyForm({vacancy, skills, category, myCompanies}: VacancyFormProps) {
-  const [updateVacancy, {isLoading: isLoadingUpdate}] = useUpdateMyVacancyMutation();
-  // @ts-ignore
-  const [tags, setTags] = useState<Tag[]>(skills?.results.filter((item) => vacancy?.skills.includes(item.text)));
+export function VacancyCreateForm({skills, category, myCompanies}: VacancyFormProps) {
+  const [createVacancy, {isLoading: isLoadingUpdate}] = usePostMyVacancyMutation();
+
+  const [tags, setTags] = useState<Tag[]>([]);
 
   const form = useForm<VacancyFormValues>({
     resolver: zodResolver(vacancyFormSchema),
-    // @ts-ignore
+
     defaultValues: {
-      ...vacancy,
-      company: vacancy?.company.name
+      title: '',
+      description: '',
+      requirements: '',
+      other: '',
+      eng_level: 'none',
+      salary: 1,
+      category: '',
+      skills: [],
+      work_exp: 0,
+      employ_options: [],
+      country: '',
+      is_only_ukraine: true,
+      is_test_task: false,
+      company: '',
     },
     mode: "onChange",
   })
-
-  console.log(vacancy)
 
 
   function onSubmit(data: VacancyFormValues) {
     console.log('Data: ', data)
 
-    console.log(vacancy?.slug)
     // @ts-ignore
-    updateVacancy({slug: vacancy?.slug, ...data})
+    createVacancy(data)
       .unwrap()
       .then(() => {
-        toast.success('Updated Vacancy')
+        toast.success('Created Vacancy')
       })
       .catch(() => {
-        toast.error('Failed to update Vacancy')
+        toast.error('Failed to create Vacancy')
       });
   }
 
@@ -121,7 +94,7 @@ export function VacancyForm({vacancy, skills, category, myCompanies}: VacancyFor
             <FormItem>
               <FormLabel>Vacancy title</FormLabel>
               <FormControl>
-                <Input placeholder="Backend dev" {...field}/>
+                <Input placeholder="Backend dev..." {...field}/>
               </FormControl>
               <FormMessage/>
             </FormItem>
@@ -568,7 +541,7 @@ export function VacancyForm({vacancy, skills, category, myCompanies}: VacancyFor
         <Button type="submit" className='w-full' disabled={isLoadingUpdate}>
           {isLoadingUpdate
             ? <Loader/>
-            : 'Update vacancy'
+            : 'Create vacancy'
           }
         </Button>
       </form>

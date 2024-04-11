@@ -1,11 +1,12 @@
 "use client";
-import {useListMyVacanciesQuery} from "@/lib/features/accounts/accountsApiSlice";
+import {useListMyVacanciesQuery, useRetrieveMeRecruiterQuery} from "@/lib/features/accounts/accountsApiSlice";
 import {Skeleton} from "@/components/ui/skeleton";
 import MyVacanciesTable from "@/components/vacancies/MyVacanciesTable";
 
 
 export function MyVacanciesContainer() {
   const {data: vacancies, isLoading, isFetching} = useListMyVacanciesQuery();
+  const {data: recruiter, isLoading: isLoadingRecruiter, isFetching: isFetchingRecruiter} = useRetrieveMeRecruiterQuery();
 
   const loader = (
     <div className='h-96 mt-2 mr-2 ml-2'>
@@ -29,9 +30,9 @@ export function MyVacanciesContainer() {
   return (
     <div className="flex w-full flex-col">
       <div className="flex flex-col sm:py-2 sm:px-2 bg-muted/40 rounded-2xl">
-        {(isLoading || isFetching) ? loader :
+        {(isLoading || isFetching || isLoadingRecruiter || isFetchingRecruiter) ? loader :
           <div className="flex-1 items-start">
-            <MyVacanciesTable vacancies={vacancies} loader={loader}/>
+            <MyVacanciesTable vacancies={vacancies} recruiter={recruiter} loader={loader}/>
           </div>
         }
       </div>

@@ -13,7 +13,7 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} f
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import Image from "next/image";
 import {Badge} from "@/components/ui/badge";
-import {Companies} from "@/lib/features/other/otherApiSlice";
+import {Company} from "@/lib/features/other/otherApiSlice";
 import dayjs from "dayjs";
 import {useRouter} from "next/navigation";
 import {useDeleteMyCompanyMutation} from "@/lib/features/accounts/accountsApiSlice";
@@ -21,7 +21,7 @@ import {toast} from "react-toastify";
 
 
 interface Prop {
-  companies?: Companies[] | undefined;
+  companies?: Company[] | undefined;
   loader: any;
 }
 

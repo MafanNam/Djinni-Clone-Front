@@ -40,7 +40,7 @@ export default function Page({params}: { params: { slug: string } }) {
       <div className="space-y-6">
         <Separator className="mt-5 mb-3"/>
         <div>
-          <h3 className="text-lg font-medium">Vacancies</h3>
+          <h3 className="text-lg font-medium">Edit Vacancy</h3>
           <p className="text-sm text-muted-foreground">
             Manage or create vacancy for employment new worker
           </p>

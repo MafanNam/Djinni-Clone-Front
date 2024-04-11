@@ -14,19 +14,28 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {Badge} from "@/components/ui/badge";
 import {useRouter} from "next/navigation";
 import {
+  Recruiter,
   useDeleteMyVacancyMutation,
   Vacancies
 } from "@/lib/features/accounts/accountsApiSlice";
 import {toast} from "react-toastify";
 import {Checkbox} from "@/components/ui/checkbox";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from "@/components/ui/alert-dialog";
 
 
 interface Prop {
   vacancies?: Vacancies | undefined;
+  recruiter?: Recruiter | undefined;
   loader: any;
 }
 
-export default function MyVacanciesTable({vacancies, loader}: Prop) {
+export default function MyVacanciesTable({vacancies, recruiter, loader}: Prop) {
   const [vacancyDelete, {isLoading}] = useDeleteMyVacancyMutation();
   const router = useRouter();
 
@@ -82,12 +91,39 @@ export default function MyVacanciesTable({vacancies, loader}: Prop) {
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button size="sm" className="h-8 gap-1" onClick={() => router.push('/my/about-us/create')}>
-            <PlusCircle className="h-3.5 w-3.5"/>
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+
+          {recruiter?.company ?
+            <Button size="sm" className="h-8 gap-1" onClick={() => router.push('/my/vacancies/create')}>
+              <PlusCircle className="h-3.5 w-3.5"/>
+              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                     Add Vacancy
                   </span>
-          </Button>
+            </Button> :
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button size="sm" className="h-8 gap-1 bg-red-700 hover:bg-red-600">
+                  <PlusCircle className="h-3.5 w-3.5"/>
+                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                    Add Vacancy
+                  </span>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>You dont have company in contacts</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    In order to create vacancies, you must select the company you created in your contacts
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => router.push('/my/contacts')}>Go to contacts</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
+          }
+
         </div>
       </div>
       <TabsContent value="all">
@@ -159,17 +195,6 @@ export default function MyVacanciesTable({vacancies, loader}: Prop) {
                       <Checkbox defaultChecked={vacancy.is_test_task} disabled/>
                     </TableCell>
                     <TableCell>
-                      {vacancy.feedback
-                        ? (
-                          <div className='flex'>
-                            <Eye className='h-4 mr-1'/>
-                            {vacancy.feedback}
-                          </div>
-                        )
-                        : 'No feedback'
-                      }
-                    </TableCell>
-                    <TableCell>
                       {vacancy.views
                         ? (
                           <div className='flex'>
@@ -180,6 +205,18 @@ export default function MyVacanciesTable({vacancies, loader}: Prop) {
                         : 'No views'
                       }
                     </TableCell>
+                    <TableCell>
+                      {vacancy.feedback
+                        ? (
+                          <div className='flex'>
+                            <Eye className='h-4 mr-1'/>
+                            {vacancy.feedback}
+                          </div>
+                        )
+                        : 'No feedback'
+                      }
+                    </TableCell>
+
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
