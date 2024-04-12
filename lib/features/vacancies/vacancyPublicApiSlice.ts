@@ -1,9 +1,5 @@
 import {apiPublicSlice} from "@/lib/services/apiPublicSlice";
-import {Tag} from "@/components/ui/tag-input";
-import {BaseApi} from "@/utils/Interface";
-import {Vacancies} from "@/lib/features/accounts/accountsApiSlice";
-
-
+import {Vacancies, Vacancy} from "@/lib/features/accounts/accountsApiSlice";
 
 
 const otherApiSlice = apiPublicSlice.injectEndpoints({
@@ -11,10 +7,14 @@ const otherApiSlice = apiPublicSlice.injectEndpoints({
     listVacancies: builder.query<Vacancies, void>({
       query: () => '/vacancies/',
     }),
+    retrieveVacancy: builder.query<Vacancy, string>({
+      query: (slug) => `/vacancies/${slug}`,
+    }),
   })
 })
 
 
 export const {
   useListVacanciesQuery,
+  useRetrieveVacancyQuery,
 } = otherApiSlice

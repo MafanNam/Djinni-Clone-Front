@@ -8,6 +8,19 @@ import Autoplay from "embla-carousel-autoplay"
 export default function CategoryContainer() {
   const {data, isLoading, isFetching} = useListCategoryQuery();
 
+  let loader = null;
+  if (isLoading || isFetching) {
+    loader = (
+      <>
+        <div className='flex space-x-4'>
+          <Skeleton className="h-[80px] w-[300px] rounded-xl"/>
+          <Skeleton className="h-[80px] w-[300px] rounded-xl"/>
+          <Skeleton className="h-[80px] w-[300px] rounded-xl"/>
+          <Skeleton className="h-[80px] w-[300px] rounded-xl"/>
+        </div>
+      </>
+    )
+  }
 
   return (
     <div className='bg-gray-100 dark:bg-gray-900 dark:bg-opacity-50 py-20 md:px-16 px-8'>
@@ -27,19 +40,7 @@ export default function CategoryContainer() {
           className="w-full max-w-72 sm:max-w-xl md:max-w-2xl lg:max-w-5xl xl:max-w-6xl"
         >
           <CarouselContent>
-            {(isLoading || isFetching) && (
-              <>
-                <Skeleton className="h-[80px] w-[340px] rounded-l"/>
-                <Skeleton className="h-[80px] w-[340px] rounded-l"/>
-                <Skeleton className="h-[80px] w-[340px] rounded-l"/>
-                <Skeleton className="h-[80px] w-[340px] rounded-l"/>
-                <Skeleton className="h-[80px] w-[340px] rounded-l"/>
-                <Skeleton className="h-[80px] w-[340px] rounded-l"/>
-                <Skeleton className="h-[80px] w-[340px] rounded-l"/>
-                <Skeleton className="h-[80px] w-[340px] rounded-l"/>
-              </>
-            )}
-            {
+            {loader ||
               data?.results.slice(0, 8).map((item) => (
                 <CarouselItem key={item.id} className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
                   <CategoryCard

@@ -1,69 +1,219 @@
 "use client";
-import {useState} from "react";
-import {FormSubmit, InputChange} from "@/utils/Interface";
+import {Button} from "@/components/ui/button";
+import {Card, CardContent, CardDescription, CardHeader} from "@/components/ui/card";
+import {useRetrieveVacancyQuery} from "@/lib/features/vacancies/vacancyPublicApiSlice";
+import {Separator} from "@/components/ui/separator";
+import {Skeleton} from "@/components/ui/skeleton";
+import UA from "@/public/images/ua.svg"
+import Image from "next/image";
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from "@/components/ui/breadcrumb";
 import {useRouter} from "next/navigation";
-import {AiOutlineSearch} from "react-icons/ai";
-import JobCard from "@/components/jobs/JobCard";
+import JobDetailCard from "@/components/jobs/JobDetailCard";
+import {useRetrieveMeCandidateQuery} from "@/lib/features/accounts/accountsApiSlice";
+import {useAppSelector} from "@/lib/hooks";
+import {CircleCheckBig, CircleX, ClipboardList, FolderClosed, Laptop, MapPin} from "lucide-react";
 
 
-export default function Jobs() {
-  const [search, setSearch] = useState('')
+const engLvl = [
+  {value: 'none', name: 'No English', index: 0},
+  {value: 'beginner', name: 'Beginner/Elementary', index: 1},
+  {value: 'intermediate', name: 'Intermediate', index: 2},
+  {value: 'upper_intermediate', name: 'Upper-Intermediate', index: 3},
+  {value: 'advanced', name: 'Advanced/Fluent', index: 4},
+]
 
-  const [jobs, setJobs] = useState([
-    {id: 1, title: 'Backend'},
-    {id: 2, title: 'Frontend'},
-  ])
+
+export default function Page({params}: { params: { slug: string } }) {
+  const {data: vacancy, isLoading, isFetching} = useRetrieveVacancyQuery(params.slug)
+  const {
+    data: candidate,
+    isLoading: isLoadingCandidate,
+    isFetching: isFetchingCandidate,
+    error,
+  } = useRetrieveMeCandidateQuery()
+  const {isAuthenticated, isLoading: isLoadingAuth} = useAppSelector(state => state.auth)
+  const router = useRouter();
+
+  // @ts-ignore
+  const isCandidate = isAuthenticated && error?.status !== 403
+
+  const candidateEngIndex = engLvl.find((item) => item.value === candidate?.eng_level)?.index
+  const vacancyEngIndex = engLvl.find((item) => item.name === vacancy?.eng_level)?.index
+
+  const equalCandidateEngLvl = (candidateEngIndex || 0) >= (vacancyEngIndex || 0);
+  const equalCandidateWorkExp = (vacancy?.work_exp || 0) <= (candidate?.work_exp || 0);
+  const equalCandidateSalary = (vacancy?.salary || 0) >= (candidate?.salary_expectation || 0);
 
 
-  const handleFilter = (e?: FormSubmit) => {
-    e?.preventDefault()
+  let loader = null;
+  if (isLoading || isFetching || isLoadingCandidate || isFetchingCandidate || isLoadingAuth) {
+    loader = (
+      <div>
+        {Array.from('1234567890').map((_, index,) =>
+          <div key={index} className='bg-gray-900 bg-muted/30 rounded-2xl p-4'>
+            <div className='grid gap-2'>
+              <div className='flex justify-center items-center w-full'>
+                <Skeleton className="h-7 w-7 rounded-full ml-4"/>
+                <Skeleton className="h-7 w-24 rounded-full ml-2"/>
+                <Skeleton className="h-7 w-7 rounded-xl ml-auto"/>
+              </div>
+              <Skeleton className="h-8 w-60 lg:w-72 rounded-2xl ml-2"/>
+              <Skeleton className="h-6 w-72 lg:w-96 rounded-2xl ml-2"/>
+              <Skeleton className="h-28 w-full rounded-2xl mt-2"/>
+            </div>
+            <div className='flex justify-center items-center w-full mt-4'>
+              <Skeleton className="h-8 w-36 rounded-2xl ml-2"/>
+              <Skeleton className="h-8 w-28 rounded-2xl ml-auto"/>
+            </div>
+          </div>
+        )}
+      </div>
+    )
   }
-
 
   return (
     <>
-      <div className='md:py-10 py-7 md:px-16 px-5'>
-        <div
-          className='w-full m-auto bg-white dark:bg-gray-900 shadow-xl border border-gray-200 dark:border-gray-600 md:rounded-full rounded-md md:h-16 h-auto md:py-0 py-6 px-4'>
-          <form onSubmit={handleFilter} className='flex md:flex-row flex-col justify-between items-center h-full gap-3'>
-            <div
-              className='flex w-full items-center gap-3 md:mb-0 mb-5 md:border-none border-b border-gray-200 md:pb-0 pb-3 flex-1'>
-              <AiOutlineSearch className='text-xl text-gray-500 dark:text-purple-500'/>
-              <input type='text' value={search} onChange={e => setSearch(e.target.value)}
-                     placeholder='Job title or keyword'
-                     className='outline-0 dark:bg-gray-900 h-full px-2 w-full text-sm'/>
-            </div>
-            <button
-              className='bg-[#504ED7] hover:bg-[#2825C2] transition-[background] text-white text-sm px-6 py-2 rounded-full outline-0'>Search
-            </button>
-          </form>
-        </div>
-      </div>
-      {/*<Filter*/}
-      {/*  selectedJobLevel={selectedJobLevel}*/}
-      {/*  setSelectedJobLevel={setSelectedJobLevel}*/}
-      {/*  selectedEmploymentType={selectedEmploymentType}*/}
-      {/*  setSelectedEmploymentType={setSelectedEmploymentType}*/}
-      {/*  minSalary={minSalary}*/}
-      {/*  setMinSalary={setMinSalary}*/}
-      {/*  handleFilter={handleFilter}*/}
-      {/*/>*/}
-      <div className='bg-gray-100 dark:bg-gray-950 pt-10 pb-7 md:px-16 px-5'>
-        {
-          jobs.length === 0
-            ? (
-              <div className='bg-red-500 text-center text-white rounded-md py-3'>There`s no job available.</div>
-            )
-            : (
-              <div className='grid gap-8 xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1'>
-                {
-                  jobs.map(item => (
-                    <JobCard key={item.id} item={item}/>
-                  ))
+      <div className='pt-10 pb-7 md:px-6 px-5'>
+        <div className="text-white min-h-screen">
+          <div className="max-w-7xl mx-auto py-4 px-1 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between mb-6 ml-2">
+              <Breadcrumb>
+                <BreadcrumbList className='text-l text-black dark:text-white'>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink className='hover:text-blue-300'>
+                      <h1 onClick={() => router.push("/jobs")}>All jobs</h1>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator/>
+                  <BreadcrumbItem>
+                    {isLoading || isFetching ? <Skeleton className="h-6 w-36 rounded-xl"/> :
+                      <BreadcrumbPage className='text-blue-500'>{vacancy?.title}</BreadcrumbPage>
+                    }
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb></div>
+            <Separator/>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+              <div className="col-span-2 space-y-6">
+                {loader ||
+                  <JobDetailCard vacancy={vacancy} isCandidate={isCandidate}/>
                 }
               </div>
-            )
-        }
+
+              {isCandidate && (
+                <div className='lg:block w-96 md:w-auto'>
+                  <Card className='grow'>
+                    <CardHeader>
+                      <div>
+                        <div className='flex'>
+                          {equalCandidateEngLvl
+                            ? <CircleCheckBig className='w-4 h-4 mt-1 mr-2' color='green'/>
+                            : <CircleX className='w-4 h-4 mt-1 mr-2' color='red'/>
+                          }
+                          <h1>Only from {vacancy?.eng_level}</h1>
+                        </div>
+                        <CardDescription className='ml-6'>Your
+                          level: {engLvl.find((item) => item.value === candidate?.eng_level)?.name}</CardDescription>
+                      </div>
+
+                      <div>
+                        <div className='flex'>
+                          {equalCandidateWorkExp
+                            ? <CircleCheckBig className='w-4 h-4 mt-1 mr-2' color='green'/>
+                            : <CircleX className='w-4 h-4 mt-1 mr-2' color='red'/>
+                          }
+                          {vacancy?.work_exp === 0 ? 'No experience' :
+                            <h1>Only from {vacancy?.work_exp} year of experience </h1>
+                          }
+                        </div>
+                        <CardDescription className='ml-6'>Your experience: {candidate?.work_exp === 0
+                          ? 'no experience'
+                          : `${candidate?.work_exp} years of experience`}
+                        </CardDescription>
+                      </div>
+
+                      <div>
+                        <div className='flex'>
+                          {equalCandidateSalary
+                            ? <CircleCheckBig className='w-4 h-4 mt-1 mr-2' color='green'/>
+                            : <CircleX className='w-4 h-4 mt-1 mr-2' color='red'/>
+                          }
+                          <h1>Only ${vacancy?.salary}</h1>
+                        </div>
+                        <CardDescription className='ml-6'>
+                          Your expectations: ${candidate?.salary_expectation}
+                        </CardDescription>
+                      </div>
+                    </CardHeader>
+
+                    <Separator className='mb-4'/>
+
+                    <CardContent className='pt-2'>
+                      <div className='flex'>
+                        <FolderClosed className='w-4 h-4 mt-0.5 mr-2'/>
+                        <CardDescription>{vacancy?.category}</CardDescription>
+                      </div>
+                    </CardContent>
+
+                    <Separator className='mb-4'/>
+
+                    <CardContent className='pt-2 space-y-2'>
+                      <div className='flex'>
+                        <Laptop className='w-4 h-4 mt-0.5 mr-2'/>
+                        <CardDescription>
+                          {(vacancy?.employ_options.length || 0) > 0
+                            ? vacancy?.employ_options.join(', ')
+                            : 'No employ options'
+                          }
+                        </CardDescription>
+                      </div>
+
+                      <div className='flex'>
+                        <MapPin className='w-4 h-4 mt-0.5 mr-2'/>
+                        <CardDescription>{vacancy?.country}</CardDescription>
+                      </div>
+
+                      {vacancy?.is_only_ukraine &&
+                        <div className='flex'>
+                          <Image src={UA} className='w-4 h-4 mt-0.5 mr-2' alt='UA'/>
+                          <CardDescription>Only in Ukraine</CardDescription>
+                        </div>
+                      }
+
+                      {vacancy?.is_test_task &&
+                        <div className='flex'>
+                          <ClipboardList className='w-4 h-4 mt-0.5 mr-2'/>
+                          <CardDescription>Test task is needed</CardDescription>
+                        </div>
+                      }
+
+                    </CardContent>
+
+                    <Separator className='mb-4'/>
+
+                    {(vacancy?.skills.length || 0) > 0 &&
+                      <CardContent className='pt-2 space-y-1'>
+                        <CardDescription><strong>Skills:</strong></CardDescription>
+                        <CardDescription>{vacancy?.skills.join(', ')}</CardDescription>
+                      </CardContent>
+                    }
+                  </Card>
+                  <Button className='w-full mt-4 dark:text-gray-200' disabled={!isCandidate}>
+                    Apply for the job
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </>
   )

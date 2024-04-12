@@ -8,11 +8,13 @@ export default function MailPage() {
   const defaultLayout = layout ? JSON.parse(layout.value) : undefined
 
   return (
-    <div className="flex-col md:flex">
-      <Mail
-        mails={mails}
-        defaultLayout={defaultLayout}
-      />
-    </div>
+    <>
+      <div className="flex-col md:flex mb-1">
+        <Mail
+          mails={mails}
+          defaultLayout={defaultLayout}
+        />
+      </div>
+    </>
   )
 }

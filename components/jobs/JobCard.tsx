@@ -33,18 +33,20 @@ export default function JobCard({vacancy}: Props) {
                 alt={vacancy?.company.name}
               />
             </Avatar>
-            <Link href={`/companies/${vacancy?.company.id}`} className='mt-1 text-blue-500'>
+            <Link href={`/companies/${vacancy?.company.id}`}
+                  className='mt-1 text-blue-600 dark:text-blue-500 hover:text-blue-400'>
               {vacancy?.company.name}
             </Link>
             </span>
           </CardDescription>
           <CardTitle>
-            <Link href={`/jobs/${vacancy?.slug}`}>
+            <Link href={`/jobs/${vacancy?.slug}`} className='text-blue-600 dark:text-blue-400 hover:text-blue-300'>
               {vacancy?.title}
             </Link>
+            <span className='text-green-600 opacity-80'>{(vacancy?.salary || 0) >= 1 && ` $${vacancy?.salary}`}</span>
           </CardTitle>
           <CardDescription className='mt-1'>
-            {vacancy?.country} - Product - {vacancy?.employ_options.join(', ')} - {vacancy?.eng_level}
+            {vacancy?.country} - {vacancy?.employ_options.join(', ')} - {vacancy?.eng_level}
           </CardDescription>
         </div>
         <div className="ml-auto">
@@ -64,7 +66,8 @@ export default function JobCard({vacancy}: Props) {
       </CardHeader>
       <CardContent className="p-4 pt-2">
         <p>
-          {vacancy?.description.slice(0, 199)} <Link href={`/jobs/${vacancy?.slug}`} className='text-blue-500'>
+          {vacancy?.description.slice(0, 199)} <Link href={`/jobs/${vacancy?.slug}`}
+                                                     className='text-blue-500 hover:text-blue-400'>
           Read more
         </Link>
         </p>

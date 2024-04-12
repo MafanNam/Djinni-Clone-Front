@@ -1,6 +1,6 @@
 import {apiSlice} from "@/lib/services/apiSlice";
 import {BaseApi} from "@/utils/Interface";
-import {Companies, Company} from "@/lib/features/other/otherApiSlice";
+import {Company} from "@/lib/features/other/otherApiSlice";
 
 
 export interface Candidate extends BaseApi {
@@ -64,6 +64,8 @@ export interface Vacancy extends BaseApi {
     id: number;
     name: string;
     image: any;
+    bio: string;
+    company_url: string;
     country: string;
   }
   title: string;

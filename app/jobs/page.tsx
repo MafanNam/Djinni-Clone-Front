@@ -4,7 +4,6 @@ import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {useListVacanciesQuery} from "@/lib/features/vacancies/vacancyPublicApiSlice";
 import {Separator} from "@/components/ui/separator";
-import Spinner from "@/components/general/Spinner";
 import {
   Pagination,
   PaginationContent, PaginationEllipsis,
@@ -12,12 +11,40 @@ import {
   PaginationLink, PaginationNext,
   PaginationPrevious
 } from "@/components/ui/pagination";
+import {Skeleton} from "@/components/ui/skeleton";
 
 
 export default function Jobs() {
   const {data: vacancies, isLoading, isFetching} = useListVacanciesQuery()
 
-  if (isLoading || isFetching) return <Spinner size={200}/>
+  let loader = null;
+  if (isLoading || isFetching) {
+    loader = (
+      <div>
+        {Array.from('1234567890').map((_, index) =>
+          <div key={index}>
+            <div className='bg-gray-900 bg-muted/30 rounded-2xl p-4'>
+              <div className='grid gap-2'>
+                <div className='flex justify-center items-center w-full'>
+                  <Skeleton className="h-7 w-7 rounded-full ml-4"/>
+                  <Skeleton className="h-7 w-24 rounded-full ml-2"/>
+                  <Skeleton className="h-7 w-7 rounded-xl ml-auto"/>
+                </div>
+                <Skeleton className="h-8 w-60 lg:w-72 rounded-2xl ml-2"/>
+                <Skeleton className="h-6 w-72 lg:w-96 rounded-2xl ml-2"/>
+                <Skeleton className="h-28 w-full rounded-2xl mt-2"/>
+              </div>
+              <div className='flex justify-center items-center w-full mt-4'>
+                <Skeleton className="h-8 w-36 rounded-2xl ml-2"/>
+                <Skeleton className="h-8 w-28 rounded-2xl ml-auto"/>
+              </div>
+            </div>
+            <br/>
+          </div>
+        )}
+      </div>
+    )
+  }
 
   return (
     <>
@@ -30,12 +57,13 @@ export default function Jobs() {
             <Separator/>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
               <div className="col-span-2 space-y-6">
-                {vacancies?.count !== 0 ? vacancies?.results.map((vacancy) => (
-                  <JobCard key={vacancy.id} vacancy={vacancy}/>
-                )) : (
-                  <h1>No Vacancies</h1>
-                )}
-                <Pagination className='flex relative items-center justify-center'>
+                {loader || (
+                  vacancies?.count !== 0 ? vacancies?.results.map((vacancy) => (
+                    <JobCard key={vacancy.id} vacancy={vacancy}/>
+                  )) : (
+                    <h1>No Vacancies</h1>
+                  ))}
+                <Pagination className='flex relative items-center justify-center text-black dark:text-white'>
                   <PaginationContent>
                     <PaginationItem className='absolute left-0'>
                       <PaginationPrevious href="#"/>
@@ -59,7 +87,7 @@ export default function Jobs() {
                 </Pagination>
 
               </div>
-              <div className='invisible lg:visible'>
+              <div className='hidden lg:block'>
                 <Card>
                   <CardHeader>
                     <CardTitle>Filter Jobs</CardTitle>

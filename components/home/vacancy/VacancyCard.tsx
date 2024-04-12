@@ -15,9 +15,6 @@ interface Props {
 }
 
 export default function VacancyCard({vacancy}: Props) {
-
-  console.log(vacancy)
-
   const router = useRouter()
 
   return (
