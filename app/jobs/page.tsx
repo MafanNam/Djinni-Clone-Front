@@ -1,69 +1,86 @@
 "use client";
-import {useState} from "react";
-import {FormSubmit, InputChange} from "@/utils/Interface";
-import {useRouter} from "next/navigation";
-import {AiOutlineSearch} from "react-icons/ai";
 import JobCard from "@/components/jobs/JobCard";
+import {Button} from "@/components/ui/button";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {useListVacanciesQuery} from "@/lib/features/vacancies/vacancyPublicApiSlice";
+import {Separator} from "@/components/ui/separator";
+import Spinner from "@/components/general/Spinner";
+import {
+  Pagination,
+  PaginationContent, PaginationEllipsis,
+  PaginationItem,
+  PaginationLink, PaginationNext,
+  PaginationPrevious
+} from "@/components/ui/pagination";
 
 
 export default function Jobs() {
-  const [search, setSearch] = useState('')
+  const {data: vacancies, isLoading, isFetching} = useListVacanciesQuery()
 
-  const [jobs, setJobs] = useState([
-    {id: 1, title: 'Backend'},
-    {id: 2, title: 'Frontend'},
-  ])
-
-
-  const handleFilter = (e?: FormSubmit) => {
-    e?.preventDefault()
-  }
-
+  if (isLoading || isFetching) return <Spinner size={200}/>
 
   return (
     <>
-      <div className='md:py-10 py-7 md:px-16 px-5'>
-        <div
-          className='w-full m-auto bg-white dark:bg-gray-900 shadow-xl border border-gray-200 dark:border-gray-600 md:rounded-full rounded-md md:h-16 h-auto md:py-0 py-6 px-4'>
-          <form onSubmit={handleFilter} className='flex md:flex-row flex-col justify-between items-center h-full gap-3'>
-            <div
-              className='flex w-full items-center gap-3 md:mb-0 mb-5 md:border-none border-b border-gray-200 md:pb-0 pb-3 flex-1'>
-              <AiOutlineSearch className='text-xl text-gray-500 dark:text-purple-500'/>
-              <input type='text' value={search} onChange={e => setSearch(e.target.value)}
-                     placeholder='Job title or keyword'
-                     className='outline-0 dark:bg-gray-900 h-full px-2 w-full text-sm'/>
+      <div className='pt-10 pb-7 md:px-16 px-5'>
+        <div className="text-white min-h-screen">
+          <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between mb-6 ml-2">
+              <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Jobs at Djinni {vacancies?.count}</h1>
             </div>
-            <button
-              className='bg-[#504ED7] hover:bg-[#2825C2] transition-[background] text-white text-sm px-6 py-2 rounded-full outline-0'>Search
-            </button>
-          </form>
-        </div>
-      </div>
-      {/*<Filter*/}
-      {/*  selectedJobLevel={selectedJobLevel}*/}
-      {/*  setSelectedJobLevel={setSelectedJobLevel}*/}
-      {/*  selectedEmploymentType={selectedEmploymentType}*/}
-      {/*  setSelectedEmploymentType={setSelectedEmploymentType}*/}
-      {/*  minSalary={minSalary}*/}
-      {/*  setMinSalary={setMinSalary}*/}
-      {/*  handleFilter={handleFilter}*/}
-      {/*/>*/}
-      <div className='bg-gray-100 dark:bg-gray-950 pt-10 pb-7 md:px-16 px-5'>
-        {
-          jobs.length === 0
-            ? (
-              <div className='bg-red-500 text-center text-white rounded-md py-3'>There`s no job available.</div>
-            )
-            : (
-              <div className='grid gap-8 xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1'>
-                {
-                  jobs.map(item => (
-                    <JobCard key={item.id} item={item}/>
-                  ))
-                }
+            <Separator/>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+              <div className="col-span-2 space-y-6">
+                {vacancies?.count !== 0 ? vacancies?.results.map((vacancy) => (
+                  <JobCard key={vacancy.id} vacancy={vacancy}/>
+                )) : (
+                  <h1>No Vacancies</h1>
+                )}
+                <Pagination className='flex relative items-center justify-center'>
+                  <PaginationContent>
+                    <PaginationItem className='absolute left-0'>
+                      <PaginationPrevious href="#"/>
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationLink href="#" isActive>1</PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationLink href="#">2</PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationLink href="#">3</PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationEllipsis/>
+                    </PaginationItem>
+                    <PaginationItem className='absolute right-0'>
+                      <PaginationNext href="#"/>
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+
               </div>
-            )
-        }
+              <div className='invisible lg:visible'>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Filter Jobs</CardTitle>
+                    <CardDescription>
+                      Python, від $1000, 2 роки досвіду, Relocate, Віддалена робота, Офіс, Part-time, Фріланс -
+                      Редагувати
+                      профіль
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p>Підписки - На email</p>
+                    <p>У вас поки що немає підписок</p>
+                    <Button variant="outline">Створити підписку</Button>
+                    <p>Мої відгуки на вакансії</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+            </div>
+          </div>
+        </div>
       </div>
     </>
   )

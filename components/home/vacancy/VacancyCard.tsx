@@ -1,45 +1,105 @@
 "use client";
-import Image from "next/image";
 import {useRouter} from "next/navigation";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {
+  Dot, Eye, MessageCircle,
+} from "lucide-react";
+import {Separator} from "@/components/ui/separator";
+import {Vacancy} from "@/lib/features/accounts/accountsApiSlice";
+import {Avatar, AvatarImage} from "@/components/ui/avatar";
+import dayjs from "dayjs";
+import {Checkbox} from "@/components/ui/checkbox";
 
-// @ts-ignore
-export default function VacancyCard({id, name, image, bio, country, num_employees}) {
+interface Props {
+  vacancy?: Vacancy | undefined;
+}
+
+export default function VacancyCard({vacancy}: Props) {
+
+  console.log(vacancy)
 
   const router = useRouter()
 
   return (
-    <div onClick={() => router.push(`/companies/${id}`)}
-         className='hover:border-2 border hover:border-[#504ED7] border-gray-200 shadow-md p-5 hover:scale-105 rounded-md transition-[transform] cursor-pointer'>
-      <div className='flex items-center gap-2'>
-        <div className='w-12 h-12 rounded-full border border-gray-300 dark:border-[#504ED7] shrink-0'>
-          <Image src={image} alt={name} width={100} height={100} className='w-full h-full rounded-full object-cover'/>
+    <Card className="overflow-hidden hover:border-[#504ED7] hover:scale-105 transition-[transform] cursor-pointer"
+          onClick={() => router.push(`/jobs/${vacancy?.slug}`)}>
+      <CardHeader className="flex flex-row items-start bg-muted/50">
+        <div className="grid">
+          <CardDescription className='flex gap-1'>
+            <Avatar>
+              <AvatarImage
+                className='rounded-full w-8 h-8'
+                src={vacancy?.company.image}
+                alt={vacancy?.company.name}
+              />
+            </Avatar>
+            <span className='mt-1.5'>
+              {vacancy?.company.name}
+            </span>
+            <Dot className='mt-1'/>
+            <span className='mt-1.5'>
+              {dayjs(vacancy?.updated_at).format('h:mm A MM/DD')}
+            </span>
+            <Eye className='mt-2 h-4 w-4 ml-2'/>
+            <span className='mt-1.5'>
+              {vacancy?.views}
+            </span>
+            <MessageCircle className='mt-2 h-3.5 w-3.5'/>
+            <span className='mt-1.5'>
+              {vacancy?.feedback}
+            </span>
+          </CardDescription>
+          <CardTitle className="group flex items-center gap-2 text-lg">
+            {vacancy?.title.slice(0, 30) + ((vacancy?.title.length || 0) - 30 >= 1 ? '...' : '')}
+          </CardTitle>
         </div>
-        <div>
-          <h1 className='font-medium'>{name}</h1>
-          <p className='mt-2 text-xs text-gray-500'>{country}</p>
+      </CardHeader>
+      <CardContent className="p-4 text-sm">
+        <div className="grid gap-2">
+          <div className="font-semibold">Description</div>
+          <div>{vacancy?.description.slice(0, 150) + ((vacancy?.description.length || 0) - 150 >= 1 ? '...' : '')}</div>
+          <Separator className="my-2"/>
+          <div className="font-semibold">Details</div>
+          <ul className="grid gap-3">
+            <li className="flex items-center justify-between">
+              <span className="text-muted-foreground">
+                Work experience
+              </span>
+              <span>{(vacancy?.work_exp || 0) > 0 ? `${vacancy?.work_exp} years` : 'Not necessary'}</span>
+            </li>
+            <li className="flex items-center justify-between">
+              <span className="text-muted-foreground">
+                Salary
+              </span>
+              <span>${vacancy?.salary}</span>
+            </li>
+          </ul>
+          <Separator className="my-2"/>
+          <ul className="grid gap-2">
+            <li className="flex items-center justify-between">
+              <span className="text-muted-foreground">Country</span>
+              <span>{vacancy?.country}</span>
+            </li>
+            <li className="flex items-center justify-between">
+              <span className="text-muted-foreground">English level</span>
+              <span>{vacancy?.eng_level}</span>
+            </li>
+            <li className="flex items-center justify-between">
+              <span className="text-muted-foreground">Is only Ukraine</span>
+              <span><Checkbox defaultChecked={vacancy?.is_only_ukraine} disabled/></span>
+            </li>
+            <li className="flex items-center justify-between font-semibold">
+              <span className="text-muted-foreground">Is test task</span>
+              <span><Checkbox defaultChecked={vacancy?.is_test_task} disabled/></span>
+            </li>
+          </ul>
         </div>
-      </div>
-      <div className='mb-10 mt-6'>
-        {/*<h1 className='font-semibold text-xl'>{name}</h1>*/}
-        <div className='mt-3 text-gray-400 text-sm' dangerouslySetInnerHTML={{__html: bio.slice(0, 50) + '...'}}/>
-      </div>
-      <div className='flex items-center justify-between'>
-        <div className='flex items-center'>
-          <p className='font-semibold text-xl'>{num_employees}</p>
-          <sub className='text-xs text-gray-500 font-medium'>/employers</sub>
+      </CardContent>
+      <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
+        <div className="text-xs text-muted-foreground">
+          {(vacancy?.employ_options.length || 0) < 4 ? vacancy?.employ_options.join(', ') : 'Any'}
         </div>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   )
-
-  // return (
-  //   <div className='bg-gray-100 p-7 flex gap-4'>
-  //     {/*<div className='w-12 h-12 rounded-md shrink-0'>*/}
-  //     {/*  <img src={image} alt={title} />*/}
-  //     {/*</div>*/}
-  //     <div>
-  //       <h2 className='font-medium'>{title}</h2>
-  //     </div>
-  //   </div>
-  // )
 }

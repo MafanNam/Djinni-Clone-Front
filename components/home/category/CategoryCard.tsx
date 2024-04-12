@@ -1,10 +1,11 @@
-// @ts-ignore
-export default function CategoryCard({name}) {
+import {Card, CardHeader} from "@/components/ui/card";
+
+export default function CategoryCard({name}: {name: string}) {
   return (
-    <div className='bg-white dark:bg-gray-800 dark:bg-opacity-50 p-7 flex gap-4'>
-      <div>
+    <Card className=''>
+      <CardHeader>
         <h2 className='font-medium'>{name}</h2>
-      </div>
-    </div>
+      </CardHeader>
+    </Card>
   )
 }

@@ -85,6 +85,7 @@ export interface Vacancy extends BaseApi {
 }
 
 export interface Vacancies extends BaseApi {
+  count: number;
   results: Vacancy[];
 }
 
