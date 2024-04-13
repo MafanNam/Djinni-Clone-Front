@@ -18,21 +18,22 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import {TooltipProvider} from "@/components/ui/tooltip"
-import {MailDisplay} from "@/components/inbox/mail-display"
 import {MailList} from "@/components/inbox/mail-list"
-import {type Mail} from "@/components/inbox/data"
-import {useMail} from "@/app/inbox/use-mail"
+import {useListChatsQuery} from "@/lib/features/inbox/inboxApiSlice";
+import {ReactNode} from "react";
+import Spinner from "@/components/general/Spinner";
 
 interface MailProps {
-  mails: Mail[]
   defaultLayout: number[] | undefined
+  children: ReactNode;
 }
 
-export function Mail({
-                       mails,
-                       defaultLayout = [440, 655],
-                     }: MailProps) {
-  const [mail] = useMail()
+export function Mail({defaultLayout = [440, 655], children}: MailProps) {
+  const {data: chats, isLoading, isFetching} = useListChatsQuery();
+
+  if (isLoading || isFetching) return <Spinner size={150}/>
+
+  console.log(chats)
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -74,18 +75,16 @@ export function Mail({
               </form>
             </div>
             <TabsContent value="all" className="m-0">
-              <MailList items={mails}/>
+              <MailList chats={chats?.results}/>
             </TabsContent>
             <TabsContent value="unread" className="m-0">
-              <MailList items={mails.filter((item) => !item.read)}/>
+              <MailList chats={chats?.results.filter((chat) => !chat.is_read)}/>
             </TabsContent>
           </Tabs>
         </ResizablePanel>
         <ResizableHandle withHandle/>
         <ResizablePanel defaultSize={defaultLayout[1]}>
-          <MailDisplay
-            mail={mails.find((item) => item.id === mail.selected) || null}
-          />
+          {children}
         </ResizablePanel>
       </ResizablePanelGroup>
     </TooltipProvider>

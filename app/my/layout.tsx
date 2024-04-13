@@ -107,7 +107,6 @@ export default function SettingsLayout({children}: SettingsLayoutProps) {
             }
           </aside>
           <div className="flex-1 lg:max-w-5xl">{children}</div>
-          {/*<>{children}</>*/}
         </div>
       </div>
     </ProtectRouter>
