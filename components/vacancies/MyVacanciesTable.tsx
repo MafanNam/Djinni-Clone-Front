@@ -165,7 +165,7 @@ export default function MyVacanciesTable({vacancies, recruiter, loader}: Prop) {
                 {vacancies?.results?.map((vacancy) => (
                   <TableRow key={vacancy.id}>
                     <TableCell className="font-medium">
-                      {vacancy.title.slice(0, 30) + '...'}
+                      {vacancy.title.slice(0, 30) + ((vacancy.title.length - 30) > 1 ? '...' : '')}
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline"

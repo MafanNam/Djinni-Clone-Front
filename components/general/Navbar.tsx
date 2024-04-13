@@ -76,14 +76,14 @@ export default function Navbar() {
                 {isAuthenticated &&
                   <li>
                     <Link href="/inbox"
-                          className={`${pathname === '/inbox' ? 'text-blue-600 dark:text-blue-400' : undefined} block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}>
+                          className={`navbar-link ${pathname === '/inbox' ? 'text-blue-600 dark:text-blue-300' : undefined} block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}>
                       Inbox
                     </Link>
                   </li>
                 }
                 <li>
                   <Link href="/jobs"
-                        className={`${pathname == '/jobs' ? 'text-blue-600 dark:text-blue-400' : undefined} block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}>
+                        className={`navbar-link ${pathname == '/jobs' ? 'text-blue-600 dark:text-blue-300' : undefined} block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}>
                     Jobs
                   </Link>
                 </li>
@@ -91,14 +91,14 @@ export default function Navbar() {
                   user?.type_profile == 'Recruiter' &&
                   <li>
                     <Link href="/candidates"
-                          className={`${pathname === '/candidates' ? 'text-blue-600 dark:text-blue-400' : undefined} block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}>
+                          className={`navbar-link ${pathname === '/candidates' ? 'text-blue-600 dark:text-blue-300' : undefined} block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}>
                       Candidates
                     </Link>
                   </li>
                 }
                 <li>
                   <Link href="/salaries"
-                        className={`${pathname === '/salaries' ? 'text-blue-600 dark:text-blue-400' : undefined} block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}>
+                        className={`navbar-link ${pathname === '/salaries' ? 'text-blue-600 dark:text-blue-300' : undefined} block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}>
                     Salaries
                   </Link>
                 </li>

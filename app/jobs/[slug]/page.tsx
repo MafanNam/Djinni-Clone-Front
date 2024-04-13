@@ -17,9 +17,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import {useRouter} from "next/navigation";
 import JobDetailCard from "@/components/jobs/JobDetailCard";
-import {useRetrieveMeCandidateQuery} from "@/lib/features/accounts/accountsApiSlice";
+import {
+  useRetrieveMeCandidateContactCvQuery,
+  useRetrieveMeCandidateQuery
+} from "@/lib/features/accounts/accountsApiSlice";
 import {useAppSelector} from "@/lib/hooks";
 import {CircleCheckBig, CircleX, ClipboardList, FolderClosed, Laptop, MapPin} from "lucide-react";
+import {useState} from "react";
 
 
 const engLvl = [
@@ -34,12 +38,19 @@ const engLvl = [
 export default function Page({params}: { params: { slug: string } }) {
   const {data: vacancy, isLoading, isFetching} = useRetrieveVacancyQuery(params.slug)
   const {
+    data: contactCv,
+    isLoading: isLoadingCv,
+    isFetching: isFetchingCv
+  } = useRetrieveMeCandidateContactCvQuery();
+
+  const {
     data: candidate,
     isLoading: isLoadingCandidate,
     isFetching: isFetchingCandidate,
     error,
   } = useRetrieveMeCandidateQuery()
   const {isAuthenticated, isLoading: isLoadingAuth} = useAppSelector(state => state.auth)
+  const [isOpenFeedback, setIsOpenFeedback] = useState(false);
   const router = useRouter();
 
   // @ts-ignore
@@ -54,7 +65,7 @@ export default function Page({params}: { params: { slug: string } }) {
 
 
   let loader = null;
-  if (isLoading || isFetching || isLoadingCandidate || isFetchingCandidate || isLoadingAuth) {
+  if (isLoading || isFetching || isLoadingCandidate || isFetchingCandidate || isLoadingAuth || isLoadingCv || isFetchingCv) {
     loader = (
       <div>
         {Array.from('1234567890').map((_, index,) =>
@@ -86,7 +97,7 @@ export default function Page({params}: { params: { slug: string } }) {
           <div className="max-w-7xl mx-auto py-4 px-1 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-6 ml-2">
               <Breadcrumb>
-                <BreadcrumbList className='text-l text-black dark:text-white'>
+                <BreadcrumbList className='text-l text-black dark:text-white cursor-pointer'>
                   <BreadcrumbItem>
                     <BreadcrumbLink className='hover:text-blue-300'>
                       <h1 onClick={() => router.push("/jobs")}>All jobs</h1>
@@ -104,7 +115,13 @@ export default function Page({params}: { params: { slug: string } }) {
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
               <div className="col-span-2 space-y-6">
                 {loader ||
-                  <JobDetailCard vacancy={vacancy} isCandidate={isCandidate}/>
+                  <JobDetailCard
+                    vacancy={vacancy}
+                    contactCv={contactCv}
+                    isCandidate={isCandidate}
+                    isOpenFeedback={isOpenFeedback}
+                    setIsOpenFeedback={setIsOpenFeedback}
+                  />
                 }
               </div>
 
@@ -206,9 +223,15 @@ export default function Page({params}: { params: { slug: string } }) {
                       </CardContent>
                     }
                   </Card>
-                  <Button className='w-full mt-4 dark:text-gray-200' disabled={!isCandidate}>
-                    Apply for the job
-                  </Button>
+                  {!isOpenFeedback &&
+                    <Button
+                      className='w-full mt-6 dark:text-gray-200'
+                      onClick={() => setIsOpenFeedback(!isOpenFeedback)}
+                      disabled={!isCandidate}
+                    >
+                      Apply for the job
+                    </Button>
+                  }
                 </div>
               )}
             </div>

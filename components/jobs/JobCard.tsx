@@ -7,17 +7,34 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
-import {Vacancy} from "@/lib/features/accounts/accountsApiSlice";
+import {usePostVacancyFeedbackMutation, Vacancy} from "@/lib/features/accounts/accountsApiSlice";
 import {Avatar, AvatarImage} from "@/components/ui/avatar";
 import dayjs from "dayjs";
 import Link from "next/link";
+import {useAppSelector} from "@/lib/hooks";
+import {toast} from "react-toastify";
+import {useRouter} from "next/navigation";
 
 interface Props {
   vacancy: Vacancy | undefined
 }
 
 export default function JobCard({vacancy}: Props) {
-  console.log(vacancy)
+  const {isAuthenticated} = useAppSelector(state => state.auth)
+  const [createFeedback, {isLoading: isLoadingFeedback}] = usePostVacancyFeedbackMutation();
+  const router = useRouter()
+
+  function handleFeedback() {
+    createFeedback({slug: vacancy?.slug, cover_letter: ''})
+      .unwrap()
+      .then(() => {
+        toast.success('Feedback is send')
+        router.push(`/inbox`)
+      })
+      .catch((err) => {
+        toast.error(err.data?.message || "Could not send feedback")
+      });
+  }
 
   return (
     <Card
@@ -49,20 +66,22 @@ export default function JobCard({vacancy}: Props) {
             {vacancy?.country} - {vacancy?.employ_options.join(', ')} - {vacancy?.eng_level}
           </CardDescription>
         </div>
-        <div className="ml-auto">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button className="h-8 w-8" size="icon" variant="outline">
-                <MoreVerticalIcon className="h-3.5 w-3.5"/>
-                <span className="sr-only">More</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>Feedback</DropdownMenuItem>
-              <DropdownMenuItem>Save job</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        {isAuthenticated &&
+          <div className="ml-auto">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="h-8 w-8" size="icon" variant="outline">
+                  <MoreVerticalIcon className="h-3.5 w-3.5"/>
+                  <span className="sr-only">More</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleFeedback} disabled={isLoadingFeedback}>Feedback</DropdownMenuItem>
+                <DropdownMenuItem>Save job</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        }
       </CardHeader>
       <CardContent className="p-4 pt-2">
         <p>

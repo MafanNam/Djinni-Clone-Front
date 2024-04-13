@@ -49,6 +49,10 @@ export interface VacancyCreate {
   is_test_task: boolean;
 }
 
+export interface CreateVacancyFeedback {
+  cover_letter: string;
+}
+
 export interface Vacancy extends BaseApi {
   recruiter: {
     id: number;
@@ -158,6 +162,25 @@ const accountsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Candidate'],
     }),
+    updateMeCandidateContactCvFile: builder.mutation<ContactCv, void>({
+      query: (data) => ({
+        url: '/accounts/candidates/me/cv/file/',
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ['Candidate'],
+    }),
+
+    postVacancyFeedback: builder.mutation<CreateVacancyFeedback, Partial<any>>({
+      query: ({slug, ...data}) => ({
+        url: `/vacancies/${slug}/feedbacks/`,
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Vacancies']
+    }),
+
+
     listRecruiters: builder.query<Recruiters, void>({
       query: () => '/accounts/recruiters/',
     }),
@@ -244,7 +267,6 @@ const accountsApiSlice = apiSlice.injectEndpoints({
     }),
     updateMyVacancy: builder.mutation<VacancyCreate, Partial<VacancyCreate>>({
       query: ({slug, ...data}) => ({
-        // @ts-ignore
         url: `/vacancies/my/${slug}/`,
         method: "PUT",
         body: data,
@@ -272,6 +294,9 @@ export const {
   useUpdateMeCandidateImageMutation,
   useRetrieveMeCandidateContactCvQuery,
   useUpdateMeCandidateContactCvMutation,
+  useUpdateMeCandidateContactCvFileMutation,
+  usePostVacancyFeedbackMutation,
+
 
   useListRecruitersQuery,
   useRetrieveRecruiterQuery,
