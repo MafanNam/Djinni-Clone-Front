@@ -177,7 +177,7 @@ const accountsApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['Vacancies']
+      invalidatesTags: ['Vacancies', 'Chats']
     }),
 
 

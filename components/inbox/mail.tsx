@@ -21,7 +21,7 @@ import {TooltipProvider} from "@/components/ui/tooltip"
 import {MailList} from "@/components/inbox/mail-list"
 import {useListChatsQuery} from "@/lib/features/inbox/inboxApiSlice";
 import {ReactNode} from "react";
-import Spinner from "@/components/general/Spinner";
+import FullScreenSpinner from "@/components/general/FullScreenSpinner";
 
 interface MailProps {
   defaultLayout: number[] | undefined
@@ -31,7 +31,7 @@ interface MailProps {
 export function Mail({defaultLayout = [440, 655], children}: MailProps) {
   const {data: chats, isLoading, isFetching} = useListChatsQuery();
 
-  if (isLoading || isFetching) return <Spinner size={150}/>
+  if (isLoading || isFetching) return <FullScreenSpinner/>
 
   console.log(chats)
 
@@ -75,7 +75,11 @@ export function Mail({defaultLayout = [440, 655], children}: MailProps) {
               </form>
             </div>
             <TabsContent value="all" className="m-0">
-              <MailList chats={chats?.results}/>
+              {(chats?.count || 0) > 0 ? <MailList chats={chats?.results}/> :
+                <div className="p-8 pt-20 h-screen text-center text-muted-foreground">
+                  Chats not found.
+                </div>
+              }
             </TabsContent>
             <TabsContent value="unread" className="m-0">
               <MailList chats={chats?.results.filter((chat) => !chat.is_read)}/>

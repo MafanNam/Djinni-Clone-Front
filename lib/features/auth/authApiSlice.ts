@@ -1,7 +1,8 @@
 import {apiSlice} from "@/lib/services/apiSlice";
 import {finishInitialLoadUser, setUser} from "@/lib/features/auth/authSlice";
+import {BaseApi} from "@/utils/Interface";
 
-export interface User {
+export interface User extends BaseApi {
   first_name: string;
   last_name: string;
   type_profile: string,

@@ -187,6 +187,12 @@ export default function JobDetailCard({vacancy, contactCv, isCandidate, isOpenFe
                     <AlertTitle>Not found</AlertTitle>
                     <AlertDescription>Please upload your resume</AlertDescription>
                   </Alert>
+                  <h1
+                    className='pt-2 pl-2 text-sm text-blue-500 hover:text-blue-400 cursor-pointer'
+                    onClick={() => setIsUploadCv(!isUploadCv)}
+                  >
+                    + Upload CV
+                  </h1>
                 </div>
               :
               <div className='pt-4'>
@@ -194,7 +200,7 @@ export default function JobDetailCard({vacancy, contactCv, isCandidate, isOpenFe
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmitUploadCv)} encType='multipart/form-data'
                         className="space-y-8">
-                    <FormField
+                  <FormField
                       control={form.control}
                       name="cv_file"
                       render={({field}) => (
@@ -237,7 +243,7 @@ export default function JobDetailCard({vacancy, contactCv, isCandidate, isOpenFe
               <Button
                 className='dark:text-gray-200'
                 onClick={handleFeedback}
-                disabled={!isCandidate || !contactCv?.cv_file || isLoadingFeedback}
+                disabled={!isCandidate || isLoadingFeedback}
               >
                 Share contacts and start talking
               </Button>
