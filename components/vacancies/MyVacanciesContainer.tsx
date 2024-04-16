@@ -2,10 +2,17 @@
 import {useListMyVacanciesQuery, useRetrieveMeRecruiterQuery} from "@/lib/features/accounts/accountsApiSlice";
 import {Skeleton} from "@/components/ui/skeleton";
 import MyVacanciesTable from "@/components/vacancies/MyVacanciesTable";
+import {useState} from "react";
+import {useSearchParams} from "next/navigation";
 
 
 export function MyVacanciesContainer() {
-  const {data: vacancies, isLoading, isFetching} = useListMyVacanciesQuery();
+  const [page, setPage] = useState(1)
+  const searchParams = useSearchParams()
+
+  const search = searchParams.get('search') || ''
+
+  const {data: vacancies, isLoading, isFetching} = useListMyVacanciesQuery({page, search});
   const {data: recruiter, isLoading: isLoadingRecruiter, isFetching: isFetchingRecruiter} = useRetrieveMeRecruiterQuery();
 
   const loader = (
@@ -32,7 +39,7 @@ export function MyVacanciesContainer() {
       <div className="flex flex-col sm:py-2 sm:px-2 bg-muted/40 rounded-2xl">
         {(isLoading || isFetching || isLoadingRecruiter || isFetchingRecruiter) ? loader :
           <div className="flex-1 items-start">
-            <MyVacanciesTable vacancies={vacancies} recruiter={recruiter} loader={loader}/>
+            <MyVacanciesTable vacancies={vacancies} recruiter={recruiter} loader={loader} page={page} setPage={setPage}/>
           </div>
         }
       </div>

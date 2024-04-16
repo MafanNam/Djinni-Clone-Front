@@ -8,6 +8,7 @@ import VacancyContainer from "@/components/home/vacancy/VacancyContainer";
 
 
 export default function Home() {
+
   return (
     <>
       <div>

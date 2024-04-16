@@ -1,10 +1,9 @@
 import {apiPublicSlice} from "@/lib/services/apiPublicSlice";
 import {Tag} from "@/components/ui/tag-input";
-import {BaseApi} from "@/utils/Interface";
+import {BaseApi, ListBaseApi} from "@/utils/Interface";
 
 
-export interface Category {
-  count: number;
+export interface Category extends ListBaseApi {
   results: [{
     id: number;
     name: string;
@@ -21,13 +20,11 @@ export interface Company extends BaseApi {
   num_employees: number;
 }
 
-export interface Companies extends BaseApi {
-  count: number;
+export interface Companies extends ListBaseApi {
   results: Company[];
 }
 
-export interface Skills {
-  count: number;
+export interface Skills extends ListBaseApi {
   results: Tag[];
 }
 
@@ -37,8 +34,8 @@ const otherApiSlice = apiPublicSlice.injectEndpoints({
     listCategory: builder.query<Category, void>({
       query: () => '/categories/',
     }),
-    listCompanies: builder.query<Companies, void>({
-      query: () => '/companies/',
+    listCompanies: builder.query<Companies, number | void>({
+      query: (page = 1) => `/companies/?page=${page}`,
     }),
     retrieveCompany: builder.query<Company, number>({
       query: (id) => `/companies/${id}/`,

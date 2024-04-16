@@ -2,10 +2,15 @@
 import MyCompaniesTable from "@/components/companies/MyCompaniesTable";
 import {useListMyCompaniesQuery} from "@/lib/features/accounts/accountsApiSlice";
 import {Skeleton} from "@/components/ui/skeleton";
+import {useSearchParams} from "next/navigation";
 
 
 export function MyCompaniesContainer() {
-  const {data: companies, isLoading, isFetching} = useListMyCompaniesQuery();
+  const searchParams = useSearchParams()
+
+  const search = searchParams.get('search') || ''
+
+  const {data: companies, isLoading, isFetching} = useListMyCompaniesQuery(search);
 
   const loader = (
     <div className='h-96 mt-2 mr-2 ml-2'>

@@ -1,7 +1,7 @@
 "use client";
 import JobCard from "@/components/jobs/JobCard";
 import {Button} from "@/components/ui/button";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {useListVacanciesQuery} from "@/lib/features/vacancies/vacancyPublicApiSlice";
 import {Separator} from "@/components/ui/separator";
 import {
@@ -14,13 +14,61 @@ import {
 import {Skeleton} from "@/components/ui/skeleton";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import * as React from "react";
+import {useState} from "react";
+import {useRouter, useSearchParams} from "next/navigation";
+import {Input} from "@/components/ui/input";
+import {FormSubmit} from "@/utils/Interface";
+import {useListCategoryQuery, useListSkillsQuery} from "@/lib/features/other/otherApiSlice";
+
+
+const workExp = [
+  {value: 0, title: "No experience"},
+  {value: 1, title: "1 year"},
+  {value: 2, title: "2 years"},
+  {value: 3, title: "3 years"},
+  {value: 5, title: "5 years"},
+]
+
+const endLvl = [
+  {value: 'none', title: "No English"},
+  {value: 'beginner', title: "Beginner/Elementary"},
+  {value: 'intermediate', title: "Intermediate"},
+  {value: 'upper_intermediate', title: "Upper-Intermediate"},
+  {value: 'advanced', title: "Advanced/Fluent"},
+]
+
+const salaryFrom = [1500, 2500, 3500, 4500, 5500, 6500, 7500, 8500]
 
 
 export default function Jobs() {
-  const {data: vacancies, isLoading, isFetching} = useListVacanciesQuery()
+  const [page, setPage] = useState(1)
+  const router = useRouter();
+
+  const searchParams = useSearchParams()
+
+  const search = searchParams.get('search') || ''
+  const category__id = searchParams.get('category__id') || ''
+  const skills__name = searchParams.get('skills__name') || ''
+  const work_exp = searchParams.get('work_exp') || ''
+  const salary__lte = searchParams.get('salary__lte') || ''
+  const eng_level = searchParams.get('eng_level') || ''
+  const [searchJobs, setSearchJobs] = useState(search)
+
+  const {data: vacancies, isLoading, isFetching} = useListVacanciesQuery({
+    page,
+    search,
+    category__id,
+    skills__name,
+    work_exp,
+    salary__lte,
+    eng_level,
+  })
+  const {data: category, isLoading: isLoadingCategory, isFetching: isFetchingCategory} = useListCategoryQuery()
+  const {data: skills, isLoading: isLoadingSkills, isFetching: isFetchingSkills} = useListSkillsQuery()
+  const pages = Math.floor((vacancies?.count || 0) / 10);
 
   let loader = null;
-  if (isLoading || isFetching) {
+  if (isLoading || isFetching || isLoadingCategory || isFetchingCategory || isLoadingSkills || isFetchingSkills) {
     loader = (
       <div>
         {Array.from('1234567890').map((_, index) =>
@@ -47,6 +95,37 @@ export default function Jobs() {
       </div>
     )
   }
+
+  const handleSubmit = (e: FormSubmit) => {
+    e.preventDefault()
+    router.push(`?search=${searchJobs}`)
+  }
+
+  const handleCategoryFilter = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => {
+    e.preventDefault()
+    router.push(`?category__id=${id}`)
+  }
+
+  const handleSkillsFilter = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, skillName: string) => {
+    e.preventDefault()
+    router.push(`?skills__name=${skillName}`)
+  }
+
+  const handleWorkExpFilter = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, title: number) => {
+    e.preventDefault()
+    router.push(`?work_exp=${title}`)
+  }
+
+  const handleSalaryFilter = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: number) => {
+    e.preventDefault()
+    router.push(`?salary__lte=${value}`)
+  }
+
+  const handleEnglishFilter = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, title: string) => {
+    e.preventDefault()
+    router.push(`?eng_level=${title}`)
+  }
+
 
   return (
     <>
@@ -85,46 +164,143 @@ export default function Jobs() {
                       )) : (
                         <h1>No Vacancies</h1>
                       ))}
-                    <Pagination className='flex relative items-center justify-center text-black dark:text-white'>
-                      <PaginationContent>
-                        <PaginationItem className='absolute left-0'>
-                          <PaginationPrevious href="#"/>
-                        </PaginationItem>
-                        <PaginationItem>
-                          <PaginationLink href="#" isActive>1</PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                          <PaginationLink href="#">2</PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                          <PaginationLink href="#">3</PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                          <PaginationEllipsis/>
-                        </PaginationItem>
-                        <PaginationItem className='absolute right-0'>
-                          <PaginationNext href="#"/>
-                        </PaginationItem>
-                      </PaginationContent>
-                    </Pagination>
+                    {pages !== 0 &&
+                      <Pagination className='flex relative items-center justify-center text-black dark:text-white'>
+                        <PaginationContent>
+                          <PaginationItem className='absolute left-0'>
+                            <PaginationPrevious
+                              className={!vacancies?.previous ? "pointer-events-none opacity-50" : undefined}
+                              onClick={() => vacancies?.previous && setPage(page - 1)}
+                            />
+                          </PaginationItem>
+                          {Array.from({length: pages}).slice(0, 5).map((_, index) => (
+                            <PaginationItem key={index}>
+                              <PaginationLink
+                                onClick={() => setPage(index + 1)}
+                                isActive={page === index + 1}
+                              >
+                                {index + 1}
+                              </PaginationLink>
+                            </PaginationItem>
+                          ))}
+                          <PaginationItem>
+                            <PaginationEllipsis/>
+                          </PaginationItem>
+                          <PaginationItem className='absolute right-0'>
+                            <PaginationNext
+                              className={!vacancies?.next ? "pointer-events-none opacity-50" : undefined}
+                              onClick={() => vacancies?.next && setPage(page + 1)}
+                            />
+                          </PaginationItem>
+                        </PaginationContent>
+                      </Pagination>
+                    }
 
                   </div>
                   <div className='hidden lg:block'>
                     <Card>
                       <CardHeader>
                         <CardTitle>Filter Jobs</CardTitle>
-                        <CardDescription>
-                          Python, від $1000, 2 роки досвіду, Relocate, Віддалена робота, Офіс, Part-time, Фріланс -
-                          Редагувати
-                          профіль
-                        </CardDescription>
                       </CardHeader>
-                      <CardContent>
-                        <p>Підписки - На email</p>
-                        <p>У вас поки що немає підписок</p>
-                        <Button variant="outline">Створити підписку</Button>
-                        <p>Мої відгуки на вакансії</p>
+                      <CardContent className='pl-2'>
+                        <form onSubmit={handleSubmit} className='flex space-x-2 pl-2'>
+                          <Input
+                            type="search"
+                            placeholder="Search..."
+                            value={searchJobs}
+                            onChange={(e) => setSearchJobs(e.target.value)}
+                            className="w-full rounded-lg bg-background pl-4 md:w-[250px] lg:w-[250px]"
+                          />
+                          <Button size='sm' type='submit' variant='outline'>Search</Button>
+                        </form>
                       </CardContent>
+
+                      <Separator/>
+
+                      <CardContent className='pt-4 space-x-2 space-y-3'>
+                        <span>Category:</span>
+                        <br/>
+                        {category?.results.slice(0, 50).map((item) => (
+                          <Button
+                            variant={+category__id === item.id ? 'default' : 'outline'}
+                            disabled={+category__id === item.id}
+                            key={item.id}
+                            onClick={(e) => handleCategoryFilter(e, item.id)}
+                          >
+                            {item.name}
+                          </Button>
+                        ))}
+                      </CardContent>
+
+                      <Separator/>
+
+                      <CardContent className='pt-4 space-x-2 space-y-3'>
+                        <span>Skills:</span>
+                        <br/>
+                        {skills?.results.slice(0, 50).map((item) => (
+                          <Button
+                            variant={skills__name === item.text ? 'default' : 'outline'}
+                            disabled={skills__name === item.text}
+                            key={item.id}
+                            onClick={(e) => handleSkillsFilter(e, item.text)}
+                          >
+                            {item.text}
+                          </Button>
+                        ))}
+                      </CardContent>
+
+                      <Separator/>
+
+                      <CardContent className='pt-4 space-x-2 space-y-3'>
+                        <span>Work experience:</span>
+                        <br/>
+                        {workExp.map((item, index) => (
+                          <Button
+                            variant={+(work_exp === '' && -1) === item.value ? 'default' : 'outline'}
+                            disabled={+(work_exp === '' && -1) === item.value}
+                            key={index}
+                            onClick={(e) => handleWorkExpFilter(e, item.value)}
+                          >
+                            {item.title}
+                          </Button>
+                        ))}
+                      </CardContent>
+
+                      <Separator/>
+
+                      <CardContent className='pt-4 space-x-2 space-y-3'>
+                        <span>Salary from:</span>
+                        <br/>
+                        {salaryFrom.map((item, index) => (
+                          <Button
+                            variant={+salary__lte === item ? 'default' : 'outline'}
+                            disabled={+salary__lte === item}
+                            key={index}
+                            onClick={(e) => handleSalaryFilter(e, item)}
+                          >
+                            $ {item}
+                          </Button>
+                        ))}
+                      </CardContent>
+
+                      <Separator/>
+
+                      <CardContent className='pt-4 space-x-2 space-y-3'>
+                        <span>English:</span>
+                        <br/>
+                        {endLvl.map((item, index) => (
+                          <Button
+                            variant={eng_level === item.value ? 'default' : 'outline'}
+                            disabled={eng_level === item.value}
+                            size='sm'
+                            key={index}
+                            onClick={(e) => handleEnglishFilter(e, item.value)}
+                          >
+                            {item.title}
+                          </Button>
+                        ))}
+                      </CardContent>
+
                     </Card>
                   </div>
 

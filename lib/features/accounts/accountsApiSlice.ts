@@ -1,5 +1,5 @@
 import {apiSlice} from "@/lib/services/apiSlice";
-import {BaseApi} from "@/utils/Interface";
+import {BaseApi, ListBaseApi} from "@/utils/Interface";
 import {Company} from "@/lib/features/other/otherApiSlice";
 
 
@@ -90,8 +90,7 @@ export interface Vacancy extends BaseApi {
   feedback: number;
 }
 
-export interface Vacancies extends BaseApi {
-  count: number;
+export interface Vacancies extends ListBaseApi {
   results: Vacancy[];
 }
 
@@ -111,21 +110,19 @@ export interface Recruiter extends BaseApi {
   trust_hr: boolean;
 }
 
-interface Candidates {
-  count: number;
+interface Candidates extends ListBaseApi {
   results: Candidate[]
 }
 
-interface Recruiters {
-  count: number;
+interface Recruiters extends ListBaseApi {
   results: Recruiter[]
 }
 
 
 const accountsApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    listCandidates: builder.query<Candidates, void>({
-      query: () => '/accounts/candidates/',
+    listCandidates: builder.query<Candidates, number | void>({
+      query: (page = 1) => `/accounts/candidates/?page=${page}`,
     }),
     retrieveCandidate: builder.query<Candidate, number>({
       query: (id) => `/accounts/candidates/${id}/`,
@@ -217,8 +214,8 @@ const accountsApiSlice = apiSlice.injectEndpoints({
     }),
 
 
-    listMyCompanies: builder.query<Company[], void>({
-      query: () => `/companies/my/`,
+    listMyCompanies: builder.query<Company[], string | void>({
+      query: (search = '') => `/companies/my/?search=${search}`,
       providesTags: ['Company', 'Recruiter']
     }),
     postMyCompany: builder.mutation({
@@ -251,8 +248,8 @@ const accountsApiSlice = apiSlice.injectEndpoints({
     }),
 
 
-    listMyVacancies: builder.query<Vacancies, void>({
-      query: () => `/vacancies/my/`,
+    listMyVacancies: builder.query<Vacancies, any | void>({
+      query: ({page = 1, search = ''}) => `/vacancies/my/?page=${page}&search=${search}`,
       providesTags: ['Vacancy', 'Recruiter']
     }),
     postMyVacancy: builder.mutation<VacancyCreate, void>({

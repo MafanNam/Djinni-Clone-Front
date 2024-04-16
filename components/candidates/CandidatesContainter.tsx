@@ -14,10 +14,14 @@ import {Button} from "@/components/ui/button";
 import * as React from "react";
 import CandidateCard from "@/components/candidates/CandidatesCard";
 import {useListCandidatesQuery} from "@/lib/features/accounts/accountsApiSlice";
+import {useState} from "react";
 
 
 export default function CandidatesContainer() {
-  const {data: candidates, isLoading, isFetching} = useListCandidatesQuery()
+  const [page, setPage] = useState(1)
+  const {data: candidates, isLoading, isFetching} = useListCandidatesQuery(page)
+  const pages = Math.floor((candidates?.count || 0) / 10);
+
 
   let loader = null;
   if (isLoading || isFetching) {
@@ -84,25 +88,34 @@ export default function CandidatesContainer() {
                     )) : (
                       <h1>No Candidates</h1>
                     ))}
-                  <Pagination className='flex relative items-center justify-center text-black dark:text-white'>
+                  <Pagination className='flex relative items-center justify-center text-black dark:text-white pt-2'>
                     <PaginationContent>
                       <PaginationItem className='absolute left-0'>
-                        <PaginationPrevious href="#"/>
+                        <PaginationPrevious
+                          className={!candidates?.previous ? "pointer-events-none opacity-50" : undefined}
+                          onClick={() => candidates?.previous && setPage(page - 1)}
+                        />
                       </PaginationItem>
-                      <PaginationItem>
-                        <PaginationLink href="#" isActive>1</PaginationLink>
-                      </PaginationItem>
-                      <PaginationItem>
-                        <PaginationLink href="#">2</PaginationLink>
-                      </PaginationItem>
-                      <PaginationItem>
-                        <PaginationLink href="#">3</PaginationLink>
-                      </PaginationItem>
-                      <PaginationItem>
-                        <PaginationEllipsis/>
-                      </PaginationItem>
+                      {Array.from({length: pages}).slice(0, 5).map((_, index) => (
+                        <PaginationItem key={index}>
+                          <PaginationLink
+                            onClick={() => setPage(index + 1)}
+                            isActive={page === index + 1}
+                          >
+                            {index + 1}
+                          </PaginationLink>
+                        </PaginationItem>
+                      ))}
+                      {pages !== 0 &&
+                        <PaginationItem>
+                          <PaginationEllipsis/>
+                        </PaginationItem>
+                      }
                       <PaginationItem className='absolute right-0'>
-                        <PaginationNext href="#"/>
+                        <PaginationNext
+                          className={!candidates?.next ? "pointer-events-none opacity-50" : undefined}
+                          onClick={() => candidates?.next && setPage(page + 1)}
+                        />
                       </PaginationItem>
                     </PaginationContent>
                   </Pagination>

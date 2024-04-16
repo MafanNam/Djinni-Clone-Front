@@ -7,7 +7,7 @@ import {useListVacanciesQuery} from "@/lib/features/vacancies/vacancyPublicApiSl
 import Autoplay from "embla-carousel-autoplay";
 
 export default function VacancyContainer() {
-  const {data: vacancies, isLoading, isFetching} = useListVacanciesQuery()
+  const {data: vacancies, isLoading, isFetching} = useListVacanciesQuery({})
 
   let loader = null;
   if (isLoading || isFetching) {

@@ -11,10 +11,13 @@ import {
 import * as React from "react";
 import CompaniesCard from "@/components/companies/CompaniesCard";
 import {useListCompaniesQuery} from "@/lib/features/other/otherApiSlice";
+import {useState} from "react";
 
 
 export default function CompaniesContainer() {
-  const {data: companies, isLoading, isFetching} = useListCompaniesQuery()
+  const [page, setPage] = useState(1)
+  const {data: companies, isLoading, isFetching} = useListCompaniesQuery(page)
+  const pages = Math.floor((companies?.count || 0) / 10);
 
   let loader = null;
   if (isLoading || isFetching) {
@@ -63,25 +66,35 @@ export default function CompaniesContainer() {
                 )) : (
                   <h1>No Companies</h1>
                 ))}
+
               <Pagination className='flex relative items-center justify-center text-black dark:text-white'>
                 <PaginationContent>
                   <PaginationItem className='absolute left-0'>
-                    <PaginationPrevious href="#"/>
+                    <PaginationPrevious
+                      className={!companies?.previous ? "pointer-events-none opacity-50" : undefined}
+                      onClick={() => companies?.previous && setPage(page - 1)}
+                    />
                   </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#" isActive>1</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">2</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">3</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationEllipsis/>
-                  </PaginationItem>
+                  {Array.from({length: pages}).slice(0, 5).map((_, index) => (
+                    <PaginationItem key={index}>
+                      <PaginationLink
+                        onClick={() => setPage(index + 1)}
+                        isActive={page === index + 1}
+                      >
+                        {index + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  {pages !== 0 &&
+                    <PaginationItem>
+                      <PaginationEllipsis/>
+                    </PaginationItem>
+                  }
                   <PaginationItem className='absolute right-0'>
-                    <PaginationNext href="#"/>
+                    <PaginationNext
+                      className={!companies?.next ? "pointer-events-none opacity-50" : undefined}
+                      onClick={() => companies?.next && setPage(page + 1)}
+                    />
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>

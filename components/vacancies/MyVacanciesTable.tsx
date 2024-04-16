@@ -27,21 +27,43 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink, PaginationNext,
+  PaginationPrevious
+} from "@/components/ui/pagination";
+import * as React from "react";
+import {useState} from "react";
+import {FormSubmit} from "@/utils/Interface";
 
 
 interface Prop {
   vacancies?: Vacancies | undefined;
   recruiter?: Recruiter | undefined;
   loader: any;
+  page: number;
+  setPage: any;
 }
 
-export default function MyVacanciesTable({vacancies, recruiter, loader}: Prop) {
+export default function MyVacanciesTable({vacancies, recruiter, loader, page, setPage}: Prop) {
+  const pages = Math.floor((vacancies?.count || 0) / 10);
+
+  const [search, setSearch] = useState('')
+  const router = useRouter()
+
   const [vacancyDelete, {isLoading}] = useDeleteMyVacancyMutation();
-  const router = useRouter();
 
   console.log(vacancies)
 
   if (isLoading) return loader;
+
+  const handleSubmit = (e: FormSubmit) => {
+    e.preventDefault()
+    router.push(`/my/vacancies/?search=${search}`)
+  }
 
   function handleDelete(slug: string) {
     alert('Are you sure you want to delete this vacancy?');
@@ -62,12 +84,17 @@ export default function MyVacanciesTable({vacancies, recruiter, loader}: Prop) {
           <TabsTrigger value="UA">Ukraine</TabsTrigger>
         </TabsList>
         <div className="relative ml-auto flex-1 md:grow-0">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"/>
-          <Input
-            type="search"
-            placeholder="Search..."
-            className="w-full rounded-lg bg-background pl-8 md:w-[250px] lg:w-[250px]"
-          />
+          <form onSubmit={handleSubmit} className='flex space-x-1'>
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"/>
+            <Input
+              type="search"
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full rounded-lg bg-background pl-8 md:w-[250px] lg:w-[250px]"
+            />
+            <Button size='sm' type='submit' variant='outline'>Search</Button>
+          </form>
         </div>
         <div className="ml-auto flex items-center gap-2">
           <DropdownMenu>
@@ -243,10 +270,39 @@ export default function MyVacanciesTable({vacancies, recruiter, loader}: Prop) {
             </Table>
           </CardContent>
           <CardFooter>
-            <div className="text-xs text-muted-foreground">
-              Showing <strong>1-10</strong> of <strong>{'<NONE>'}</strong>{" "}
-              Vacancies
-            </div>
+
+            <Pagination className='flex relative items-center justify-center text-black dark:text-white'>
+              <PaginationContent>
+                <PaginationItem className='absolute left-0'>
+                  <PaginationPrevious
+                    className={!vacancies?.previous ? "pointer-events-none opacity-50" : undefined}
+                    onClick={() => vacancies?.previous && setPage(page - 1)}
+                  />
+                </PaginationItem>
+                {Array.from({length: pages}).slice(0, 5).map((_, index) => (
+                  <PaginationItem key={index}>
+                    <PaginationLink
+                      onClick={() => setPage(index + 1)}
+                      isActive={page === index + 1}
+                    >
+                      {index + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                {pages !== 0 &&
+                  <PaginationItem>
+                    <PaginationEllipsis/>
+                  </PaginationItem>
+                }
+                <PaginationItem className='absolute right-0'>
+                  <PaginationNext
+                    className={!vacancies?.next ? "pointer-events-none opacity-50" : undefined}
+                    onClick={() => vacancies?.next && setPage(page + 1)}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+
           </CardFooter>
         </Card>
       </TabsContent>
