@@ -4,6 +4,7 @@ import {BaseApi} from "@/utils/Interface";
 
 
 export interface Category {
+  count: number;
   results: [{
     id: number;
     name: string;
@@ -21,10 +22,12 @@ export interface Company extends BaseApi {
 }
 
 export interface Companies extends BaseApi {
+  count: number;
   results: Company[];
 }
 
 export interface Skills {
+  count: number;
   results: Tag[];
 }
 
@@ -37,6 +40,9 @@ const otherApiSlice = apiPublicSlice.injectEndpoints({
     listCompanies: builder.query<Companies, void>({
       query: () => '/companies/',
     }),
+    retrieveCompany: builder.query<Company, number>({
+      query: (id) => `/companies/${id}/`,
+    }),
     listSkills: builder.query<Skills, void>({
       query: () => '/skills/',
     }),
@@ -47,5 +53,6 @@ const otherApiSlice = apiPublicSlice.injectEndpoints({
 export const {
   useListCategoryQuery,
   useListCompaniesQuery,
+  useRetrieveCompanyQuery,
   useListSkillsQuery,
 } = otherApiSlice

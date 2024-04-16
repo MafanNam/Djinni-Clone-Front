@@ -74,7 +74,7 @@ export function MailList({chats}: MailListProps) {
   )
 }
 
-function getBadgeVariantFromLabel(
+export function getBadgeVariantFromLabel(
   label: string
 ): ComponentProps<typeof Badge>["variant"] {
   if (["remote work"].includes(label.toLowerCase())) {

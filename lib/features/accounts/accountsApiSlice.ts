@@ -112,11 +112,13 @@ export interface Recruiter extends BaseApi {
 }
 
 interface Candidates {
-  result: Candidate[]
+  count: number;
+  results: Candidate[]
 }
 
 interface Recruiters {
-  result: Recruiter[]
+  count: number;
+  results: Recruiter[]
 }
 
 
@@ -125,7 +127,7 @@ const accountsApiSlice = apiSlice.injectEndpoints({
     listCandidates: builder.query<Candidates, void>({
       query: () => '/accounts/candidates/',
     }),
-    retrieveCandidate: builder.query<Candidate, void>({
+    retrieveCandidate: builder.query<Candidate, number>({
       query: (id) => `/accounts/candidates/${id}/`,
     }),
     retrieveMeCandidate: builder.query<Candidate, void>({

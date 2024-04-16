@@ -1,13 +1,8 @@
-"use client";
+import CandidatesContainer from "@/components/candidates/CandidatesContainter";
 
 
-export default function Candidates() {
-
+export default function Page() {
   return (
-    <>
-      <div>
-        <h1>Candidates</h1>
-      </div>
-    </>
+    <CandidatesContainer/>
   )
 }

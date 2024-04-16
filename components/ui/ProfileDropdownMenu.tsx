@@ -116,7 +116,13 @@ export default function ProfileDropdownMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button size='icon' variant='outline' className="flex bg-white bg-opacity-50 rounded-full">
-          <Image height={100} width={100} className="rounded-full" src={user.image} alt="user photo"/>
+          <Image
+            height={100}
+            width={100}
+            className="rounded-full"
+            src={user.image}
+            alt="user photo"
+          />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 my-1">

@@ -28,6 +28,14 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 import dayjs from "dayjs";
 import {parsePhoneNumber} from "libphonenumber-js";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import Loader from "@/components/general/Loader";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from "@/components/ui/alert-dialog";
 
 
 export const messageFormSchema = z.object({
@@ -241,16 +249,35 @@ export function MailDisplay({messages, chat, user}: MailDisplayProps) {
                     <h1></h1>
                     <h1 className='flex ml-auto mr-6 space-x-2'>
                       {message.user.id === user?.id &&
-                        <Button
-                          className="h-5 w-5"
-                          size="icon"
-                          variant="outline"
-                          disabled={isLoadingDeleteMsg}
-                          onClick={() => handleDeleteMessage(message.id)}
-                        >
-                          <Trash className="h-2.5 w-2.5 text-red-700"/>
-                          <span className="sr-only">Delete</span>
-                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              className="h-5 w-5"
+                              size="icon"
+                              variant="outline"
+                              disabled={isLoadingDeleteMsg}
+                            >
+                              <Trash className="h-2.5 w-2.5 text-red-700"/>
+                              <span className="sr-only">Delete</span>
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete your message.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>
+                                Cancel
+                              </AlertDialogCancel>
+                              <AlertDialogAction onClick={() => handleDeleteMessage(message.id)}>
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       }
                       {message.is_read ? <CheckCheck className='h-4 w-4 text-blue-500'/> : <Check className='h-4 w-4'/>}
                     </h1>
@@ -275,6 +302,7 @@ export function MailDisplay({messages, chat, user}: MailDisplayProps) {
                           <Textarea
                             {...field}
                             className="p-4"
+                            disabled={isLoading}
                             placeholder={`Reply ${toProfile?.first_name}...`}
                           />
                         </FormControl>
@@ -286,10 +314,10 @@ export function MailDisplay({messages, chat, user}: MailDisplayProps) {
                     <Button
                       type='submit'
                       size="sm"
-                      className="ml-auto"
+                      className="ml-auto w-16"
                       disabled={isLoading}
                     >
-                      Send
+                      {isLoading ? <Loader/> : 'Send'}
                     </Button>
                   </div>
                 </div>

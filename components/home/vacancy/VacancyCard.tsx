@@ -46,15 +46,15 @@ export default function VacancyCard({vacancy}: Props) {
               {vacancy?.feedback}
             </span>
           </CardDescription>
-          <CardTitle className="group flex items-center gap-2 text-lg">
-            {vacancy?.title.slice(0, 30) + ((vacancy?.title.length || 0) - 30 >= 1 ? '...' : '')}
+          <CardTitle className="group flex items-center gap-2 text-lg line-clamp-2">
+            {vacancy?.title.substring(0, 30)}
           </CardTitle>
         </div>
       </CardHeader>
       <CardContent className="p-4 text-sm">
         <div className="grid gap-2">
           <div className="font-semibold">Description</div>
-          <div>{vacancy?.description.slice(0, 150) + ((vacancy?.description.length || 0) - 150 >= 1 ? '...' : '')}</div>
+          <div className='line-clamp-3'>{vacancy?.description.substring(0, 150)}</div>
           <Separator className="my-2"/>
           <div className="font-semibold">Details</div>
           <ul className="grid gap-3">
