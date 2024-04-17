@@ -50,6 +50,10 @@ export default function ProfileDropdownMenu() {
   if (user.type_profile === 'Candidate') {
     MenuItems = (
       <>
+        <DropdownMenuItem onClick={() => router.push('/my/account')}>
+          <User className="mr-2 h-4 w-4"/>
+          <span>Account</span>
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => router.push('/my/profile')}>
           <CircleUserRound className="mr-2 h-4 w-4"/>
           <span>Profile</span>
@@ -70,15 +74,15 @@ export default function ProfileDropdownMenu() {
           <BriefcaseBusiness className="mr-2 h-4 w-4"/>
           <span>Hires</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push('/my/account')}>
-          <User className="mr-2 h-4 w-4"/>
-          <span>Account</span>
-        </DropdownMenuItem>
       </>
     );
   } else if (user.type_profile === 'Recruiter') {
     MenuItems = (
       <>
+        <DropdownMenuItem onClick={() => router.push('/my/account')}>
+          <User className="mr-2 h-4 w-4"/>
+          <span>Account</span>
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => router.push('/my/contacts')}>
           <ReceiptText className="mr-2 h-4 w-4"/>
           <span>Contacts</span>
@@ -102,10 +106,6 @@ export default function ProfileDropdownMenu() {
         <DropdownMenuItem onClick={() => router.push('/my/analytics')}>
           <AreaChart className="mr-2 h-4 w-4"/>
           <span>Analytics</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push('/my/account')}>
-          <User className="mr-2 h-4 w-4"/>
-          <span>Account</span>
         </DropdownMenuItem>
       </>
     )

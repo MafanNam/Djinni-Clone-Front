@@ -1,10 +1,8 @@
 import type {Metadata} from "next";
-import {Inter} from "next/font/google";
 
-const inter = Inter({subsets: ["latin"]});
 
 export const metadata: Metadata = {
-  title: 'Job Seek | Sign Up'
+  title: 'Djinni | Sign up'
 }
 
 export default function RegisterLayout({

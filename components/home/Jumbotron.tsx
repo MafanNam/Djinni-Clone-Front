@@ -19,7 +19,7 @@ export default function Jumbotron() {
       <h1 style={{lineHeight: '70px'}} className='md:text-5xl text-3xl text-center font-medium mb-7'><span
         className='text-[#504ED7]'>Anonymous Job</span> <br className='hidden md:block'/> search on Djinni</h1>
       <br/>
-      <p className='text-gray-600 dark:text-gray-500 text-sm text-center'>{`<NUM VACANCY>`} jobs listed here! Your dream job is waiting</p>
+      <p className='text-gray-600 dark:text-gray-500 text-sm text-center'>1000+ jobs listed here! Your dream job is waiting</p>
       <div
         className='w-full max-w-[800px] m-auto bg-white dark:bg-gray-900 shadow-xl border border-gray-200 dark:border-gray-600 md:rounded-full rounded-md md:h-16 h-auto md:py-0 py-6 px-4 mt-12'>
         <form onSubmit={handleSubmit} className='flex md:flex-row flex-col justify-between items-center h-full gap-3'>
