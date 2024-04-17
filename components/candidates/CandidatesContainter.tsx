@@ -124,7 +124,7 @@ export default function CandidatesContainer() {
                 <div className='hidden lg:block'>
                   <Card>
                     <CardHeader>
-                      <CardTitle>Filter Jobs</CardTitle>
+                      <CardTitle>Filter Candidates</CardTitle>
                       <CardDescription>
                         Python, від $1000, 2 роки досвіду, Relocate, Віддалена робота, Офіс, Part-time, Фріланс -
                         Редагувати

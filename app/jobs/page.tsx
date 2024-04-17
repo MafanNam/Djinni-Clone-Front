@@ -19,6 +19,11 @@ import {useRouter, useSearchParams} from "next/navigation";
 import {Input} from "@/components/ui/input";
 import {FormSubmit} from "@/utils/Interface";
 import {useListCategoryQuery, useListSkillsQuery} from "@/lib/features/other/otherApiSlice";
+import {ClipboardList, RotateCcw} from "lucide-react";
+import {Switch} from "@/components/ui/switch";
+import {Label} from "@/components/ui/label";
+import UA from "@/public/images/ua.svg"
+import Image from "next/image";
 
 
 const workExp = [
@@ -43,7 +48,6 @@ const salaryFrom = [1500, 2500, 3500, 4500, 5500, 6500, 7500, 8500]
 export default function Jobs() {
   const [page, setPage] = useState(1)
   const router = useRouter();
-
   const searchParams = useSearchParams()
 
   const search = searchParams.get('search') || ''
@@ -52,6 +56,8 @@ export default function Jobs() {
   const work_exp = searchParams.get('work_exp') || ''
   const salary__lte = searchParams.get('salary__lte') || ''
   const eng_level = searchParams.get('eng_level') || ''
+  const is_only_ukraine = searchParams.get('is_only_ukraine') || ''
+  const is_test_task = searchParams.get('is_test_task') || ''
   const [searchJobs, setSearchJobs] = useState(search)
 
   const {data: vacancies, isLoading, isFetching} = useListVacanciesQuery({
@@ -62,6 +68,8 @@ export default function Jobs() {
     work_exp,
     salary__lte,
     eng_level,
+    is_only_ukraine,
+    is_test_task,
   })
   const {data: category, isLoading: isLoadingCategory, isFetching: isFetchingCategory} = useListCategoryQuery()
   const {data: skills, isLoading: isLoadingSkills, isFetching: isFetchingSkills} = useListSkillsQuery()
@@ -103,36 +111,62 @@ export default function Jobs() {
 
   const handleCategoryFilter = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => {
     e.preventDefault()
-    router.push(`?category__id=${id}`)
+
+    Number(category__id) === id
+      ? router.push(`/jobs`)
+      : router.push(`?category__id=${id}`)
   }
 
   const handleSkillsFilter = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, skillName: string) => {
     e.preventDefault()
-    router.push(`?skills__name=${skillName}`)
+
+    skills__name === skillName
+      ? router.push(`/jobs`)
+      : router.push(`?skills__name=${skillName}`)
   }
 
   const handleWorkExpFilter = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, title: number) => {
     e.preventDefault()
-    router.push(`?work_exp=${title}`)
+
+    Number(work_exp === '' && -1) === title
+      ? router.push(`/jobs`)
+      : router.push(`?work_exp=${title}`)
   }
 
   const handleSalaryFilter = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: number) => {
     e.preventDefault()
-    router.push(`?salary__lte=${value}`)
+
+    Number(salary__lte) === value
+      ? router.push(`/jobs`)
+      : router.push(`?salary__lte=${value}`)
   }
 
   const handleEnglishFilter = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, title: string) => {
     e.preventDefault()
-    router.push(`?eng_level=${title}`)
+    eng_level === title
+      ? router.push(`/jobs`)
+      : router.push(`?eng_level=${title}`)
+  }
+
+  const handleIsUkrainian = (checked: boolean) => {
+    checked
+      ? router.push(`?is_only_ukraine=${checked}`)
+      : router.push(`/jobs`)
+  }
+
+  const handleIsTestTask = (checked: boolean) => {
+    checked
+      ? router.push(`?is_test_task=${checked}`)
+      : router.push(`/jobs`)
   }
 
 
   return (
     <>
-      <div className='pt-10 pb-7 md:px-16 px-5'>
+      <div className='pt-6 pb-7 md:px-16 px-5'>
         <div className="text-white min-h-screen">
           <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-6 ml-2">
+            <div className="flex items-center justify-between mb-4 ml-2">
               <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Jobs at Djinni {vacancies?.count}</h1>
             </div>
 
@@ -200,7 +234,19 @@ export default function Jobs() {
                   <div className='hidden lg:block'>
                     <Card>
                       <CardHeader>
-                        <CardTitle>Filter Jobs</CardTitle>
+                        <div className='flex'>
+                          <CardTitle>Filter Jobs</CardTitle>
+                          {searchParams.size > 0 &&
+                            <Button
+                              variant='outline'
+                              size='icon'
+                              className='ml-auto w-8 h-8'
+                              onClick={() => router.push(`/jobs`)}
+                            >
+                              <RotateCcw className='text-red-700'/>
+                            </Button>
+                          }
+                        </div>
                       </CardHeader>
                       <CardContent className='pl-2'>
                         <form onSubmit={handleSubmit} className='flex space-x-2 pl-2'>
@@ -209,7 +255,7 @@ export default function Jobs() {
                             placeholder="Search..."
                             value={searchJobs}
                             onChange={(e) => setSearchJobs(e.target.value)}
-                            className="w-full rounded-lg bg-background pl-4 md:w-[250px] lg:w-[250px]"
+                            className="rounded-lg bg-background pl-4"
                           />
                           <Button size='sm' type='submit' variant='outline'>Search</Button>
                         </form>
@@ -220,16 +266,22 @@ export default function Jobs() {
                       <CardContent className='pt-4 space-x-2 space-y-3'>
                         <span>Category:</span>
                         <br/>
-                        {category?.results.slice(0, 50).map((item) => (
-                          <Button
-                            variant={+category__id === item.id ? 'default' : 'outline'}
-                            disabled={+category__id === item.id}
-                            key={item.id}
-                            onClick={(e) => handleCategoryFilter(e, item.id)}
-                          >
-                            {item.name}
-                          </Button>
-                        ))}
+                        {isLoadingCategory || isFetchingCategory ? (
+                            <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+                              {Array.from({length: 20}).map((_, index) => (
+                                <Skeleton key={index} className='w-16 h-8 rounded-md'/>
+                              ))}
+                            </div>
+                          ) :
+                          category?.results.slice(0, 50).map((item) => (
+                            <Button
+                              variant={+category__id === item.id ? 'default' : 'outline'}
+                              key={item.id}
+                              onClick={(e) => handleCategoryFilter(e, item.id)}
+                            >
+                              {item.name}
+                            </Button>
+                          ))}
                       </CardContent>
 
                       <Separator/>
@@ -237,16 +289,22 @@ export default function Jobs() {
                       <CardContent className='pt-4 space-x-2 space-y-3'>
                         <span>Skills:</span>
                         <br/>
-                        {skills?.results.slice(0, 50).map((item) => (
-                          <Button
-                            variant={skills__name === item.text ? 'default' : 'outline'}
-                            disabled={skills__name === item.text}
-                            key={item.id}
-                            onClick={(e) => handleSkillsFilter(e, item.text)}
-                          >
-                            {item.text}
-                          </Button>
-                        ))}
+                        {isLoadingSkills || isFetchingSkills ? (
+                            <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+                              {Array.from({length: 20}).map((_, index) => (
+                                <Skeleton key={index} className='w-16 h-8 rounded-md'/>
+                              ))}
+                            </div>
+                          ) :
+                          skills?.results.slice(0, 50).map((item) => (
+                            <Button
+                              variant={skills__name === item.text ? 'default' : 'outline'}
+                              key={item.id}
+                              onClick={(e) => handleSkillsFilter(e, item.text)}
+                            >
+                              {item.text}
+                            </Button>
+                          ))}
                       </CardContent>
 
                       <Separator/>
@@ -257,7 +315,6 @@ export default function Jobs() {
                         {workExp.map((item, index) => (
                           <Button
                             variant={+(work_exp === '' && -1) === item.value ? 'default' : 'outline'}
-                            disabled={+(work_exp === '' && -1) === item.value}
                             key={index}
                             onClick={(e) => handleWorkExpFilter(e, item.value)}
                           >
@@ -274,7 +331,6 @@ export default function Jobs() {
                         {salaryFrom.map((item, index) => (
                           <Button
                             variant={+salary__lte === item ? 'default' : 'outline'}
-                            disabled={+salary__lte === item}
                             key={index}
                             onClick={(e) => handleSalaryFilter(e, item)}
                           >
@@ -291,7 +347,6 @@ export default function Jobs() {
                         {endLvl.map((item, index) => (
                           <Button
                             variant={eng_level === item.value ? 'default' : 'outline'}
-                            disabled={eng_level === item.value}
                             size='sm'
                             key={index}
                             onClick={(e) => handleEnglishFilter(e, item.value)}
@@ -299,6 +354,27 @@ export default function Jobs() {
                             {item.title}
                           </Button>
                         ))}
+                      </CardContent>
+
+                      <Separator/>
+
+                      <CardContent className='pt-4 pb-3 space-y-3'>
+                        <div className="flex items-center">
+                          <Switch onCheckedChange={(checked) => handleIsUkrainian(checked)}/>
+                          <Label className='flex ml-2'>
+                            Ukrainian Product
+                            <Image src={UA} height={15} width={15} alt='UA' className='ml-2'/>
+                          </Label>
+                        </div>
+                      </CardContent>
+                      <CardContent>
+                        <div className="flex items-center">
+                          <Switch onCheckedChange={(checked) => handleIsTestTask(checked)}/>
+                          <Label className='flex ml-2'>
+                            <span>Test task</span>
+                            <ClipboardList className='ml-2 h-3.5 w-3.5'/>
+                          </Label>
+                        </div>
                       </CardContent>
 
                     </Card>

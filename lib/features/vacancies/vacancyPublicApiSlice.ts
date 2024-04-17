@@ -12,9 +12,11 @@ const otherApiSlice = apiPublicSlice.injectEndpoints({
                 skills__name = '',
                 work_exp = '',
                 salary__lte = '',
-                eng_level = ''
+                eng_level = '',
+                is_only_ukraine = '',
+                is_test_task = '',
               }) =>
-        `/vacancies/?page=${page}&search=${search}&category__id=${category__id}&skills__name=${skills__name}&work_exp=${work_exp}&salary__lte=${salary__lte}&eng_level=${eng_level}`,
+        `/vacancies/?page=${page}&search=${search}&category__id=${category__id}&skills__name=${skills__name}&work_exp=${work_exp}&salary__lte=${salary__lte}&eng_level=${eng_level}&is_only_ukraine=${is_only_ukraine}&is_test_task=${is_test_task}`,
     }),
     retrieveVacancy: builder.query<Vacancy, string>({
       query: (slug) => `/vacancies/${slug}`,
