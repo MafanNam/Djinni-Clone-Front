@@ -13,21 +13,26 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} f
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import Image from "next/image";
 import {Badge} from "@/components/ui/badge";
-import {Companies} from "@/lib/features/other/otherApiSlice";
+import {Company} from "@/lib/features/other/otherApiSlice";
 import dayjs from "dayjs";
 import {useRouter} from "next/navigation";
 import {useDeleteMyCompanyMutation} from "@/lib/features/accounts/accountsApiSlice";
 import {toast} from "react-toastify";
+import * as React from "react";
+import {useState} from "react";
+import {FormSubmit} from "@/utils/Interface";
 
 
 interface Prop {
-  companies?: Companies[] | undefined;
+  companies?: Company[] | undefined;
   loader: any;
 }
 
 export default function MyCompaniesTable({companies, loader}: Prop) {
   const [companyDelete, {isLoading}] = useDeleteMyCompanyMutation();
   const router = useRouter();
+  const [search, setSearch] = useState('')
+
 
   console.log(companies)
 
@@ -44,21 +49,30 @@ export default function MyCompaniesTable({companies, loader}: Prop) {
       .catch(() => toast.error('Failed to delete Company'))
   }
 
+  const handleSubmit = (e: FormSubmit) => {
+    e.preventDefault()
+    router.push(`/my/about-us/?search=${search}`)
+  }
+
   return (
     <Tabs defaultValue="all">
       <div className="flex items-center">
         <TabsList>
           <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="active">Active</TabsTrigger>
-          <TabsTrigger value="draft">Draft</TabsTrigger>
+          <TabsTrigger value="UA">Ukraine</TabsTrigger>
         </TabsList>
         <div className="relative ml-auto flex-1 md:grow-0">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"/>
-          <Input
-            type="search"
-            placeholder="Search..."
-            className="w-full rounded-lg bg-background pl-8 md:w-[250px] lg:w-[250px]"
-          />
+          <form onSubmit={handleSubmit} className='flex space-x-1'>
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"/>
+            <Input
+              type="search"
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full rounded-lg bg-background pl-8 md:w-[250px] lg:w-[250px]"
+            />
+            <Button size='sm' type='submit' variant='outline'>Search</Button>
+          </form>
         </div>
         <div className="ml-auto flex items-center gap-2">
           <DropdownMenu>
@@ -74,11 +88,11 @@ export default function MyCompaniesTable({companies, loader}: Prop) {
               <DropdownMenuLabel>Filter by</DropdownMenuLabel>
               <DropdownMenuSeparator/>
               <DropdownMenuCheckboxItem checked>
-                Active
+                Ukraine
               </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem>Draft</DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem>Created at</DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem>
-                Archived
+                Num employees
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>

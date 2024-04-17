@@ -1,13 +1,8 @@
-"use client";
+import CompaniesContainer from "@/components/companies/CompaniesContainter";
 
 
-export default function Companies() {
-
+export default function Page() {
   return (
-    <>
-      <div>
-        <h1>Companies</h1>
-      </div>
-    </>
+    <CompaniesContainer/>
   )
 }

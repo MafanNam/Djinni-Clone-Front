@@ -18,11 +18,11 @@ export default function Navbar() {
 
   return (
     <nav
-      className="sticky top-0 z-50 bg-white border-gray-200 bg-opacity-50 backdrop-blur-md dark:bg-gray-900 dark:bg-opacity-50 dark:backdrop-blur-md">
+      className="sticky top-0 z-50 bg-white border-gray-200 bg-opacity-30 backdrop-blur-md dark:bg-gray-900 dark:bg-opacity-50 dark:backdrop-blur-md">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link href="/" className="flex items-center space-x-2 rtl:space-x-reverse">
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Djinni Clone</span>
-          <Image width={30} height={30} src={Logo} className="" alt="Flowbite Logo"/>
+          <Image width={30} height={30} src={Logo} alt="Flowbite Logo"/>
         </Link>
         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
 
@@ -37,7 +37,7 @@ export default function Navbar() {
               : (
                 <div className='space-x-2'>
                   <Link href='/login'
-                        className={`navbar-link ${pathname === '/login' ? 'text-blue-700 dark:text-blue-500' : undefined}`}>
+                        className={`navbar-link ${pathname === '/login' ? 'text-blue-700 dark:text-blue-500' : ''}`}>
                     Login
                   </Link>
                   <Link href='/register'
@@ -62,7 +62,7 @@ export default function Navbar() {
         <div
           className={`${openSidebar ? '' : 'hidden flex-1 ml-5'} items-center justify-between w-full md:flex md:w-auto md:order-1`}>
           <ul
-            className="flex flex-col font-medium text-xl p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-100 bg-opacity-80 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white md:bg-opacity-0 dark:bg-gray-900 dark:bg-opacity-0 dark:backdrop-blur-md dark:border-gray-700">
+            className="flex flex-col font-medium text-xl p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 bg-opacity-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white md:bg-opacity-0 dark:bg-gray-900 dark:bg-opacity-0 dark:border-gray-700">
 
             {isLoading ? (
               <div className='space-x-4 flex'>
@@ -76,14 +76,14 @@ export default function Navbar() {
                 {isAuthenticated &&
                   <li>
                     <Link href="/inbox"
-                          className={`${pathname === '/inbox' ? 'text-blue-600 dark:text-blue-400' : undefined} block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}>
+                          className={`block py-2 px-3 ${pathname == '/inbox' ? 'text-gray-900 dark:text-white bg-blue-700 bg-opacity-20 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500' : 'text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}>
                       Inbox
                     </Link>
                   </li>
                 }
                 <li>
                   <Link href="/jobs"
-                        className={`${pathname == '/jobs' ? 'text-blue-600 dark:text-blue-400' : undefined} block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}>
+                        className={`block py-2 px-3 ${pathname == '/jobs' ? 'text-gray-900 dark:text-white bg-blue-700 bg-opacity-20 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500' : 'text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}>
                     Jobs
                   </Link>
                 </li>
@@ -91,14 +91,14 @@ export default function Navbar() {
                   user?.type_profile == 'Recruiter' &&
                   <li>
                     <Link href="/candidates"
-                          className={`${pathname === '/candidates' ? 'text-blue-600 dark:text-blue-400' : undefined} block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}>
+                          className={`block py-2 px-3 ${pathname == '/candidates' ? 'text-gray-900 dark:text-white bg-blue-700 bg-opacity-20 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500' : 'text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}>
                       Candidates
                     </Link>
                   </li>
                 }
                 <li>
                   <Link href="/salaries"
-                        className={`${pathname === '/salaries' ? 'text-blue-600 dark:text-blue-400' : undefined} block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}>
+                        className={`block py-2 px-3 ${pathname == '/salaries' ? 'text-gray-900 dark:text-white bg-blue-700 bg-opacity-20 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500' : 'text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}>
                     Salaries
                   </Link>
                 </li>

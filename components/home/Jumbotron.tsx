@@ -3,8 +3,6 @@ import {useState} from "react";
 import {useRouter} from "next/navigation";
 import {FormSubmit} from "@/utils/Interface";
 import {AiOutlineSearch} from 'react-icons/ai'
-import Image from "next/image";
-import HomeJobLogo from '@/public/images/home.job.png';
 
 export default function Jumbotron() {
   const [search, setSearch] = useState('')
@@ -13,7 +11,7 @@ export default function Jumbotron() {
 
   const handleSubmit = (e: FormSubmit) => {
     e.preventDefault()
-    router.push(`/jobs?q=${search}`)
+    router.push(`/jobs?search=${search}`)
   }
 
   return (

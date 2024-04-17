@@ -1,7 +1,6 @@
 "use client";
 import CompanyCard from "@/components/home/company/CompanyCard";
 import Link from "next/link";
-import Spinner from "@/components/general/Spinner";
 import {useListCompaniesQuery} from "@/lib/features/other/otherApiSlice";
 import {Skeleton} from "@/components/ui/skeleton";
 
@@ -9,21 +8,24 @@ import {Skeleton} from "@/components/ui/skeleton";
 export default function CompanyContainer() {
   const {data, isLoading, isFetching} = useListCompaniesQuery()
 
+  let loader = null;
+  if (isLoading || isFetching) {
+    loader = (
+      <>
+        <Skeleton className="h-[215px] w-auto rounded-xl"/>
+        <Skeleton className="h-[215px] w-auto rounded-xl"/>
+        <Skeleton className="h-[215px] w-auto rounded-xl"/>
+      </>
+    )
+  }
 
   return (
-    <div className='py-20 md:px-16 px-8'>
+    <div className='py-20 md:px-16 px-8 bg-gray-50 dark:bg-gray-950'>
       <h1 className='text-4xl md:text-3xl font-medium text-center mb-12'><span
-        className='text-[#504ED7]'>Latest</span> Jobs</h1>
+        className='text-[#504ED7]'>Latest</span> Companies</h1>
       <div
-        className='grid xl:items-center xl:justify-center xl:flex lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-10'>
-        {(isLoading || isFetching) && (
-          <>
-            <Skeleton className="h-[215px] w-[330px] rounded-l"/>
-            <Skeleton className="h-[215px] w-[330px] rounded-l"/>
-            <Skeleton className="h-[215px] w-[330px] rounded-l"/>
-          </>
-        )}
-        {
+        className='grid xl:items-center xl:justify-center lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-10'>
+        {loader ||
           data?.results.slice(0, 3).map((item) => (
             <CompanyCard
               key={item.id}
@@ -38,35 +40,10 @@ export default function CompanyContainer() {
           ))
         }
       </div>
-      <Link href='/jobs'
+      <Link href='/companies'
             className='bg-white dark:bg-purple-800 dark:bg-opacity-20 m-auto block w-fit mt-20 px-10 py-2 border-2 rounded-full border-[#504ED7] text-[#504ED7]'>
-        Find More Jobs
+        Find More Companies
       </Link>
     </div>
   )
-
-
-  // return (
-  //   <div className='py-20 md:px-16 px-8'>
-  //     <h1 className='text-4xl md:text-3xl font-medium text-center mb-12'><span
-  //       className='text-[#504ED7]'>Find</span> Companies</h1>
-  //     {isLoading ? <Loader size='xl'/> : (
-  //       <div className='grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-10'>
-  //         {
-  //           data?.results.map((item: { id: Key | null | undefined; name: any; }) => (
-  //             <CompanyCard
-  //               id={item.id as string}
-  //               key={item.id}
-  //               title={item.name}
-  //             />
-  //           ))
-  //         }
-  //       </div>
-  //     )}
-  //     <Link href='/jobs'
-  //           className='bg-white m-auto block w-fit mt-20 px-10 py-2 border-2 rounded-full border-[#504ED7] text-[#504ED7]'>
-  //       Find More Jobs
-  //     </Link>
-  //   </div>
-  // )
 }

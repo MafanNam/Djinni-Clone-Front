@@ -1,6 +1,6 @@
 import {apiSlice} from "@/lib/services/apiSlice";
-import {BaseApi} from "@/utils/Interface";
-import {Companies, Company} from "@/lib/features/other/otherApiSlice";
+import {BaseApi, ListBaseApi} from "@/utils/Interface";
+import {Company} from "@/lib/features/other/otherApiSlice";
 
 
 export interface Candidate extends BaseApi {
@@ -32,6 +32,68 @@ export interface ContactCv extends BaseApi {
   cv_file: any;
 }
 
+export interface VacancyCreate {
+  title: string;
+  slug: string;
+  description: string;
+  requirements: string;
+  other: string;
+  eng_level: string;
+  salary: number;
+  category: string;
+  skills: [];
+  work_exp: number;
+  employ_options: [];
+  country: string;
+  is_only_ukraine: boolean;
+  is_test_task: boolean;
+}
+
+export interface CreateVacancyFeedback {
+  cover_letter: string;
+}
+
+export interface Vacancy extends BaseApi {
+  recruiter: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    position: string;
+    category: string;
+    company: string;
+    image: any;
+    trust_hr: boolean;
+  }
+  company: {
+    id: number;
+    name: string;
+    image: any;
+    bio: string;
+    company_url: string;
+    country: string;
+  }
+  title: string;
+  slug: string;
+  description: string;
+  requirements: string;
+  other: string;
+  eng_level: string;
+  salary: number;
+  category: string;
+  skills: [];
+  work_exp: number;
+  employ_options: [];
+  country: string;
+  is_only_ukraine: boolean;
+  is_test_task: boolean;
+  views: number;
+  feedback: number;
+}
+
+export interface Vacancies extends ListBaseApi {
+  results: Vacancy[];
+}
+
 
 export interface Recruiter extends BaseApi {
   first_name: string;
@@ -48,21 +110,21 @@ export interface Recruiter extends BaseApi {
   trust_hr: boolean;
 }
 
-interface Candidates {
-  result: [Candidate]
+interface Candidates extends ListBaseApi {
+  results: Candidate[]
 }
 
-interface Recruiters {
-  result: [Recruiter]
+interface Recruiters extends ListBaseApi {
+  results: Recruiter[]
 }
 
 
 const accountsApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    listCandidates: builder.query<Candidates, void>({
-      query: () => '/accounts/candidates/',
+    listCandidates: builder.query<Candidates, number | void>({
+      query: (page = 1) => `/accounts/candidates/?page=${page}`,
     }),
-    retrieveCandidate: builder.query<Candidate, void>({
+    retrieveCandidate: builder.query<Candidate, number>({
       query: (id) => `/accounts/candidates/${id}/`,
     }),
     retrieveMeCandidate: builder.query<Candidate, void>({
@@ -99,6 +161,25 @@ const accountsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Candidate'],
     }),
+    updateMeCandidateContactCvFile: builder.mutation<ContactCv, void>({
+      query: (data) => ({
+        url: '/accounts/candidates/me/cv/file/',
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ['Candidate'],
+    }),
+
+    postVacancyFeedback: builder.mutation<CreateVacancyFeedback, Partial<any>>({
+      query: ({slug, ...data}) => ({
+        url: `/vacancies/${slug}/feedbacks/`,
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Vacancies', 'Chats']
+    }),
+
+
     listRecruiters: builder.query<Recruiters, void>({
       query: () => '/accounts/recruiters/',
     }),
@@ -133,8 +214,8 @@ const accountsApiSlice = apiSlice.injectEndpoints({
     }),
 
 
-    listMyCompanies: builder.query<Companies, void>({
-      query: () => `/companies/my/`,
+    listMyCompanies: builder.query<Company[], string | void>({
+      query: (search = '') => `/companies/my/?search=${search}`,
       providesTags: ['Company', 'Recruiter']
     }),
     postMyCompany: builder.mutation({
@@ -167,6 +248,39 @@ const accountsApiSlice = apiSlice.injectEndpoints({
     }),
 
 
+    listMyVacancies: builder.query<Vacancies, any | void>({
+      query: ({page = 1, search = ''}) => `/vacancies/my/?page=${page}&search=${search}`,
+      providesTags: ['Vacancy', 'Recruiter']
+    }),
+    postMyVacancy: builder.mutation<VacancyCreate, void>({
+      query: (data) => ({
+        url: '/vacancies/my/',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Vacancies']
+    }),
+    retrieveMyVacancy: builder.query<Vacancy, string>({
+      query: (slug) => `/vacancies/my/${slug}/`,
+      providesTags: ['Vacancy', 'Recruiter']
+    }),
+    updateMyVacancy: builder.mutation<VacancyCreate, Partial<VacancyCreate>>({
+      query: ({slug, ...data}) => ({
+        url: `/vacancies/my/${slug}/`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ['Vacancy', 'Vacancies'],
+    }),
+    deleteMyVacancy: builder.mutation({
+      query: (slug) => ({
+        url: `/vacancies/my/${slug}/`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Recruiter', 'Vacancies']
+    }),
+
+
   })
 })
 
@@ -179,6 +293,9 @@ export const {
   useUpdateMeCandidateImageMutation,
   useRetrieveMeCandidateContactCvQuery,
   useUpdateMeCandidateContactCvMutation,
+  useUpdateMeCandidateContactCvFileMutation,
+  usePostVacancyFeedbackMutation,
+
 
   useListRecruitersQuery,
   useRetrieveRecruiterQuery,
@@ -190,6 +307,12 @@ export const {
   usePostMyCompanyMutation,
   useUpdateMyCompanyMutation,
   useDeleteMyCompanyMutation,
+
+  useListMyVacanciesQuery,
+  useRetrieveMyVacancyQuery,
+  usePostMyVacancyMutation,
+  useUpdateMyVacancyMutation,
+  useDeleteMyVacancyMutation,
 
   usePostIsSpamEmailEveryWeekMutation,
   useDeleteIsSpamEmailEveryWeekMutation,

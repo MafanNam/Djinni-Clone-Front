@@ -11,7 +11,7 @@ import {
   ArrowRightLeft,
   LogOut, MessageCircleMore,
   BriefcaseBusiness,
-  User, Ban, Mail, ReceiptText, Building2, Handshake, Settings, AreaChart, CircleUserRound
+  User, Ban, Mail, ReceiptText, Building2, Settings, AreaChart, CircleUserRound, Layers
 } from "lucide-react";
 import {useLogoutMutation, useRetrieveUserQuery} from "@/lib/features/auth/authApiSlice";
 import {useDispatch} from "react-redux";
@@ -87,9 +87,9 @@ export default function ProfileDropdownMenu() {
           <Building2 className="mr-2 h-4 w-4"/>
           <span>About us</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push('/my/team')}>
-          <Handshake className="mr-2 h-4 w-4"/>
-          <span>Team</span>
+        <DropdownMenuItem onClick={() => router.push('/my/vacancies')}>
+          <Layers className="mr-2 h-4 w-4"/>
+          <span>Vacancies</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => router.push('/my/subscriptions')}>
           <Mail className="mr-2 h-4 w-4"/>
@@ -116,7 +116,13 @@ export default function ProfileDropdownMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button size='icon' variant='outline' className="flex bg-white bg-opacity-50 rounded-full">
-          <Image height={100} width={100} className="rounded-full" src={user.image} alt="user photo"/>
+          <Image
+            height={100}
+            width={100}
+            className="rounded-full"
+            src={user.image}
+            alt="user photo"
+          />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 my-1">

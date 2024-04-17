@@ -1,6 +1,7 @@
 import {configureStore} from '@reduxjs/toolkit'
 import {apiSlice} from "@/lib/services/apiSlice";
 import authReducer from "@/lib/features/auth/authSlice";
+import inboxReducer from "@/lib/features/inbox/inboxSlice";
 import {apiPublicSlice} from "@/lib/services/apiPublicSlice";
 
 export const makeStore = () => {
@@ -9,6 +10,7 @@ export const makeStore = () => {
       [apiSlice.reducerPath]: apiSlice.reducer,
       [apiPublicSlice.reducerPath]: apiPublicSlice.reducer,
       auth: authReducer,
+      inbox: inboxReducer,
     },
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware().concat(

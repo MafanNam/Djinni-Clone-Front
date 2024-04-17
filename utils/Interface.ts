@@ -14,3 +14,9 @@ export interface BaseApi {
   created_at: string;
   updated_at: string;
 }
+
+export interface ListBaseApi {
+  count: number;
+  next: string;
+  previous: string;
+}

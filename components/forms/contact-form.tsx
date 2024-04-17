@@ -30,7 +30,7 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import getImageData from "@/utils/getImage";
 import {useState} from "react";
 import {Separator} from "@/components/ui/separator";
-import {Companies} from "@/lib/features/other/otherApiSlice";
+import {Company} from "@/lib/features/other/otherApiSlice";
 
 const contactFormSchema = z.object({
   first_name: z
@@ -63,10 +63,10 @@ type ContactFormValues = z.infer<typeof contactFormSchema>
 
 interface ContactFormProps {
   recruiter?: Recruiter | undefined
-  companies?: Companies | undefined
+  myCompanies?: Company[] | undefined
 }
 
-export function ContactForm({recruiter, companies}: ContactFormProps) {
+export function ContactForm({recruiter, myCompanies}: ContactFormProps) {
   const [updateRecruiter, {isLoading: isLoadingUpdate}] = useUpdateMeRecruiterMutation();
   const [tempImage, setTempImage] = useState(recruiter?.image);
 
@@ -80,7 +80,7 @@ export function ContactForm({recruiter, companies}: ContactFormProps) {
   })
 
   console.log(recruiter)
-  console.log(companies)
+  console.log(myCompanies)
 
 
   function onSubmit(data: ContactFormValues) {
@@ -267,7 +267,7 @@ export function ContactForm({recruiter, companies}: ContactFormProps) {
                           )}
                         >
                           {field.value
-                            ? companies?.results.find(
+                            ? myCompanies?.find(
                               (company) => company.name === field.value
                             )?.name
                             : "Select company"}
@@ -281,7 +281,7 @@ export function ContactForm({recruiter, companies}: ContactFormProps) {
                         <CommandEmpty>No country found.</CommandEmpty>
                         <CommandGroup>
                           <CommandList>
-                            {companies?.results.map((company) => (
+                            {myCompanies?.map((company) => (
                               <CommandItem
                                 value={company.name}
                                 key={company.id}

@@ -1,13 +1,12 @@
 "use client";
 import {Separator} from "@/components/ui/separator"
 import {ContactForm} from "@/components/forms/contact-form";
-import {useRetrieveMeRecruiterQuery} from "@/lib/features/accounts/accountsApiSlice";
+import {useListMyCompaniesQuery, useRetrieveMeRecruiterQuery} from "@/lib/features/accounts/accountsApiSlice";
 import Spinner from "@/components/general/Spinner";
-import {useListCompaniesQuery} from "@/lib/features/other/otherApiSlice";
 
 export default function Page() {
   const {data: recruiter, isLoading, isFetching} = useRetrieveMeRecruiterQuery();
-  const {data: companies, isLoading: isLoadingCompanies, isFetching: isFetchingCompanies} = useListCompaniesQuery();
+  const {data: myCompanies, isLoading: isLoadingCompanies, isFetching: isFetchingCompanies} = useListMyCompaniesQuery();
 
   return (
     <div className="space-y-6">
@@ -20,7 +19,7 @@ export default function Page() {
       </div>
       <Separator/>
       {(isLoading || isFetching || isLoadingCompanies || isFetchingCompanies) ? <Spinner size={200}/> :
-        <ContactForm recruiter={recruiter} companies={companies}/>
+        <ContactForm recruiter={recruiter} myCompanies={myCompanies}/>
       }
     </div>
   )

@@ -17,7 +17,7 @@ export default function Page({params}: { params: { id: number } }) {
   const router = useRouter();
 
   return (
-    <>
+    <div className='flex-1'>
       <Breadcrumb className=''>
         <BreadcrumbList className='text-xl'>
           <BreadcrumbItem>
@@ -37,6 +37,6 @@ export default function Page({params}: { params: { id: number } }) {
           <CompanyForm company={company}/>
         }
       </div>
-    </>
+    </div>
   )
 }
