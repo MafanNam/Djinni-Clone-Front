@@ -75,6 +75,8 @@ export default function Jobs() {
   const {data: skills, isLoading: isLoadingSkills, isFetching: isFetchingSkills} = useListSkillsQuery()
   const pages = Math.floor((vacancies?.count || 0) / 10);
 
+  console.log(vacancies)
+
   let loader = null;
   if (isLoading || isFetching || isLoadingCategory || isFetchingCategory || isLoadingSkills || isFetchingSkills) {
     loader = (
@@ -242,7 +244,10 @@ export default function Jobs() {
                               variant='outline'
                               size='icon'
                               className='ml-auto w-8 h-8'
-                              onClick={() => router.push(`/jobs`)}
+                              onClick={() => {
+                                setSearchJobs('')
+                                router.push(`/jobs`)
+                              }}
                             >
                               <RotateCcw className='text-red-700'/>
                             </Button>

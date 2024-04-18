@@ -2,6 +2,7 @@ import {fetchBaseQuery, createApi} from '@reduxjs/toolkit/query/react'
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${process.env.NEXT_PUBLIC_HOST}/api/v1`,
+  credentials: 'include',
 })
 
 

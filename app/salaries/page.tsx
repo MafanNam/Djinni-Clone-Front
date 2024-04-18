@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -13,6 +12,7 @@ import {
 } from "@/components/ui/tabs"
 import {Overview} from "@/components/dashboard/overview"
 import {RecentSales} from "@/components/dashboard/recent-sales"
+import {BriefcaseBusiness, UserRoundSearch, Users} from "lucide-react";
 
 export default function Page() {
   return (
@@ -29,106 +29,89 @@ export default function Page() {
             </div>
           </div>
           <TabsContent value="salaries" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-3">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Total Revenue
+                  <CardTitle className="text-md font-bold">
+                    Jobs
                   </CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                  </svg>
+                  <BriefcaseBusiness className='text-muted-foreground w-5 h-5'/>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">$45,231.89</div>
-                  <p className="text-xs text-muted-foreground">
-                    +20.1% from last month
-                  </p>
+                <CardContent className='flex justify-center space-x-16 md:space-x-5 lg:space-x-8 xl:space-x-16'>
+                  <div>
+                    <div className="text-sm">Total</div>
+                    <p className="text-l text-muted-foreground">
+                      <strong>8000</strong>
+                    </p>
+                  </div>
+                  <div>
+                    <div className="text-sm">Avg Salary</div>
+                    <p className="text-l text-muted-foreground">
+                      <strong>$ 3000</strong>
+                    </p>
+                  </div>
+                  <div>
+                    <div className="text-sm">Applications</div>
+                    <p className="text-l text-muted-foreground">
+                      <strong>37.0</strong>
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Subscriptions
+                    Candidates
                   </CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-                  </svg>
+                  <UserRoundSearch className='text-muted-foreground w-5 h-5'/>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+2350</div>
-                  <p className="text-xs text-muted-foreground">
-                    +180.1% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Sales</CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <rect width="20" height="14" x="2" y="5" rx="2"/>
-                    <path d="M2 10h20"/>
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+12,234</div>
-                  <p className="text-xs text-muted-foreground">
-                    +19% from last month
-                  </p>
+                <CardContent className='flex justify-center space-x-16 md:space-x-5 lg:space-x-8 xl:space-x-16'>
+                  <div>
+                    <div className="text-sm">Total</div>
+                    <p className="text-l text-muted-foreground">
+                      <strong>120000</strong>
+                    </p>
+                  </div>
+                  <div>
+                    <div className="text-sm">Avg Salary</div>
+                    <p className="text-l text-muted-foreground">
+                      <strong>$ 2000</strong>
+                    </p>
+                  </div>
+                  <div>
+                    <div className="text-sm">Proposals</div>
+                    <p className="text-l text-muted-foreground">
+                      <strong>1.0</strong>
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Active Now
+                    All users
                   </CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-                  </svg>
+                  <Users className='text-muted-foreground w-5 h-5'/>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+573</div>
-                  <p className="text-xs text-muted-foreground">
-                    +201 since last hour
-                  </p>
+                <CardContent className='flex justify-center space-x-16 md:space-x-5 lg:space-x-8 xl:space-x-16'>
+                  <div>
+                    <div className="text-sm">Total</div>
+                    <p className="text-l text-muted-foreground">
+                      <strong>20000</strong>
+                    </p>
+                  </div>
+                  <div>
+                    <div className="text-sm">Avg a day</div>
+                    <p className="text-l text-muted-foreground">
+                      <strong>150</strong>
+                    </p>
+                  </div>
+                  <div>
+                    <div className="text-sm">Now</div>
+                    <p className="text-l text-muted-foreground">
+                      <strong>20</strong>
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -143,10 +126,7 @@ export default function Page() {
               </Card>
               <Card className="col-span-3">
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
-                  <CardDescription>
-                    You made 265 sales this month.
-                  </CardDescription>
+                  <CardTitle>Recent Vacancy</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <RecentSales/>

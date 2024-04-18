@@ -65,27 +65,99 @@ export default function Page({params}: { params: { slug: string } }) {
 
 
   let loader = null;
+  let loaderBar = null;
   if (isLoading || isFetching || isLoadingCandidate || isFetchingCandidate || isLoadingAuth || isLoadingCv || isFetchingCv) {
     loader = (
       <div>
-        {Array.from('1234567890').map((_, index,) =>
-          <div key={index} className='bg-gray-900 bg-muted/30 rounded-2xl p-4'>
-            <div className='grid gap-2'>
-              <div className='flex justify-center items-center w-full'>
-                <Skeleton className="h-7 w-7 rounded-full ml-4"/>
-                <Skeleton className="h-7 w-24 rounded-full ml-2"/>
-                <Skeleton className="h-7 w-7 rounded-xl ml-auto"/>
-              </div>
-              <Skeleton className="h-8 w-60 lg:w-72 rounded-2xl ml-2"/>
-              <Skeleton className="h-6 w-72 lg:w-96 rounded-2xl ml-2"/>
-              <Skeleton className="h-28 w-full rounded-2xl mt-2"/>
+        <div className='bg-gray-900 bg-muted/20 rounded-2xl p-4'>
+          <div className='grid gap-2 space-y-3'>
+            <div className='flex w-full space-x-2'>
+              <Skeleton className="h-7 w-24 rounded-full "/>
+              <Skeleton className="h-7 w-24 rounded-full "/>
             </div>
-            <div className='flex justify-center items-center w-full mt-4'>
-              <Skeleton className="h-8 w-36 rounded-2xl ml-2"/>
-              <Skeleton className="h-8 w-28 rounded-2xl ml-auto"/>
+            <div className='flex space-x-2'>
+              <Skeleton className="h-7 w-7 rounded-full"/>
+              <Skeleton className="h-7 w-24 rounded-2xl"/>
+            </div>
+            <Skeleton className="h-48 w-full rounded-2xl mt-2"/>
+          </div>
+          <div className='mt-8 space-y-4'>
+            <Skeleton className="h-7 w-36 rounded-2xl"/>
+            <Skeleton className="h-40 w-full rounded-2xl mt-2"/>
+          </div>
+          <div className='mt-8 space-y-4'>
+            <Skeleton className="h-7 w-36 rounded-2xl"/>
+            <Skeleton className="h-40 w-full rounded-2xl mt-2"/>
+          </div>
+          <div className='mt-8 space-y-4'>
+            <Skeleton className="h-7 w-36 rounded-2xl"/>
+            <Skeleton className="h-40 w-full rounded-2xl mt-2"/>
+          </div>
+        </div>
+      </div>
+    )
+
+    loaderBar = (
+      <div>
+        <div className='bg-gray-900 bg-muted/20 rounded-2xl p-6'>
+          <div className='grid gap-2'>
+            <div className='flex space-x-2'>
+              <Skeleton className="h-6 w-6 rounded-full "/>
+              <Skeleton className="h-6 w-full rounded-full "/>
+            </div>
+            <div className='flex space-x-2'>
+              <Skeleton className="ml-8 h-4 w-36 rounded-2xl"/>
             </div>
           </div>
-        )}
+          <div className='grid gap-2 mt-3'>
+            <div className='flex space-x-2'>
+              <Skeleton className="h-6 w-6 rounded-full "/>
+              <Skeleton className="h-6 w-full rounded-full "/>
+            </div>
+            <div className='flex space-x-2'>
+              <Skeleton className="ml-8 h-4 w-36 rounded-2xl"/>
+            </div>
+          </div>
+          <div className='grid gap-2 mt-3'>
+            <div className='flex space-x-2'>
+              <Skeleton className="h-6 w-6 rounded-full "/>
+              <Skeleton className="h-6 w-full rounded-full "/>
+            </div>
+            <div className='flex space-x-2'>
+              <Skeleton className="ml-8 h-4 w-36 rounded-2xl"/>
+            </div>
+          </div>
+          <div className='grid gap-2 mt-12'>
+            <div className='flex space-x-2'>
+              <Skeleton className="h-6 w-6 rounded-full "/>
+              <Skeleton className="h-6 w-20 rounded-full "/>
+            </div>
+          </div>
+          <div className='grid gap-2 mt-12 space-y-2'>
+            <div className='flex space-x-2'>
+              <Skeleton className="h-5 w-5 rounded-full "/>
+              <Skeleton className="h-5 w-full rounded-full "/>
+            </div>
+            <div className='flex space-x-2'>
+              <Skeleton className="h-5 w-5 rounded-full "/>
+              <Skeleton className="h-5 w-20 rounded-full "/>
+            </div>
+            <div className='flex space-x-2'>
+              <Skeleton className="h-5 w-5 rounded-full "/>
+              <Skeleton className="h-5 w-32 rounded-full "/>
+            </div>
+            <div className='flex space-x-2'>
+              <Skeleton className="h-5 w-5 rounded-full "/>
+              <Skeleton className="h-5 w-32 rounded-full "/>
+            </div>
+          </div>
+          <div className='grid gap-2 mt-12 space-y-2'>
+            <div className='flex space-x-2'>
+              <Skeleton className="h-5 w-20 rounded-full "/>
+            </div>
+            <Skeleton className="h-20 w-full rounded-xl "/>
+          </div>
+        </div>
       </div>
     )
   }
@@ -125,7 +197,7 @@ export default function Page({params}: { params: { slug: string } }) {
                 }
               </div>
 
-              {isCandidate && (
+              {loaderBar || isCandidate &&
                 <div className='lg:block w-96 md:w-auto'>
                   <Card className='grow'>
                     <CardHeader>
@@ -223,7 +295,7 @@ export default function Page({params}: { params: { slug: string } }) {
                       </CardContent>
                     }
                   </Card>
-                  {!isOpenFeedback &&
+                  {!isOpenFeedback && !vacancy?.is_user_feedback ?
                     <Button
                       className='w-full mt-6 dark:text-gray-200'
                       onClick={() => setIsOpenFeedback(!isOpenFeedback)}
@@ -231,9 +303,10 @@ export default function Page({params}: { params: { slug: string } }) {
                     >
                       Apply for the job
                     </Button>
+                    : null
                   }
                 </div>
-              )}
+              }
             </div>
           </div>
         </div>
