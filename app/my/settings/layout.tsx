@@ -2,7 +2,7 @@ import type {Metadata} from "next";
 import ProtectRouter from "@/components/utils/ProtectRouter";
 
 export const metadata: Metadata = {
-  title: 'Job Seek | Sign Up'
+  title: 'Djinni | Settings'
 }
 
 export default function SettingsLayout({

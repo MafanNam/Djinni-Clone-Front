@@ -60,6 +60,7 @@
     "react-resizable-panels": "^2.0.16",
     "react-spinners": "^0.13.8",
     "react-toastify": "^10.0.5",
+    "recharts": "^2.12.5",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^9.0.1",

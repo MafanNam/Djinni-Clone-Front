@@ -75,8 +75,12 @@ export default function Jobs() {
   const {data: skills, isLoading: isLoadingSkills, isFetching: isFetchingSkills} = useListSkillsQuery()
   const pages = Math.floor((vacancies?.count || 0) / 10);
 
+  console.log(vacancies)
+
+  const load = isLoading || isFetching || isLoadingCategory || isFetchingCategory || isLoadingSkills || isFetchingSkills
+
   let loader = null;
-  if (isLoading || isFetching || isLoadingCategory || isFetchingCategory || isLoadingSkills || isFetchingSkills) {
+  if (load) {
     loader = (
       <div>
         {Array.from('1234567890').map((_, index) =>
@@ -167,7 +171,14 @@ export default function Jobs() {
         <div className="text-white min-h-screen">
           <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-4 ml-2">
-              <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Jobs at Djinni {vacancies?.count}</h1>
+              {load ? <Skeleton className='h-10 w-60'/> :
+                <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+                  {page === 1
+                    ? `Jobs at Djinni ${vacancies?.count}`
+                    : `Jobs (page ${page} of ${pages}) ${vacancies?.count}`
+                  }
+                </h1>
+              }
             </div>
 
             <Tabs defaultValue="all">
@@ -198,37 +209,38 @@ export default function Jobs() {
                       )) : (
                         <h1>No Vacancies</h1>
                       ))}
-                    {pages !== 0 &&
-                      <Pagination className='flex relative items-center justify-center text-black dark:text-white'>
-                        <PaginationContent>
-                          <PaginationItem className='absolute left-0'>
-                            <PaginationPrevious
-                              className={!vacancies?.previous ? "pointer-events-none opacity-50" : undefined}
-                              onClick={() => vacancies?.previous && setPage(page - 1)}
-                            />
+
+                    <Pagination className='flex relative items-center justify-center text-black dark:text-white pt-2'>
+                      <PaginationContent>
+                        <PaginationItem className='absolute left-0'>
+                          <PaginationPrevious
+                            className={!vacancies?.previous ? "pointer-events-none opacity-50" : undefined}
+                            onClick={() => vacancies?.previous && setPage(page - 1)}
+                          />
+                        </PaginationItem>
+                        {Array.from({length: pages}).slice(0, 5).map((_, index) => (
+                          <PaginationItem key={index}>
+                            <PaginationLink
+                              onClick={() => setPage(index + 1)}
+                              isActive={page === index + 1}
+                            >
+                              {index + 1}
+                            </PaginationLink>
                           </PaginationItem>
-                          {Array.from({length: pages}).slice(0, 5).map((_, index) => (
-                            <PaginationItem key={index}>
-                              <PaginationLink
-                                onClick={() => setPage(index + 1)}
-                                isActive={page === index + 1}
-                              >
-                                {index + 1}
-                              </PaginationLink>
-                            </PaginationItem>
-                          ))}
+                        ))}
+                        {pages !== 0 &&
                           <PaginationItem>
                             <PaginationEllipsis/>
                           </PaginationItem>
-                          <PaginationItem className='absolute right-0'>
-                            <PaginationNext
-                              className={!vacancies?.next ? "pointer-events-none opacity-50" : undefined}
-                              onClick={() => vacancies?.next && setPage(page + 1)}
-                            />
-                          </PaginationItem>
-                        </PaginationContent>
-                      </Pagination>
-                    }
+                        }
+                        <PaginationItem className='absolute right-0'>
+                          <PaginationNext
+                            className={!vacancies?.next ? "pointer-events-none opacity-50" : undefined}
+                            onClick={() => vacancies?.next && setPage(page + 1)}
+                          />
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
 
                   </div>
                   <div className='hidden lg:block'>
@@ -241,7 +253,10 @@ export default function Jobs() {
                               variant='outline'
                               size='icon'
                               className='ml-auto w-8 h-8'
-                              onClick={() => router.push(`/jobs`)}
+                              onClick={() => {
+                                setSearchJobs('')
+                                router.push(`/jobs`)
+                              }}
                             >
                               <RotateCcw className='text-red-700'/>
                             </Button>
@@ -257,7 +272,8 @@ export default function Jobs() {
                             onChange={(e) => setSearchJobs(e.target.value)}
                             className="rounded-lg bg-background pl-4"
                           />
-                          <Button size='sm' type='submit' variant='outline'>Search</Button>
+                          <Button size='sm' type='submit' variant='outline'
+                                  className='bg-blue-400 bg-opacity-50 dark:bg-blue-900 dark:hover:bg-blue-600'>Search</Button>
                         </form>
                       </CardContent>
 

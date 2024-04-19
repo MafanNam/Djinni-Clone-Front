@@ -41,8 +41,8 @@ export default function Navbar() {
                     Login
                   </Link>
                   <Link href='/register'
-                        className={`px-6 py-2 border-2 rounded-full border-[#504ED7] ${pathname === '/register' ? 'bg-[#504ED7] text-white' : 'text-[#504ED7]'}`}>
-                    Register Now
+                        className={`px-4 py-2 border-2 rounded-full border-[#504ED7] ${pathname === '/register' ? 'bg-[#504ED7] text-white' : 'text-gray-900 dark:text-gray-100'}`}>
+                    Sign up
                   </Link>
                 </div>
               )

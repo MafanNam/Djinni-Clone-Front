@@ -86,6 +86,7 @@ export interface Vacancy extends BaseApi {
   country: string;
   is_only_ukraine: boolean;
   is_test_task: boolean;
+  is_user_feedback: boolean;
   views: number;
   feedback: number;
 }

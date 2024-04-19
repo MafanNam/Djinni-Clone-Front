@@ -18,6 +18,10 @@ export default function SettingsLayout({children}: SettingsLayoutProps) {
   if (user?.type_profile === "Candidate") {
     sidebarNavItems = [
       {
+        title: "Account",
+        href: "/my/account",
+      },
+      {
         title: "Profile",
         href: "/my/profile",
       },
@@ -37,13 +41,13 @@ export default function SettingsLayout({children}: SettingsLayoutProps) {
         title: "Hires",
         href: "/my/hires",
       },
+    ]
+  } else if (user?.type_profile === "Recruiter") {
+    sidebarNavItems = [
       {
         title: "Account",
         href: "/my/account",
       },
-    ]
-  } else if (user?.type_profile === "Recruiter") {
-    sidebarNavItems = [
       {
         title: "Contacts",
         href: "/my/contacts",
@@ -67,10 +71,6 @@ export default function SettingsLayout({children}: SettingsLayoutProps) {
       {
         title: "Analytics",
         href: "/my/analytics",
-      },
-      {
-        title: "Account",
-        href: "/my/account",
       },
     ]
   }

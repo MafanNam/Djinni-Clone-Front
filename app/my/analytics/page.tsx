@@ -5,10 +5,9 @@ export default function Page() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium">Contact and CV</h3>
+        <h3 className="text-lg font-medium">Analytics</h3>
         <p className="text-sm text-muted-foreground">
-          Job search on Djinni is anonymous.
-          Only those to whom you open contacts will see your personal data.
+          Information about your companies and vacancies.
         </p>
       </div>
       <Separator />

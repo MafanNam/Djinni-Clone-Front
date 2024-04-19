@@ -1,4 +1,4 @@
-import {ClockIcon, EyeIcon, MoreVerticalIcon, Users} from "lucide-react";
+import {Check, ClockIcon, EyeIcon, MoreVerticalIcon, Users} from "lucide-react";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -62,8 +62,13 @@ export default function JobCard({vacancy}: Props) {
             </Link>
             <span className='text-green-600 opacity-80'>{(vacancy?.salary || 0) >= 1 && ` $${vacancy?.salary}`}</span>
           </CardTitle>
-          <CardDescription className='mt-1'>
-            {vacancy?.country} - {vacancy?.employ_options.join(', ')} - {vacancy?.eng_level}
+          <CardDescription className='mt-1 flex space-x-2'>
+            {vacancy?.is_user_feedback && (
+              <span className='text-green-400 flex'>
+                <Check className='mr-1 mt-0.5 h-4 w-4'/>
+              You responded
+              </span>)}
+            <span>{vacancy?.country} - {vacancy?.employ_options.join(', ')} - {vacancy?.eng_level}</span>
           </CardDescription>
         </div>
         {isAuthenticated &&

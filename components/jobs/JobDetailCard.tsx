@@ -1,4 +1,4 @@
-import {CalendarDays, EyeIcon, File, FileX, Users} from "lucide-react";
+import {CalendarDays, EyeIcon, File, FileX, MessageSquareText, Users} from "lucide-react";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {
   ContactCv, usePostVacancyFeedbackMutation, useUpdateMeCandidateContactCvFileMutation,
@@ -200,7 +200,7 @@ export default function JobDetailCard({vacancy, contactCv, isCandidate, isOpenFe
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmitUploadCv)} encType='multipart/form-data'
                         className="space-y-8">
-                  <FormField
+                    <FormField
                       control={form.control}
                       name="cv_file"
                       render={({field}) => (
@@ -251,14 +251,20 @@ export default function JobDetailCard({vacancy, contactCv, isCandidate, isOpenFe
 
           </div>
         ) : (
-          <Button
-            className='w-48 dark:text-gray-200'
-            onClick={() => setIsOpenFeedback(!isOpenFeedback)}
-            disabled={!isCandidate}
-          >
-            Apply for the job
-          </Button>
-        )}
+          vacancy?.is_user_feedback ? (
+            <Alert>
+              <MessageSquareText className="h-4 w-4 mt-2" />
+              <AlertTitle className='p-2'>You have already responded to this vacancy.</AlertTitle>
+            </Alert>
+            ) : (
+            <Button
+              className='w-48 dark:text-gray-200'
+              onClick={() => setIsOpenFeedback(!isOpenFeedback)}
+              disabled={!isCandidate}
+            >
+              Apply for the job
+            </Button>
+          ))}
       </CardFooter>
     </Card>
   );
