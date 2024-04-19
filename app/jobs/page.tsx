@@ -77,8 +77,10 @@ export default function Jobs() {
 
   console.log(vacancies)
 
+  const load = isLoading || isFetching || isLoadingCategory || isFetchingCategory || isLoadingSkills || isFetchingSkills
+
   let loader = null;
-  if (isLoading || isFetching || isLoadingCategory || isFetchingCategory || isLoadingSkills || isFetchingSkills) {
+  if (load) {
     loader = (
       <div>
         {Array.from('1234567890').map((_, index) =>
@@ -169,7 +171,14 @@ export default function Jobs() {
         <div className="text-white min-h-screen">
           <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-4 ml-2">
-              <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Jobs at Djinni {vacancies?.count}</h1>
+              {load ? <Skeleton className='h-10 w-60'/> :
+                <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+                  {page === 1
+                    ? `Jobs at Djinni ${vacancies?.count}`
+                    : `Jobs (page ${page} of ${pages}) ${vacancies?.count}`
+                  }
+                </h1>
+              }
             </div>
 
             <Tabs defaultValue="all">
