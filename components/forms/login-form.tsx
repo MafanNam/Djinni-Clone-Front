@@ -15,6 +15,7 @@ import {useAppDispatch, useAppSelector} from "@/lib/hooks";
 import {setAuth} from "@/lib/features/auth/authSlice";
 import {toast} from "react-toastify";
 import Loader from "@/components/general/Loader";
+import {continueWithGoogle} from "@/utils";
 
 const loginFormSchema = z.object({
   email: z
@@ -97,7 +98,12 @@ export default function LoginForm() {
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? <Loader/> : 'Login'}
           </Button>
-          <Button variant="outline" type='button' className="w-full bg-red-200 dark:bg-red-950">
+          <Button
+            variant="outline"
+            type='button'
+            className="w-full bg-red-200 dark:bg-red-950"
+            onClick={continueWithGoogle}
+          >
             <ImGoogle className='mr-3'/>Login with Google
           </Button>
         </div>

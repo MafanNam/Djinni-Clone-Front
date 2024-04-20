@@ -16,6 +16,7 @@ import {useRegisterMutation} from "@/lib/features/auth/authApiSlice";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
 import Loader from "@/components/general/Loader";
+import {continueWithGoogle} from "@/utils";
 
 
 const registerFormSchema = z.object({
@@ -139,8 +140,13 @@ export default function RegisterForm() {
           <Button type="submit" className="w-full">
             {isLoading ? <Loader/> : 'Create an account'}
           </Button>
-          <Button variant="outline" type='button' className="w-full bg-red-200 dark:bg-red-950">
-            <ImGoogle className='mr-3'/>Login with Google
+          <Button
+            variant="outline"
+            type='button'
+            className="w-full bg-red-200 dark:bg-red-950"
+            onClick={continueWithGoogle}
+          >
+            <ImGoogle className='mr-3'/>Sign up with Google
           </Button>
         </div>
       </form>

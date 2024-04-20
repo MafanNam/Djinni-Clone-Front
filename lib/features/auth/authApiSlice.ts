@@ -29,7 +29,7 @@ const authApiSlice = apiSlice.injectEndpoints({
     retrieveUser: builder.query<User, void>({
       query: () => '/auth/users/me/',
       keepUnusedDataFor: 5,
-      async onQueryStarted(arg, {dispatch, queryFulfilled}) {
+      async onQueryStarted(_, {dispatch, queryFulfilled}) {
         try {
           const {data} = await queryFulfilled
           dispatch(setUser(data))
