@@ -94,7 +94,7 @@ export default function LoginForm() {
             {errors.password && <span className='text-red-900'>{errors.password.message}</span>}
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? <Loader/> : 'Login'}
           </Button>
           <Button variant="outline" type='button' className="w-full bg-red-200 dark:bg-red-950">
