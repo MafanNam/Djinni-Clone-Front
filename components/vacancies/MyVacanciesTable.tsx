@@ -38,6 +38,7 @@ import {
 import * as React from "react";
 import {useState} from "react";
 import {FormSubmit} from "@/utils/Interface";
+import Link from "next/link";
 
 
 interface Prop {
@@ -192,7 +193,9 @@ export default function MyVacanciesTable({vacancies, recruiter, loader, page, se
                 {vacancies?.results?.map((vacancy) => (
                   <TableRow key={vacancy.id}>
                     <TableCell className="font-medium">
+                      <Link href={`/jobs/${vacancy.slug}`} className='text-blue-500 hover:text-blue-400'>
                       {vacancy.title.slice(0, 30) + ((vacancy.title.length - 30) > 1 ? '...' : '')}
+                      </Link>
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline"

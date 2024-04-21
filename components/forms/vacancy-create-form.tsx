@@ -1,9 +1,6 @@
 "use client"
 
-import {zodResolver} from "@hookform/resolvers/zod"
-import {useForm} from "react-hook-form"
 import {CaretSortIcon} from "@radix-ui/react-icons"
-
 import {Button} from "@/components/ui/button"
 import {
   Form,
@@ -14,9 +11,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import {Input} from "@/components/ui/input"
-import {
-  usePostMyVacancyMutation
-} from "@/lib/features/accounts/accountsApiSlice";
 import Loader from "@/components/general/Loader";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Textarea} from "@/components/ui/textarea";
@@ -26,13 +20,11 @@ import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Check} from "lucide-react";
 import {countries, employOptions} from "@/utils/constForm";
 import {Checkbox} from "@/components/ui/checkbox";
-import {useState} from "react";
 import {Tag, TagInput} from "@/components/ui/tag-input";
 import {Category, Company, Skills} from "@/lib/features/other/otherApiSlice";
 import {Slider} from "@/components/ui/slider";
 import {Avatar, AvatarImage} from "@/components/ui/avatar";
-import {toast} from "react-toastify";
-import {vacancyFormSchema, VacancyFormValues} from "@/components/forms/vacancy-form";
+import useVacancyCreateForm from "@/hooks/useVacancyCreateForm";
 
 
 interface VacancyFormProps {
@@ -42,46 +34,13 @@ interface VacancyFormProps {
 }
 
 export function VacancyCreateForm({skills, category, myCompanies}: VacancyFormProps) {
-  const [createVacancy, {isLoading: isLoadingUpdate}] = usePostMyVacancyMutation();
-
-  const [tags, setTags] = useState<Tag[]>([]);
-
-  const form = useForm<VacancyFormValues>({
-    resolver: zodResolver(vacancyFormSchema),
-
-    defaultValues: {
-      title: '',
-      description: '',
-      requirements: '',
-      other: '',
-      eng_level: 'none',
-      salary: 1,
-      category: '',
-      skills: [],
-      work_exp: 0,
-      employ_options: [],
-      country: '',
-      is_only_ukraine: true,
-      is_test_task: false,
-      company: '',
-    },
-    mode: "onChange",
-  })
-
-
-  function onSubmit(data: VacancyFormValues) {
-    console.log('Data: ', data)
-
-    // @ts-ignore
-    createVacancy(data)
-      .unwrap()
-      .then(() => {
-        toast.success('Created Vacancy')
-      })
-      .catch(() => {
-        toast.error('Failed to create Vacancy')
-      });
-  }
+  const {
+    form,
+    onSubmit,
+    isLoadingUpdate,
+    tags,
+    setTags,
+  } = useVacancyCreateForm()
 
   return (
     <Form {...form}>

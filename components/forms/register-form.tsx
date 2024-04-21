@@ -2,90 +2,26 @@
 
 import Link from "next/link"
 
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod"
-import {useForm} from "react-hook-form";
-
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {ImGoogle} from "react-icons/im";
-import {toast} from "react-toastify";
-import {useRegisterMutation} from "@/lib/features/auth/authApiSlice";
-import {useRouter} from "next/navigation";
-import {useState} from "react";
 import Loader from "@/components/general/Loader";
-
-
-const registerFormSchema = z.object({
-  first_name: z
-    .string()
-    .min(2, {
-      message: "Least 2 characters.",
-    })
-    .max(30, {
-      message: "First name must not be longer than 20 characters.",
-    }),
-  last_name: z
-    .string()
-    .min(2, {
-      message: "Least 2 characters.",
-    })
-    .max(30, {
-      message: "Last name must not be longer than 20 characters.",
-    }),
-  email: z
-    .string()
-    .email(),
-  password: z
-    .string()
-    .min(8, {
-      message: "Password must be at least 8 characters"
-    })
-    .max(40, {
-      message: "Password must not be longer then 40 characters"
-    }),
-  re_password: z
-    .string(),
-}).refine((data) => data.password === data.re_password, {
-  path: ["re_password"],
-  message: "Passwords don't match",
-});
-
-type RegisterFormValue = z.infer<typeof registerFormSchema>
+import {continueWithGoogle} from "@/utils";
+import useRegisterForm from "@/hooks/useRegisterForm";
 
 
 export default function RegisterForm() {
-
   const {
     register,
     handleSubmit,
-    formState: {errors},
-  } = useForm<RegisterFormValue>({
-    resolver: zodResolver(registerFormSchema),
-    mode: "onChange",
-  });
+    errors,
+    isLoading,
+    onSubmit,
+    setTypeProfile,
+  } = useRegisterForm()
 
-  const [typeProfile, setTypeProfile] = useState('candidate')
-
-  const [registerUser, {isLoading}] = useRegisterMutation()
-  const router = useRouter()
-
-  function onSubmit(data: RegisterFormValue) {
-    registerUser({...data, typeProfile})
-      .unwrap()
-      .then(() => {
-
-        toast.info("Please check email to verify account.")
-        router.push("/login")
-      })
-      .catch(() => {
-        toast.error("Uh oh! Something went wrong.")
-      })
-  }
-
-  console.log(errors)
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -139,8 +75,13 @@ export default function RegisterForm() {
           <Button type="submit" className="w-full">
             {isLoading ? <Loader/> : 'Create an account'}
           </Button>
-          <Button variant="outline" type='button' className="w-full bg-red-200 dark:bg-red-950">
-            <ImGoogle className='mr-3'/>Login with Google
+          <Button
+            variant="outline"
+            type='button'
+            className="w-full bg-red-200 dark:bg-red-950"
+            onClick={continueWithGoogle}
+          >
+            <ImGoogle className='mr-3'/>Sign up with Google
           </Button>
         </div>
       </form>

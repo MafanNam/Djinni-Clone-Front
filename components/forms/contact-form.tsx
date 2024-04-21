@@ -1,8 +1,5 @@
 "use client"
 
-import {zodResolver} from "@hookform/resolvers/zod"
-import {useForm} from "react-hook-form"
-import {z} from "zod"
 import {CaretSortIcon} from "@radix-ui/react-icons"
 
 import {Button} from "@/components/ui/button"
@@ -15,50 +12,18 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import {Input} from "@/components/ui/input"
-import {
-  Recruiter,
-  useUpdateMeRecruiterMutation,
-} from "@/lib/features/accounts/accountsApiSlice";
+import {Recruiter} from "@/lib/features/accounts/accountsApiSlice";
 import Loader from "@/components/general/Loader";
 import {cn} from "@/lib/utils";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "@/components/ui/command";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Check} from "lucide-react";
 import {countries} from "@/utils/constForm";
-import {toast} from "react-toastify";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import getImageData from "@/utils/getImage";
-import {useState} from "react";
 import {Separator} from "@/components/ui/separator";
 import {Company} from "@/lib/features/other/otherApiSlice";
-
-const contactFormSchema = z.object({
-  first_name: z
-    .string()
-    .min(2, {
-      message: "First name must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "First name must not be longer than 30 characters.",
-    }),
-  last_name: z
-    .string()
-    .min(2, {
-      message: "Last name must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "Last name must not be longer than 30 characters.",
-    }),
-  image: z.any(),
-  position: z.string(),
-  country: z.string({
-    required_error: "Please select a country.",
-  }),
-  company: z
-    .string({required_error: "Company is required"}),
-})
-
-type ContactFormValues = z.infer<typeof contactFormSchema>
+import useContactForm from "@/hooks/useContactForm";
 
 
 interface ContactFormProps {
@@ -67,45 +32,13 @@ interface ContactFormProps {
 }
 
 export function ContactForm({recruiter, myCompanies}: ContactFormProps) {
-  const [updateRecruiter, {isLoading: isLoadingUpdate}] = useUpdateMeRecruiterMutation();
-  const [tempImage, setTempImage] = useState(recruiter?.image);
-
-  const form = useForm<ContactFormValues>({
-    resolver: zodResolver(contactFormSchema),
-    defaultValues: {
-      ...recruiter,
-      company: recruiter?.company.name,
-    },
-    mode: "onChange",
-  })
-
-  console.log(recruiter)
-  console.log(myCompanies)
-
-
-  function onSubmit(data: ContactFormValues) {
-    console.log('Data: ', data)
-
-    const formData = new FormData();
-    formData.append('first_name', data.first_name)
-    formData.append('last_name', data.last_name)
-    formData.append('position', data.position)
-    formData.append('country', data.country)
-    formData.append('company', data.company)
-    if (typeof data.image === 'object') {
-      formData.append('image', data.image[0], data.image[0].name);
-    }
-
-    // @ts-ignore
-    updateRecruiter(formData)
-      .unwrap()
-      .then(() => {
-        toast.success('Updated Contact')
-      })
-      .catch(() => {
-        toast.error('Failed to update Contact')
-      });
-  }
+  const {
+    form,
+    onSubmit,
+    isLoadingUpdate,
+    tempImage,
+    setTempImage,
+  } = useContactForm(recruiter, myCompanies)
 
   return (
     <Form {...form}>
@@ -131,9 +64,8 @@ export function ContactForm({recruiter, myCompanies}: ContactFormProps) {
                     className='w-56'
                     onChange={(e) => {
                       const {files, displayUrl} = getImageData(e)
-                      // @ts-ignore
+
                       setTempImage(displayUrl)
-                      // @ts-ignore
                       field.onChange(files);
                     }}
                   />
