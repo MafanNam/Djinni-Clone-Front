@@ -74,7 +74,7 @@ export default function RegisterForm() {
   const router = useRouter()
 
   function onSubmit(data: RegisterFormValue) {
-    registerUser({...data, typeProfile})
+    registerUser({...data, "type_profile": typeProfile})
       .unwrap()
       .then(() => {
 

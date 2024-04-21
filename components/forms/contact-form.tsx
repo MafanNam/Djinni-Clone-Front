@@ -74,7 +74,7 @@ export function ContactForm({recruiter, myCompanies}: ContactFormProps) {
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
       ...recruiter,
-      company: recruiter?.company.name,
+      company: recruiter?.company?.name,
     },
     mode: "onChange",
   })

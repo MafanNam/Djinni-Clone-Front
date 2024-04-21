@@ -43,9 +43,12 @@ export const vacancyFormSchema = z.object({
     .max(100, {
       message: "First name must not be longer than 100 characters.",
     }),
-  description: z.string(),
-  requirements: z.string(),
-  other: z.string(),
+  description: z.string()
+    .max(1000, {message: 'Must not be longer than 1000 characters.',}),
+  requirements: z.string()
+    .max(1000, {message: 'Must not be longer than 1000 characters.',}),
+  other: z.string()
+    .max(1000, {message: 'Must not be longer than 1000 characters.',}),
   eng_level: z
     .enum(['none', 'beginner', 'intermediate', 'upper_intermediate', 'advanced']),
   salary: z.coerce.number().gte(1, 'Must be 1 or above'),

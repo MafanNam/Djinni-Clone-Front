@@ -225,7 +225,7 @@ const accountsApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['Companies']
+      invalidatesTags: ['Companies', 'Recruiter']
     }),
     retrieveMyCompany: builder.query<Company, number>({
       query: (id) => `/companies/my/${id}/`,
@@ -251,7 +251,7 @@ const accountsApiSlice = apiSlice.injectEndpoints({
 
     listMyVacancies: builder.query<Vacancies, any | void>({
       query: ({page = 1, search = ''}) => `/vacancies/my/?page=${page}&search=${search}`,
-      providesTags: ['Vacancy', 'Recruiter']
+      providesTags: ['Vacancies', 'Vacancy', 'Recruiter']
     }),
     postMyVacancy: builder.mutation<VacancyCreate, void>({
       query: (data) => ({
