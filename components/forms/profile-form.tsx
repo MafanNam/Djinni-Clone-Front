@@ -1,8 +1,5 @@
 "use client"
 
-import {zodResolver} from "@hookform/resolvers/zod"
-import {useForm} from "react-hook-form"
-import {z} from "zod"
 import {CaretSortIcon} from "@radix-ui/react-icons"
 
 import {Button} from "@/components/ui/button"
@@ -17,7 +14,6 @@ import {
 import {Input} from "@/components/ui/input"
 import {
   Candidate,
-  useUpdateMeCandidateMutation,
 } from "@/lib/features/accounts/accountsApiSlice";
 import Loader from "@/components/general/Loader";
 import {
@@ -35,118 +31,30 @@ import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Check} from "lucide-react";
 import {countries, employOptions} from "@/utils/constForm";
 import {Checkbox} from "@/components/ui/checkbox";
-import {useState} from "react";
 import {Tag, TagInput} from "@/components/ui/tag-input";
 import {Category, Skills} from "@/lib/features/other/otherApiSlice";
-import {toast} from "react-toastify";
 import {Slider} from "@/components/ui/slider";
-
-const profileFormSchema = z.object({
-  first_name: z
-    .string()
-    .min(2, {
-      message: "First name must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "First name must not be longer than 30 characters.",
-    }),
-  last_name: z
-    .string()
-    .min(2, {
-      message: "Last name must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "Last name must not be longer than 30 characters.",
-    }),
-  position: z.string(),
-  category: z
-    .string({required_error: "Category is required"}),
-  skills: z.any(),
-  work_exp: z.coerce.number()
-    .gte(0, 'Must be 0 or above')
-    .lte(10, 'Must be less or equal then 10 '),
-  work_exp_bio: z.string(),
-  salary_expectation: z.coerce.number().gte(1, 'Must be 1 or above'),
-  country: z.string({
-    required_error: "Please select a country.",
-  }),
-  city: z.string(),
-  eng_level: z
-    .enum(['none', 'beginner', 'intermediate', 'upper_intermediate', 'advanced']),
-  employ_options: z
-    .array(z.string()).refine((value) => value.some((item) => item)),
-  find_job: z
-    .enum(['active', 'passive', 'disabled']),
-})
-
-type ProfileFormValues = z.infer<typeof profileFormSchema>
+import useProfileForm from "@/hooks/useProfileForm";
 
 
 interface ProfileFormProps {
   candidate?: Candidate | undefined
-  skills?: Skills | undefined
+  skills: Skills
   category?: Category | undefined
 }
 
 export function ProfileForm({candidate, skills, category}: ProfileFormProps) {
-  const [updateCandidate, {isLoading: isLoadingUpdate}] = useUpdateMeCandidateMutation();
-  // @ts-ignore
-  const [tags, setTags] = useState<Tag[]>(skills?.results.filter((item) => candidate?.skills.includes(item.text)));
-
-  const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileFormSchema),
-    // @ts-ignore
-    defaultValues: candidate,
-    mode: "onChange",
-  })
-
-  console.log(candidate)
-
-
-  function onSubmit(data: ProfileFormValues) {
-    console.log('Data: ', data)
-
-    // @ts-ignore
-    updateCandidate(data)
-      .unwrap()
-      .then(() => {
-        toast.success('Updated Profile')
-      })
-      .catch(() => {
-        toast.error('Failed to update Profile')
-      });
-  }
+  const {
+    form,
+    onSubmit,
+    tags,
+    setTags,
+    isLoadingUpdate,
+  } = useProfileForm(candidate, skills)
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-
-        {/*<FormField*/}
-        {/*  control={form.control}*/}
-        {/*  name="first_name"*/}
-        {/*  render={({field}) => (*/}
-        {/*    <FormItem>*/}
-        {/*      <FormLabel>First Name</FormLabel>*/}
-        {/*      <FormControl>*/}
-        {/*        <Input placeholder="Jhon" {...field}/>*/}
-        {/*      </FormControl>*/}
-        {/*      <FormMessage/>*/}
-        {/*    </FormItem>*/}
-        {/*  )}*/}
-        {/*/>*/}
-        {/*<FormField*/}
-        {/*  control={form.control}*/}
-        {/*  name="last_name"*/}
-        {/*  render={({field}) => (*/}
-        {/*    <FormItem>*/}
-        {/*      <FormLabel>Last Name</FormLabel>*/}
-        {/*      <FormControl>*/}
-        {/*        <Input placeholder="Dou" {...field} />*/}
-        {/*      </FormControl>*/}
-        {/*      <FormMessage/>*/}
-        {/*    </FormItem>*/}
-        {/*  )}*/}
-        {/*/>*/}
         <FormField
           control={form.control}
           name="position"
@@ -254,7 +162,6 @@ export function ProfileForm({candidate, skills, category}: ProfileFormProps) {
             <FormItem>
               <FormLabel>Work experience</FormLabel>
               <FormControl>
-                {/*<Input type='number' {...field}/>*/}
                 <Slider
                   defaultValue={[field.value]}
                   max={10}

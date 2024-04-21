@@ -1,76 +1,34 @@
 "use client";
 
 import Link from "next/link";
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod"
-import {useForm} from "react-hook-form";
-import {useLoginMutation} from "@/lib/features/auth/authApiSlice";
-import {redirect, useRouter} from "next/navigation";
+import {redirect} from "next/navigation";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import React, {useEffect} from "react";
 import {ImGoogle} from "react-icons/im";
-import {useAppDispatch, useAppSelector} from "@/lib/hooks";
-import {setAuth} from "@/lib/features/auth/authSlice";
-import {toast} from "react-toastify";
+import {useAppSelector} from "@/lib/hooks";
 import Loader from "@/components/general/Loader";
 import {continueWithGoogle} from "@/utils";
+import useLoginForm from "@/hooks/useLoginForm";
 
-const loginFormSchema = z.object({
-  email: z
-    .string()
-    .email(),
-  password: z
-    .string()
-    .min(8, {
-      message: "Password must be at least 8 characters"
-    })
-    .max(40, {
-      message: "Password must not be longer then 40 characters"
-    })
-})
-
-type LoginFormValues = z.infer<typeof loginFormSchema>
 
 export default function LoginForm() {
-
   const {
     register,
     handleSubmit,
-    formState: {errors},
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginFormSchema),
-    mode: "onChange",
-  });
+    errors,
+    isLoading,
+    onSubmit,
+  } = useLoginForm();
 
-  const [login, {isLoading}] = useLoginMutation()
 
-  const router = useRouter()
-
-  const dispatch = useAppDispatch()
   const {isAuthenticated} = useAppSelector(state => state.auth);
 
   useEffect(() => {
     if (isAuthenticated) redirect("/my/account");
   }, [isAuthenticated]);
 
-
-  function onSubmit(data: LoginFormValues) {
-    const {email, password} = data
-
-    login({email, password})
-      .unwrap()
-      .then(() => {
-        dispatch(setAuth())
-
-        router.push('my/profile')
-        toast.success("Login successfully")
-      })
-      .catch(() => {
-        toast.error("Failed to log in.")
-      })
-  }
 
   return (
     <>

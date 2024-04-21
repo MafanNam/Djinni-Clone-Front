@@ -1,9 +1,5 @@
 "use client"
 
-import {zodResolver} from "@hookform/resolvers/zod"
-import {useForm} from "react-hook-form"
-import {z} from "zod"
-
 import {Button} from "@/components/ui/button"
 import {
   Form,
@@ -14,99 +10,27 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import {Input} from "@/components/ui/input"
-import {
-  useDeleteUserMutation,
-  useLogoutMutation, User,
-  useUpdateUserMutation
-} from "@/lib/features/auth/authApiSlice";
-import {toast} from "react-toastify";
-import {useRouter} from "next/navigation";
+import {User} from "@/lib/features/auth/authApiSlice";
 import {Label} from "@/components/ui/label";
 import {Separator} from "@/components/ui/separator";
-import {FormEvent, useState} from "react";
-import {useAppDispatch} from "@/lib/hooks";
-import {logout as setLogout} from "@/lib/features/auth/authSlice";
 import Loader from "@/components/general/Loader";
-
-const accountFormSchema = z.object({
-  first_name: z
-    .string()
-    .min(2, {
-      message: "First name must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "First name must not be longer than 30 characters.",
-    }),
-  last_name: z
-    .string()
-    .min(2, {
-      message: "Last name must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "Last name must not be longer than 30 characters.",
-    }),
-  email: z
-    .string()
-    .readonly()
-})
-
-type AccountFormValues = z.infer<typeof accountFormSchema>
+import useAccountForm from "@/hooks/useAccountForm";
 
 interface UserFormProps {
   user?: User;
 }
 
 export function AccountForm({user}: UserFormProps) {
-  const [updateUser, {isLoading: isLoadingUpdate}] = useUpdateUserMutation();
-  const [deleteUser, {isLoading: isLoadingDelete}] = useDeleteUserMutation();
-  const [logout,] = useLogoutMutation();
-  const [password, setPassword] = useState('')
+  const {
+    isLoadingDelete,
+    isLoadingUpdate,
+    password,
+    form,
+    setPassword,
+    onSubmit,
+    handleDelete,
+  } = useAccountForm(user)
 
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-
-  const form = useForm<AccountFormValues>({
-    resolver: zodResolver(accountFormSchema),
-    defaultValues: user,
-    mode: "onChange",
-  })
-
-  function onSubmit(data: AccountFormValues) {
-    const {first_name, last_name} = data
-
-    if (user?.first_name === first_name && user?.last_name === last_name) {
-      return;
-    }
-    // @ts-ignore
-    updateUser({first_name, last_name})
-      .unwrap()
-      .then(() => {
-        toast.success('Updated Account')
-      })
-      .catch(() => {
-        toast.error('Failed to update Account')
-      });
-  }
-
-  function handleDelete(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    // @ts-ignore
-    deleteUser({current_password: password})
-      .unwrap()
-      .then(() => {
-        toast.success('Deleted Profile')
-      })
-      .catch(() => toast.error('Failed to delete Profile'))
-    logout(undefined)
-      .unwrap()
-      .then(() => {
-        dispatch(setLogout());
-      })
-      .catch()
-      .finally(() => {
-        router.push("/");
-      })
-  }
 
   return (
     <>
