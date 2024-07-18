@@ -19,7 +19,7 @@ export default function RegisterForm() {
     errors,
     isLoading,
     onSubmit,
-    setTypeProfile,
+    setValue,
   } = useRegisterForm()
 
   return (
@@ -41,7 +41,7 @@ export default function RegisterForm() {
           <div className="grid gap-2">
             <Label htmlFor="type_profile">Select Type Profile:</Label>
             <RadioGroup defaultValue="candidate" name='type_profile'
-                        onValueChange={(value: string) => setTypeProfile(value)}>
+                        onValueChange={(value: string) => setValue("type_profile", value)}>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="candidate" id="r1"/>
                 <Label htmlFor="r1">Candidate</Label>
